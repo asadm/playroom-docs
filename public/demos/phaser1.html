@@ -23,6 +23,8 @@
         // 1. Handle players joining and quiting.
         onPlayerJoin(player => this.addPlayer(player));
 
+        this.add.text(50, 200, 'Touch the screen to move the player', { fontSize: '20px' });
+
         // 2. Pass player input to Playroom.
         const joystick = nipplejs.create();
         joystick.on("plain", (e, data) => {

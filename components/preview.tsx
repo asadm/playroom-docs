@@ -11,7 +11,7 @@ export default function Preview({src}) {
 
   useEffect(() => {
     setTimeout(() => {
-      setUrl(iframeRef.current.contentWindow.location.href);
+      setUrl(iframeRef.current?.contentWindow.location.href || "");
     }, 2000);
   }, []);
     return (
@@ -39,12 +39,13 @@ export default function Preview({src}) {
             }} src={url}></iframe>
           </FakeBrowser>
         ))}
+      {joinedIframes===0 &&
       <a className={styles.btnNew}
       onClick={()=>{
         setJoinedIframes(joinedIframes + 1);
       }}>
         + Add a Player
-      </a>
+      </a>}
     </div>
   )
 }

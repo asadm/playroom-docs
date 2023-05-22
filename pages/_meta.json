@@ -1,7 +1,12 @@
 {
   "index": "Introduction",
-  "gettingstarted": "Getting Started",
-  "advanced": "API Reference",
+  "setup": "Setup",
+  "bigscreen":"Big Screen / TV Mode",
+  "react":"Usage with React",
+  "phaser":"Usage with Phaser",
+  "kaboom":"Usage with Kaboom",
+  "threejs":"Usage with Three.js",
+  "apidocs":"API Reference",
   "about": {
     "title": "About Playroom ↗",
     "type": "page",

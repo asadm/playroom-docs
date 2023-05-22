@@ -16,7 +16,7 @@ import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
 
 ## Using a CDN
 
-You can also directly include it via a script tag from a CDN like `unpkg.com`:
+You can also directly include it via a script tag from a CDN like `unpkg.com`, make sure to also include the peer dependencies (react, react-dom):
 
 ```html copy
 <script src="https://unpkg.com/playroomkit"></script>
@@ -29,7 +29,7 @@ This will make the `Playroom` object available on the global scope.
   <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/playroomkit"></script>
-  <script type="module">
+  <script>
     const { onPlayerJoin, insertCoin, isHost, myPlayer } = Playroom;
   </script>
 </body>

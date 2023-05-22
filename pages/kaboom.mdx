@@ -1,0 +1,114 @@
+# Using Playroom Kit with Kaboom.js
+
+[Kaboom](https://kaboomjs.com/) is a Javascript game programming library that helps you make games fast and fun.
+Here is how a simple Kaboom game looks like:
+
+```js copy
+// start the game
+kaboom()
+
+// load a default sprite
+loadBean()
+
+// add character to screen, from a list of components
+const player = add([
+    sprite("bean"),  // renders as a sprite
+    pos(120, 80),    // position in world
+    area(),          // has a collider
+    body(),          // responds to physics and gravity
+])
+
+// jump when player presses "space" key
+onKeyPress("space", () => {
+    // .jump() is provided by the body() component
+    player.jump()
+})
+```
+
+## Making a Kaboom Game Multiplayer
+
+To make a Kaboom game multiplayer, you can pipe the game state to Playroom state methods and also pipe the player inputs to Playroom.
+
+Here is a simple example with relevant parts highlighted:
+
+```js copy {4, 14-20, 32, 44, 57-60, 69, 73}
+import kaboom from "kaboom";
+import nipplejs from "nipplejs";
+// 0. Import Playroom SDK
+import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
+
+const SPEED = 320;
+const PLAYERSIZE = 20;
+
+function start() {
+  kaboom({ width: 512, height: 512 });
+  gravity(1600);
+
+  // 1. Pass Joystick data to Playroom SDK
+  const joystick = nipplejs.create();
+  joystick.on("plain", (e, data) => {
+    myPlayer().setState("dir", data.direction);
+  });
+  joystick.on("end", () => {
+    myPlayer().setState("dir", undefined);
+  });
+
+  // Platform to hold the player(s)
+  add([
+    rect(width(), 48),
+    color(0, 255, 0),
+    pos(0, height() - 48),
+    area(),
+    solid(),
+  ]);
+
+  // 2. When a new player joins, add a circle for them in the color they chose
+  onPlayerJoin((player) => {
+    const playerColor = player.getProfile().color;
+    const playerSprite = add([
+      circle(PLAYERSIZE),
+      color(playerColor.r, playerColor.g, playerColor.b),
+      pos(rand(0, width()), center().y),
+      area({ shape: "circle", width: PLAYERSIZE, height: PLAYERSIZE }),
+      body(),
+    ]);
+
+    playerSprite.onUpdate(() => {
+      // 3. We use host player as the source of truth for player positions
+      if (isHost()) {
+        const controls = player.getState("dir") || {};
+        if (controls.x == "left") {
+          playerSprite.move(-SPEED, 0);
+        }
+        if (controls.x == "right") {
+          playerSprite.move(SPEED, 0);
+        }
+        if (controls.y == "up" && playerSprite.isGrounded()) {
+          playerSprite.jump();
+        }
+
+        // Sync position to other players
+        player.setState("pos", {
+          x: playerSprite.pos.x,
+          y: playerSprite.pos.y,
+        });
+      }
+      // Other players receive position from host and move player on their screen
+      else {
+        const newPos = player.getState("pos") || { x: 0, y: 0 };
+        playerSprite.moveTo(newPos.x, newPos.y);
+      }
+    });
+
+    player.onQuit(() => destroy(playerSprite));
+  });
+}
+
+insertCoin().then(start);
+```
+
+Here is a live preview of the above code:
+
+import Preview from '../components/preview'
+
+<Preview src="/demos/kaboom1.html" />
