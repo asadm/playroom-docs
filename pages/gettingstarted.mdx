@@ -1,0 +1,36 @@
+# Setting up Playroom Kit
+
+## Using NPM
+
+If you are using npm, install Playroom Kit and its peer dependencies:
+
+```bash copy
+npm install --save playroomkit react react-dom
+```
+
+Then import it into your project:
+
+```js copy
+import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
+```
+
+## Using a CDN
+
+You can also directly include it via a script tag from a CDN like `unpkg.com`:
+
+```html copy
+<script src="https://unpkg.com/playroomkit"></script>
+```
+
+This will make the `Playroom` object available on the global scope.
+
+```html copy
+<body>
+  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/playroomkit"></script>
+  <script type="module">
+    const { onPlayerJoin, insertCoin, isHost, myPlayer } = Playroom;
+  </script>
+</body>
+```

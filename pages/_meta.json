@@ -1,15 +1,17 @@
 {
   "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
+  "gettingstarted": "Getting Started",
+  "advanced": "API Reference",
   "about": {
-    "title": "About",
-    "type": "page"
-  },
-  "contact": {
-    "title": "Contact ↗",
+    "title": "About Playroom ↗",
     "type": "page",
-    "href": "https://twitter.com/shuding_",
+    "href": "https://joinplayroom.com",
+    "newWindow": true
+  },
+  "npm": {
+    "title": "NPM ↗",
+    "type": "page",
+    "href": "https://www.npmjs.com/package/playroomkit",
     "newWindow": true
   }
 }

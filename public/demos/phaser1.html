@@ -1,0 +1,107 @@
+<head>
+  <style>
+    body{
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://unpkg.com/nipplejs@0.10.1/dist/nipplejs.js"></script>
+  <script src="https://unpkg.com/phaser@3.60.0/dist/phaser.min.js"></script>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script type="module">
+    window._USETEMPSTORAGE = true;
+    const { onPlayerJoin, insertCoin, isHost, myPlayer } = Playroom;
+
+    class Main extends Phaser.Scene {
+      controls = {};
+      players = []; 
+
+      create() {
+        // 1. Handle players joining and quiting.
+        onPlayerJoin(player => this.addPlayer(player));
+
+        // 2. Pass player input to Playroom.
+        const joystick = nipplejs.create();
+        joystick.on("plain", (e, data) => {
+          myPlayer().setState("dir", data.direction);
+        });
+        joystick.on("end", () => {
+          myPlayer().setState("dir", undefined);
+        });
+      }
+
+      addPlayer(playerState) {
+        const color = Phaser.Display.Color.HexStringToColor(playerState.getProfile().color.hex).color
+        const sprite = this.add.rectangle(
+          Phaser.Math.Between(100, 500), 200, 50, 50, color);
+        this.physics.add.existing(sprite, false);
+        sprite.body.setCollideWorldBounds(true);
+        this.players.push({
+          sprite,
+          state: playerState
+        });
+        playerState.onQuit(() => {
+          sprite.destroy();
+          this.players = this.players.filter(p => p.state !== playerState);
+        });
+      }
+
+      update() {
+        // 3. Pass your game state to Playroom.
+        if (isHost()){
+          for (const player of this.players) {
+            const controls = player.state.getState("dir") || {};
+            if (controls.x == "left") {
+              player.sprite.body.setVelocityX(-160);
+            }
+            else if (controls.x == "right") {
+              player.sprite.body.setVelocityX(160);
+            }
+            else{
+              player.sprite.body.setVelocityX(0);
+            }
+        
+            if (controls.y == "up" && player.sprite.body.onFloor()) {
+              player.sprite.body.setVelocityY(-330);
+            }
+            player.state.setState("pos", {
+              x: player.sprite.x,
+              y: player.sprite.y,
+            });
+          }
+        }
+        else{
+          for (const player of this.players) {
+            const pos = player.state.getState("pos");
+            if (pos){
+              player.sprite.x = pos.x;
+              player.sprite.y = pos.y;
+            }
+          }
+        }
+      }
+    }
+
+    const config = {
+      type: Phaser.AUTO,
+      width: 512,
+      height: 512,
+      parent: 'root',
+      physics: {
+        default: 'arcade',
+        arcade: {
+          gravity: { y: 700 }
+        }
+      },
+      scene: Main
+    };
+
+    // 4. Insert Coin! Start the game.
+    insertCoin().then(() => {
+      const game = new Phaser.Game(config);
+    });
+  </script>
+</body>

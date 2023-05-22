@@ -1,11 +1,145 @@
 # Introduction
- 
-Welcome to Nextra! This is a basic docs template. You can use it as a starting point for your own project :)
 
-## What is Nextra?
+<video width="300" style={{borderRadius: "30px", float: "right", marginLeft: "10px"}} playsInline autoPlay muted loop>
+  <source src="/control.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
 
-A **simple**, **powerful** and **flexible** site generation framework with everything you love from Next.js.
 
-## Documentation
+Playroom Kit let's you easily make realtime multiplayer games. It provides sync and state management out of the box. 
 
-The documentation is available at [https://nextra.site](https://nextra.site).
+It's built on top of [Playroom](https://joinplayroom.com) platform.
+
+<div style={{clear: "both"}}></div>
+
+## Features
+- Handle room creation and joining via URL or QR code with built-in UI
+- Realtime sync of game and player state between all players and screens
+- Letting players pick their names, colors and avatars with built-in UI
+- Automatically switch between WebRTC and WebSockets for &lt;50ms latency
+- First-class support for Phaser, React and Kaboom.js
+
+
+## Making a Multiplayer Game
+Whether you are making a new game or converting an existing game to multiplayer. It's easy with Playroom, you roughly need to:
+
+#### 1. Handle players joining and quiting
+When a player joins, you probably need to add a player sprite to the game. When a player quits, you need to remove the player sprite from the game.
+
+#### 2. Pass player input to Playroom
+Input can be anything like joystick data, button presses etc. Host will receive input events and update the game state. No network code needed!
+
+#### 3. Pass your game state to Playroom
+Things like player position, health, score etc. Ideally only the **host** should send the game state. Other players will only receive the game state from the host and update their game accordingly.
+
+#### 4. Insert Coin!
+Tell Playroom to start! Playroom Kit will automatically handle room creation, joining and also let players pick their names, colors and avatars. Once host taps "Launch", the game will start.
+
+## Demo
+
+Here is a very basic platformer made with Phaser and made multiplayer using Playroom Kit. You can either try it below or scan the QR code to play it on your phone.
+
+import Preview from '../components/preview'
+
+<Preview src="/demos/phaser1.html" />
+
+
+### Code for the above demo
+Here is the **complete code** for the above demo. The multiplayer code is highlighted: 
+
+
+```js {11,14-20,33-36,43,57-60,65-69,90-92} filename="Without Multiplayer"
+import nipplejs from "nipplejs";
+import Phaser from "phaser";
+import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
+
+class Main extends Phaser.Scene {
+  controls = {};
+  players = []; 
+
+  create() {
+    // 1. Handle players joining and quiting.
+    onPlayerJoin(player => this.addPlayer(player));
+
+    // 2. Pass player input to Playroom.
+    const joystick = nipplejs.create();
+    joystick.on("plain", (e, data) => {
+      myPlayer().setState("dir", data.direction);
+    });
+    joystick.on("end", () => {
+      myPlayer().setState("dir", undefined);
+    });
+  }
+
+  addPlayer(playerState) {
+    const color = Phaser.Display.Color.HexStringToColor(playerState.getProfile().color.hex).color
+    const sprite = this.add.rectangle(
+      Phaser.Math.Between(100, 500), 200, 50, 50, color);
+    this.physics.add.existing(sprite, false);
+    sprite.body.setCollideWorldBounds(true);
+    this.players.push({
+      sprite,
+      state: playerState
+    });
+    playerState.onQuit(() => {
+      sprite.destroy();
+      this.players = this.players.filter(p => p.state !== playerState);
+    });
+  }
+
+  update() {
+    // 3. Pass your game state to Playroom.
+    if (isHost()){
+      for (const player of this.players) {
+        const controls = player.state.getState("dir") || {};
+        if (controls.x == "left") {
+          player.sprite.body.setVelocityX(-160);
+        }
+        else if (controls.x == "right") {
+          player.sprite.body.setVelocityX(160);
+        }
+        else{
+          player.sprite.body.setVelocityX(0);
+        }
+    
+        if (controls.y == "up" && player.sprite.body.onFloor()) {
+          player.sprite.body.setVelocityY(-330);
+        }
+        player.state.setState("pos", {
+          x: player.sprite.x,
+          y: player.sprite.y,
+        });
+      }
+    }
+    else{
+      for (const player of this.players) {
+        const pos = player.state.getState("pos");
+        if (pos){
+          player.sprite.x = pos.x;
+          player.sprite.y = pos.y;
+        }
+      }
+    }
+  }
+}
+
+const config = {
+  type: Phaser.AUTO,
+  width: 512,
+  height: 512,
+  parent: 'root',
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 700 }
+    }
+  },
+  scene: Main
+};
+
+// 4. Insert Coin! Start the game.
+insertCoin().then(() => {
+  const game = new Phaser.Game(config);
+});
+
+```
