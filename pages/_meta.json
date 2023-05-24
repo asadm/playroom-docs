@@ -1,11 +1,8 @@
 {
   "index": "Introduction",
+  "multiplayer": "Making Multiplayer",
   "setup": "Setup",
-  "bigscreen":"Big Screen / TV Mode",
-  "react":"Usage with React",
-  "phaser":"Usage with Phaser",
-  "kaboom":"Usage with Kaboom",
-  "threejs":"Usage with Three.js",
+  "Integrate": "Integrate with",
   "apidocs":"API Reference",
   "about": {
     "title": "About Playroom ↗",
