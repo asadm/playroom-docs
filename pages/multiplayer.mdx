@@ -30,7 +30,7 @@ import Preview from '../components/preview'
 Here is the **complete code** for the above demo. The multiplayer code is highlighted: 
 
 
-```js {11,14-20,33-36,43,57-60,65-69,90-92} filename="Without Multiplayer"
+```js {11,14-20,32-35,42,56-59,64-68,89-91} filename="Without Multiplayer"
 import nipplejs from "nipplejs";
 import Phaser from "phaser";
 import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
@@ -54,9 +54,8 @@ class Main extends Phaser.Scene {
   }
 
   addPlayer(playerState) {
-    const color = Phaser.Display.Color.HexStringToColor(playerState.getProfile().color.hex).color
     const sprite = this.add.rectangle(
-      Phaser.Math.Between(100, 500), 200, 50, 50, color);
+      Phaser.Math.Between(100, 500), 200, 50, 50, playerState.getProfile().color.hex);
     this.physics.add.existing(sprite, false);
     sprite.body.setCollideWorldBounds(true);
     this.players.push({

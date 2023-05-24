@@ -36,9 +36,8 @@
       }
 
       addPlayer(playerState) {
-        const color = Phaser.Display.Color.HexStringToColor(playerState.getProfile().color.hex).color
         const sprite = this.add.rectangle(
-          Phaser.Math.Between(100, 500), 200, 50, 50, color);
+          Phaser.Math.Between(100, 500), 200, 50, 50, playerState.getProfile().color.hex);
         this.physics.add.existing(sprite, false);
         sprite.body.setCollideWorldBounds(true);
         this.players.push({
