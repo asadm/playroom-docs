@@ -3,11 +3,14 @@
     body{
       background-color: #000;
     }
+    canvas{
+      zoom: 0.5;
+    }
   </style>
 </head>
 <body>
   <script src="https://unpkg.com/nipplejs@0.10.1/dist/nipplejs.js"></script>
-  <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  <script src="https://unpkg.com/kaboom@2000.2.10/dist/kaboom.js"></script>
   <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
@@ -20,7 +23,7 @@
     const PLAYERSIZE = 20;
 
     function start() {
-      kaboom({ width: 300, height: 480 });
+      kaboom({ width: 300, height: 480, scale: 2, background: [0, 0, 0] });
       gravity(1600);
 
       // 1. Pass Joystick data to Playroom SDK
@@ -35,7 +38,7 @@
       // Platform to hold the player(s)
       add([
         rect(width(), 48),
-        color(0, 255, 0),
+        color(141, 107, 237),
         pos(0, height() - 48),
         area(),
         solid(),

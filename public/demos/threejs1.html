@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="initial-scale=0.5">
   <style>
     body {
       overflow: hidden;
@@ -73,6 +73,7 @@
 
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(WIDTH, HEIGHT);
+      // renderer.setPixelRatio( window.devicePixelRatio );
       renderer.shadowMap.enabled = true;
       container = document.getElementById("world");
       container.appendChild(renderer.domElement);

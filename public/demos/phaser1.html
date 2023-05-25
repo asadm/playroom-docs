@@ -3,6 +3,9 @@
     body{
       background-color: #000;
     }
+    canvas{
+      zoom: 0.5;
+    }
   </style>
 </head>
 <body>
@@ -23,7 +26,7 @@
         // 1. Handle players joining and quiting.
         onPlayerJoin(player => this.addPlayer(player));
 
-        this.add.text(50, 150, 'Touch the screen to\n move the player.', { fontSize: '18px' });
+        this.add.text(60*2, 150*2, 'Touch the screen to\n move the player.', { fontSize: '30px' });
 
         // 2. Pass player input to Playroom.
         const joystick = nipplejs.create();
@@ -37,7 +40,7 @@
 
       addPlayer(playerState) {
         const sprite = this.add.rectangle(
-          Phaser.Math.Between(100, 500), 200, 50, 50, playerState.getProfile().color.hex);
+          Phaser.Math.Between(100, 500), 200, 100, 100, playerState.getProfile().color.hex);
         this.physics.add.existing(sprite, false);
         sprite.body.setCollideWorldBounds(true);
         this.players.push({
@@ -56,17 +59,17 @@
           for (const player of this.players) {
             const controls = player.state.getState("dir") || {};
             if (controls.x == "left") {
-              player.sprite.body.setVelocityX(-160);
+              player.sprite.body.setVelocityX(-260);
             }
             else if (controls.x == "right") {
-              player.sprite.body.setVelocityX(160);
+              player.sprite.body.setVelocityX(260);
             }
             else{
               player.sprite.body.setVelocityX(0);
             }
         
             if (controls.y == "up" && player.sprite.body.onFloor()) {
-              player.sprite.body.setVelocityY(-330);
+              player.sprite.body.setVelocityY(-730);
             }
             player.state.setState("pos", {
               x: player.sprite.x,
@@ -88,13 +91,13 @@
 
     const config = {
       type: Phaser.AUTO,
-      width: 300,
-      height: 480,
+      width: 300 * 2,
+      height: 480 * 2,
       parent: 'root',
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 700 }
+          gravity: { y: 1600 }
         }
       },
       scene: Main
