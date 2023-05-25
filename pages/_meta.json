@@ -1,11 +1,11 @@
 {
   "index": "Introduction",
-  "multiplayer": "Making Multiplayer",
-  "setup": "Setup",
-  "Usage": "Usage",
+  "multiplayer": "🕹️ | Making Multiplayer",
+  "setup": "🧩 | Setup",
+  "Usage": "📙 | Usage",
   "apidocs":"API Reference",
-    "ai":"Upcoming: Playroom AI",
-     "components":"Upcoming: Components",
+    "ai":"🧙🏻‍♀️ | Upcoming: Playroom AI",
+     "components":"🎲 | Upcoming: Components",
   "about": {
     "title": "About Playroom ↗",
     "type": "page",
