@@ -23,7 +23,7 @@
         // 1. Handle players joining and quiting.
         onPlayerJoin(player => this.addPlayer(player));
 
-        this.add.text(50, 200, 'Touch the screen to move the player', { fontSize: '20px' });
+        this.add.text(50, 150, 'Touch the screen to\n move the player.', { fontSize: '18px' });
 
         // 2. Pass player input to Playroom.
         const joystick = nipplejs.create();
@@ -88,8 +88,8 @@
 
     const config = {
       type: Phaser.AUTO,
-      width: 512,
-      height: 512,
+      width: 300,
+      height: 480,
       parent: 'root',
       physics: {
         default: 'arcade',
