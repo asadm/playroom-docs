@@ -73,7 +73,7 @@
 
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(WIDTH, HEIGHT);
-      // renderer.setPixelRatio( window.devicePixelRatio );
+      renderer.setPixelRatio( window.devicePixelRatio );
       renderer.shadowMap.enabled = true;
       container = document.getElementById("world");
       container.appendChild(renderer.domElement);
