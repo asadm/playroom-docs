@@ -8,6 +8,7 @@
   <style>
     body {
       overflow: hidden;
+      margin: 0;
       background: -webkit-linear-gradient(#e4e0ba, #f7d9aa);
       background: linear-gradient(#e4e0ba, #f7d9aa);
     }
@@ -528,6 +529,9 @@ async function init(event){
   createLights();
   onPlayerJoin((state) => {
     const plane = createPlane(state.getProfile().color.hex);
+    if (isHost()){
+      state.setState("pos", { x: randomFloatBetween(-0.35, 0.35), y: randomFloatBetween(-0.35, 0.35) });
+    }
     players.push({ state, plane });
     state.onQuit(() => {
       scene.remove(plane.mesh);
@@ -537,6 +541,10 @@ async function init(event){
   createSea();
   createSky();
   loop();
+}
+
+function randomFloatBetween(minValue,maxValue){
+  return Math.random()*(maxValue-minValue)+minValue;
 }
 
 function createJoystick() {
