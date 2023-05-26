@@ -467,9 +467,9 @@ function loop(){
       const controls = player.state.getState("dir") || {};
       const curPos = player.state.getState("pos") || { x: 0, y: 0 };
       if (controls.x == "left") {
-        curPos.x = Math.max(-1, curPos.x - 0.01);
+        curPos.x = Math.max(-0.4, curPos.x - 0.01);
       } else if (controls.x == "right") {
-        curPos.x = Math.min(1, curPos.x + 0.01);
+        curPos.x = Math.min(0.4, curPos.x + 0.01);
       }
       if (controls.y == "up") {
         curPos.y = Math.min(1, curPos.y + 0.01);

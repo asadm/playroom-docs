@@ -28,7 +28,7 @@
         // 1. Handle players joining and quiting.
         onPlayerJoin(player => this.addPlayer(player));
 
-        this.add.text(60*2, 150*2, 'Touch the screen to\n move the player.', { fontSize: '30px' });
+        this.add.text(80*2, 150*2, 'Touch the screen to\n move the player.', { fontSize: '30px' });
 
         // 2. Pass player input to Playroom.
         const joystick = nipplejs.create();
@@ -43,6 +43,7 @@
       addPlayer(playerState) {
         const sprite = this.add.rectangle(
           Phaser.Math.Between(100, 500), 200, 100, 100, playerState.getProfile().color.hex);
+          // sprite.setStrokeStyle(4, playerState.getProfile().color.hex)
         this.physics.add.existing(sprite, false);
         sprite.body.setCollideWorldBounds(true);
         this.players.push({
@@ -94,7 +95,7 @@
     const config = {
       type: Phaser.AUTO,
       width: 300 * 2,
-      height: 480 * 2,
+      height: 640 * 2,
       parent: 'root',
       physics: {
         default: 'arcade',

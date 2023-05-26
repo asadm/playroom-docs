@@ -22,8 +22,8 @@ export default function Preview({src}) {
         setJoinedIframes(Math.max(0, joinedIframes - 1));
       }}>
       <iframe 
-        ref={iframeRef} width="325" height="490" style={{
-        // transform: `scale(${Math.min(1, width / 550)})`
+        ref={iframeRef} width="325" height="650" style={{
+        // transform: `scale(${Math.min(1, width / 650)})`
         // borderRadius: "23px", 
         // margin: "20px 0px",
         }} src={src}></iframe>
@@ -34,7 +34,7 @@ export default function Preview({src}) {
           }}>
             <iframe 
             key={i}
-            width="325" height="490" style={{
+            width="325" height="650" style={{
             // borderRadius: "23px",
             // margin: "20px 0px",
             }} src={url}></iframe>
