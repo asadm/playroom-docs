@@ -15,7 +15,7 @@ export default {
       <>
       <meta
             name="description"
-            content={frontMatter.description || 'Multiplayer in Minutes!'}
+            content={frontMatter.description || 'desc: Build multiplayer games in minutes.'}
             key="desc"
           />
           {/* <!-- Facebook Meta Tags --> */}
@@ -24,7 +24,7 @@ export default {
           <meta property="og:title" content={frontMatter.title || 'Playroom Kit'}/>
           <meta
             property="og:description"
-            content={frontMatter.description || 'Multiplayer in Minutes!'}
+            content={frontMatter.description || 'desc: Build multiplayer games in minutes.'}
           />
           <meta
             property="og:image"
@@ -38,7 +38,7 @@ export default {
           <meta name="twitter:title" content={frontMatter.title || 'Playroom Kit'}/>
           <meta
             name="twitter:description"
-            content={frontMatter.description || 'Multiplayer in Minutes!'}
+            content={frontMatter.description || 'desc: Build multiplayer games in minutes.'}
           />
           <meta
             name="twitter:image"
