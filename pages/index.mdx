@@ -4,25 +4,47 @@
 
 Playroom Kit simplifies the development of real-time web-based multiplayer games by offering seamless synchronization and state management features. With its convenient integration capabilities, you can effortlessly incorporate the kit into popular game engines and libraries, transforming any game into a multiplayer experience.
 
-
-With our low-code integration, no game needs to remain limited to single-player mode. We believe that gaming is more enjoyable when shared with friends, whether they are online, nearby, connected through Discord, part of a Twitch community, or even gathered with family at home. With Playroom Kit, you have the flexibility to create your game to suit any multiplayer scenario
+We believe that gaming is more enjoyable when shared with friends, whether they are online, nearby, connected through Discord, part of a Twitch community, or even gathered with family at home. With Playroom Kit, you have the flexibility to create your game to suit any multiplayer scenario
 
 <div style={{clear: "both"}}></div>
 
 ## Features
-- **Realtime State Sync:**
-Realtime sync of game and player state between all players and screens
-- **Low Latency, Always!:**
-Automatically switch between WebRTC and WebSockets for &lt;50ms latency
-- **No Backend Code:**
-Serverless architecture with no backend code to write or manage
-- **Region: Earth:**
-Nearest websocket backend running within milliseconds of the players
-- **Built-in UI:**
-Automatically handle room creation and joining via URL or QR code with a built-in UI
 - **Handles Player Profiles:**
 Letting players pick their names, colors and avatars with built-in UI
 - **Supports Your Game Engine:**
 First-class support for Phaser, React, Three.js, Kaboom.js, etc.
 - **Multiple Types of Screens:**
 Support for non-player screens (screencasts, spectators, TV-mode, etc.)
+
+import { Card, Cards } from 'nextra-theme-docs'
+
+<Cards>
+  <Card
+  	style={{border:"1px solid #8D6BED"}}
+    title={<div><img src="/images/sync.png" style={{width: "48px", marginTop: '20px;'}}></img><h4>Realtime State Sync</h4><div style={{fontSize:"0.8em"}}>Realtime sync of game and player state between all players and screens</div></div>}
+    href=""
+  />
+   <Card
+    style={{border:"1px solid #8D6BED"}}
+    title={<div><img src="/images/latency.png" style={{width: "48px", marginTop: '20px;'}}></img><h4>Low Latency</h4><div style={{fontSize:"0.8em"}}>Automatically switch between WebRTC and WebSockets for &lt;50ms latency</div></div>}
+    href=""
+  />
+   <Card
+    style={{border:"1px solid #8D6BED"}}
+    title={<div><img src="/images/backend.png" style={{width: "48px", marginTop: '20px;'}}></img><h4>No Backend</h4><div style={{fontSize:"0.8em"}}>Serverless architecture with no backend code to write or manage</div></div>}
+    href=""
+  />
+  <Card
+    style={{border:"1px solid #8D6BED"}}
+    title={<div><img src="/images/earth.png" style={{width: "48px", marginTop: '20px;'}}></img><h4>Region: Earth</h4><div style={{fontSize:"0.8em"}}>Nearest websocket backend running within milliseconds of the players</div></div>}
+    href=""
+  />
+   <Card
+    style={{border:"1px solid #8D6BED"}}
+    title={<div><img src="/images/earth.png" style={{width: "48px", marginTop: '20px;'}}></img><h4>Room Management</h4><div style={{fontSize:"0.8em"}}>Automatically handle room creation and joining via URL or QR code</div></div>}
+    href=""
+  />
+
+
+
+</Cards>
