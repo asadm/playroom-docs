@@ -14,16 +14,55 @@ import { Steps } from 'nextra-theme-docs'
 
 ### Handle players joining and quiting
 When a player joins, you probably need to add a player sprite to the game. When a player quits, you need to remove the player sprite from the game.
+In Playroom Kit, you can use the `onPlayerJoin` and `onPlayerQuit` callbacks to handle this:
+
+```js
+onPlayerJoin(playerState => {
+  // PlayerState is this player's multiplayer state along with it's profile.
+  // Probably add a player sprite to the game here.
+  playerState.onQuit(() => {
+    // Handle player quitting. Maybe remove player sprite?
+  });
+});
+```
 
 ### Pass player input to Playroom
 Input can be anything like joystick data, button presses etc. Host will receive input events and update the game state. No network code needed!
 
+```js
+joystick.on("move", (e, data) => {
+  // Set current player's input state to Playroom.
+  myPlayer().setState("input", data.direction);
+});
+```
+
 ### Pass your game state to Playroom
 Things like player position, health, score etc. Ideally only the **host** should send the game state. Other players will only receive the game state from the host and update their game accordingly.
+
+```js
+// Host only
+updatePlayer(player) {
+  const input = player.state.getState("input")
+  // ...
+  // Update player position based on player input
+  // ...
+  player.state.setState("position", {
+    x: newX,
+    y: newY,
+  });
+}
+```
 
 ### Insert Coin!
 Tell Playroom to start! Playroom Kit will automatically handle room creation, joining and also let players pick their names, colors and avatars. Once host taps "Launch", the game will start.
 
+```js
+// Show Playroom UI, let it handle players joining etc and wait for host to tap "Launch"
+await insertCoin();
+
+// Start the game!
+startGame();
+```
 </Steps>
 
 ## Demo #1
@@ -36,10 +75,10 @@ import Preview from '../components/preview'
 
 
 ### Code for the above demo
-Here is the **complete code** for the above demo. The multiplayer code is highlighted: 
+Highlighted are the relevant multiplayer parts of the code for the above demo. You can also find the full code [here](https://github.com/asadm/playroom-docs/blob/main/public/demos/phaser1.html): 
 
 
-```js {11,14-20,32-35,42,56-59,64-68,89-91} filename="Without Multiplayer"
+```js {11,14-20,32-35,42,56-59,64-68,89-91}
 import nipplejs from "nipplejs";
 import Phaser from "phaser";
 import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
@@ -50,7 +89,7 @@ class Main extends Phaser.Scene {
 
   create() {
     // 1. Handle players joining and quiting.
-    onPlayerJoin(player => this.addPlayer(player));
+    onPlayerJoin(playerState => this.addPlayer(playerState));
 
     // 2. Pass player input to Playroom.
     const joystick = nipplejs.create();
