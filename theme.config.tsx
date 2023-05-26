@@ -1,9 +1,55 @@
+import { useRouter } from 'next/router'
+import { useConfig } from 'nextra-theme-docs'
 import React from 'react'
 
 export default {
+  head: () => {
+    const { asPath, defaultLocale, locale } = useRouter()
+    const { frontMatter } = useConfig()
+    const baseUrl = 'https://docs.joinplayroom.com';
+    const url =
+      baseUrl +
+      (defaultLocale === locale ? asPath : `/${locale}${asPath}`)
+ 
+    return (
+      <>
+      <meta
+            name="description"
+            content={frontMatter.description || 'Multiplayer in Minutes!'}
+            key="desc"
+          />
+          {/* <!-- Facebook Meta Tags --> */}
+          <meta property="og:url" content={url} />
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content={frontMatter.title || 'Playroom Kit'}/>
+          <meta
+            property="og:description"
+            content={frontMatter.description || 'Multiplayer in Minutes!'}
+          />
+          <meta
+            property="og:image"
+            content={baseUrl + (frontMatter.image || "/images/ogimage.png")}
+          />
+
+          {/* <!-- Twitter Meta Tags --> */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta property="twitter:domain" content="joinplayroom.com" />
+          <meta property="twitter:url" content={url} />
+          <meta name="twitter:title" content={frontMatter.title || 'Playroom Kit'}/>
+          <meta
+            name="twitter:description"
+            content={frontMatter.description || 'Multiplayer in Minutes!'}
+          />
+          <meta
+            name="twitter:image"
+            content={baseUrl + (frontMatter.image || "/images/ogimage.png")}
+          />
+      </>
+    )
+  },
     useNextSeoProps(){
       return {
-        titleTemplate: '%s - PlayroomKit',
+        titleTemplate: '%s - Playroom Kit',
       }
     },
     footer: {
