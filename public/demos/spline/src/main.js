@@ -35,7 +35,7 @@ class AnimationFrame {
 
 window._USETEMPSTORAGE = true;
 await insertCoin();
-await app.load('https://prod.spline.design/upsGl4lgNgcU3Qpx/scene.splinecode');
+await app.load('/demos/spline/scene.splinecode');
 window.app = app;
 // Joystick connection
 const joystick = nipplejs.create();
