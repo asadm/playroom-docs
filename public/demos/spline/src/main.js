@@ -35,6 +35,7 @@ class AnimationFrame {
 
 window._USETEMPSTORAGE = true;
 await insertCoin();
+// await app.load('https://prod.spline.design/upsGl4lgNgcU3Qpx/scene.splinecode');
 await app.load('/demos/spline/scene.splinecode');
 window.app = app;
 // Joystick connection
@@ -48,6 +49,7 @@ joystick.on("end", () => {
 });
 
 let players = [];
+window.players = players;
 function getObjectFromSpline(name){
   return app._scene.children.find((child)=> child.name === name);//.rigidBody.addForce({ x: -0.10, y: 0.0, z: 0.0 }, true); setTimeout(()=> app._scene.children.find((child)=> child.name === "Ball1").rigidBody.resetForces(true), 100);
 };
@@ -68,6 +70,32 @@ const loop = new AnimationFrame(120, () => {
         y:player.ball.rigidBody.linvel().y, 
         z: controls?.y * -4.0 || 0.0
       }, true);
+
+      const translation = player.ball.rigidBody.translation();
+      // const pos = player.ball.position;
+      let finalPos = new THREE.Vector3(translation.x * 200, translation.y * 200, translation.z * 200);
+      // finalPos.applyQuaternion(player.ball.rigidBody.rotation());
+      finalPos.add(new THREE.Vector3(0, 100.5, 5));
+      // const finalPos = {
+      //   x: translation.x * 200,
+      //   y: translation.y * 200,
+      //   z: translation.z * 200
+      // }
+
+
+      app._camera.position.x = finalPos.x;
+      app._camera.position.y = finalPos.y;
+      app._camera.position.z = finalPos.z;
+
+      let finalLookAt = new THREE.Vector3(translation.x * 200, translation.y * 200, translation.z * 200);
+      finalLookAt.add(new THREE.Vector3(0, 100.5, 0));
+      app._controls.orbitControls.target.x = finalLookAt.x;
+      app._controls.orbitControls.target.y = finalLookAt.y;
+      app._controls.orbitControls.target.z = finalLookAt.z;
+      // app._camera.lookAt(finalLookAt.x, finalLookAt.y, finalLookAt.z);
+
+      // app._camera.lookAt(finalPos.x, finalPos.y, finalPos.z);
+      // console.log(finalPos);
       // if (controls.x == "left") {
       //   player.ball.rigidBody.resetForces(true);
       //   player.ball.rigidBody.addForce({ x: -4.0, y: 0.0, z: 0.0 }, true);
