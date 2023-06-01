@@ -16,42 +16,59 @@
     const {
       useMultiplayerState,
       insertCoin, 
-      myPlayer
+      myPlayer,
+      usePlayersList
     } = Playroom;
     window._USETEMPSTORAGE = true;
 
+    const randomNumBetween = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+    const randomRotations = Array(20).fill(0).map(()=> `rotate(${randomNumBetween(-5,5)}deg) translateX(${randomNumBetween(-10,10)}px)`);
+
     const App = () => {
-      const [currentEmoji, setCurrentEmoji] = useMultiplayerState("emoji");
-      useEffect(()=>{
-        if (currentEmoji) {
-          setTimeout(()=>{
-            setCurrentEmoji(null);
-          }, 2000);
-        }
-      }, [currentEmoji])
+      const players = usePlayersList();
+      const [currentEmoji, setCurrentEmoji] = useMultiplayerState("emoji", []);
+      // useEffect(()=>{
+      //   if (currentEmoji) {
+      //     setTimeout(()=>{
+      //       setCurrentEmoji(null);
+      //     }, 2000);
+      //   }
+      // }, [currentEmoji])
+      
       return (
-        <div className="App" style={{backgroundColor: currentEmoji?currentEmoji.bgColor : "transparent"}}>
-          {currentEmoji && 
-              <div className="emoji-display">
-              <span className="card">{currentEmoji.emoji}</span>
+        <div className="App" style={{backgroundColor: myPlayer().getProfile().color.hexString}}>
+          {currentEmoji.map((emojiData, i)=>{
+            const player = players.find(p=>p.id===emojiData.id);
+            if (!player) return null;
+            return (
+            <div key={i} className="emoji-display">
+              <span 
+                style={{transform: randomRotations[i%randomRotations.length]}}
+                className="card">
+                <span className="avatar">
+                  <img src={player.getProfile().photo} />
+                </span>
+                {emojiData.emoji}
+              </span>
             </div>
+          )})
           }
           <div className="emoji-button-bar">
-            <a className={"emoji-button" + (currentEmoji?" disabled":"")} 
+            <a className="emoji-button" 
                onClick={()=> 
-                !currentEmoji && setCurrentEmoji({emoji: "🫶", bgColor: myPlayer().getProfile().color.hexString})
+                setCurrentEmoji([...currentEmoji, {emoji: "🫶", id: myPlayer().id}])
               }>
               <span role="img">🫶</span>
             </a>
-            <a className={"emoji-button" + (currentEmoji?" disabled":"")} 
+            <a className="emoji-button" 
                onClick={()=> 
-                !currentEmoji && setCurrentEmoji({emoji: "🥳", bgColor: myPlayer().getProfile().color.hexString})
+                setCurrentEmoji([...currentEmoji, {emoji: "🥳", id: myPlayer().id}])
               }>
               <span role="img">🥳</span>
             </a>
-            <a className={"emoji-button" + (currentEmoji?" disabled":"")} 
+            <a className="emoji-button" 
                onClick={()=> 
-                !currentEmoji && setCurrentEmoji({emoji: "👋", bgColor: myPlayer().getProfile().color.hexString})
+                setCurrentEmoji([...currentEmoji, {emoji: "👋", id: myPlayer().id}])
               }>
               <span role="img">👋</span>
             </a>
