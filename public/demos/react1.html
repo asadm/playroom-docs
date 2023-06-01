@@ -1,0 +1,68 @@
+<head>
+  <link rel="stylesheet" href="./react1.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/nipplejs@0.10.1/dist/nipplejs.js"></script>
+  <script src="https://unpkg.com/kaboom@2000.2.10/dist/kaboom.js"></script>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script type="text/babel">
+    const { useEffect } = React;
+    const {
+      useMultiplayerState,
+      insertCoin, 
+      myPlayer
+    } = Playroom;
+    window._USETEMPSTORAGE = true;
+
+    const App = () => {
+      const [currentEmoji, setCurrentEmoji] = useMultiplayerState("emoji");
+      useEffect(()=>{
+        if (currentEmoji) {
+          setTimeout(()=>{
+            setCurrentEmoji(null);
+          }, 2000);
+        }
+      }, [currentEmoji])
+      return (
+        <div className="App" style={{backgroundColor: currentEmoji?currentEmoji.bgColor : "transparent"}}>
+          {currentEmoji && 
+              <div className="emoji-display">
+              <span className="card">{currentEmoji.emoji}</span>
+            </div>
+          }
+          <div className="emoji-button-bar">
+            <a className={"emoji-button" + (currentEmoji?" disabled":"")} 
+               onClick={()=> 
+                !currentEmoji && setCurrentEmoji({emoji: "🫶", bgColor: myPlayer().getProfile().color.hexString})
+              }>
+              <span role="img">🫶</span>
+            </a>
+            <a className={"emoji-button" + (currentEmoji?" disabled":"")} 
+               onClick={()=> 
+                !currentEmoji && setCurrentEmoji({emoji: "🥳", bgColor: myPlayer().getProfile().color.hexString})
+              }>
+              <span role="img">🥳</span>
+            </a>
+            <a className={"emoji-button" + (currentEmoji?" disabled":"")} 
+               onClick={()=> 
+                !currentEmoji && setCurrentEmoji({emoji: "👋", bgColor: myPlayer().getProfile().color.hexString})
+              }>
+              <span role="img">👋</span>
+            </a>
+          </div>
+        </div>
+      );
+    };
+
+    const root = document.querySelector('#root');
+    insertCoin().then(()=>{
+      ReactDOM.render(<App />, root);
+    });
+  </script>
+</body>
