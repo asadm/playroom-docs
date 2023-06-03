@@ -3,15 +3,17 @@
 <video src="/images/4.mp4" style={{width: "100%", marginTop: '20px;'}} playsInline autoPlay muted loop>
 </video>
 
-If your game involves players using their phones as controllers while looking at a shared screen (e.g. Jackbox games), you can use Stream Mode to create such multiplayer experience. 
+If your game involves players using their phones as controllers while looking at a shared screen (e.g. Jackbox games), you can use Stream Mode to create such multiplayer experiences. 
 
 Stream Mode is ideal for party games, team-building games, Twitch streamer style games, and more.
 
 ## Getting started
 
-The main difference here is that you need to differentiate between the **Stream** screen and the **Controller** screen and show the appropriate screen.
+The main difference here is that you need to make **Stream** screen and the **Controller** screen and show the appropriate screen.
 
 When you pass `streamMode: true` to Playroom's `insertCoin`. Playroom automatically detects if it's running on a larger screen or a phone screen. If it's running on a larger screen, it will show the instructions to join the room. If it's running on a phone screen, it will let player pick their name and color.
+
+Once the host launches the game, the control is handed over to your game where you can use the `isStreamScreen()` helper function to detect what screen you're on and show the appropriate screen.
 
 ## Steps
 import { Steps } from 'nextra-theme-docs'
