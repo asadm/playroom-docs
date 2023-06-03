@@ -3,19 +3,45 @@
 <video src="/images/4.mp4" style={{width: "100%", marginTop: '20px;'}} playsInline autoPlay muted loop>
 </video>
 
+If your game involves players using their phones as controllers while looking at a shared screen (e.g. Jackbox games), you can use Stream Mode to create such multiplayer experience. 
 
-Stream mode multiplayer is the ideal choice for IO games hosted on the web, where players join the game using a secondary device as a controller. In this scenario, it is essential to ensure that the game you are developing always designates a host who shares their screen, while other players actively participate and spectate the gameplay. This approach enhances the overall gaming experience by facilitating seamless interaction between the host and the players, creating an immersive and engaging environment for all participants
+Stream Mode is ideal for party games, team-building games, Twitch streamer style games, and more.
 
-import { Callout } from 'nextra-theme-docs'
- 
-<Callout emoji="👷🏼‍♀️">
-  This section is under development.
-</Callout>
+## Getting started
+
+The main difference here is that you need to differentiate between the **Stream** screen and the **Controller** screen and show the appropriate screen.
+
+When you pass `streamMode: true` to Playroom's `insertCoin`. Playroom automatically detects if it's running on a larger screen or a phone screen. If it's running on a larger screen, it will show the instructions to join the room. If it's running on a phone screen, it will let player pick their name and color.
 
 ## Steps
+import { Steps } from 'nextra-theme-docs'
 
-### Define stream mode
+<Steps>
 
-### Example code snippets
+### Do the multiplayer steps
+As described [here](/multiplayer#steps).
 
-### Screenshot
+### Show separate screens for Stream and Controller
+You can use the `isStreamScreen()` helper function to detect what screen you're on and show the appropriate screen.
+
+```js
+import { isStreamScreen } from 'playroomkit';
+...
+if (isStreamScreen()) {
+  // Show the Stream screen
+} else {
+  // Show the Controller screen
+}
+```
+
+### Insert Coin!
+When you call `insertCoin`, pass `streamMode: true` to it.
+
+```js
+import { insertCoin } from 'playroomkit';
+...
+await insertCoin({ streamMode: true });
+startGame();
+```
+
+</Steps>
