@@ -10,8 +10,77 @@ import Preview from '../../components/preview'
 
 <Preview src="/demos/threejs2.html" />
 
-### Code for the above example
+### Code
 
-```js copy
-// TODO
+Below are the interesting bits from the [full code](https://github.com/asadm/playroom-docs/blob/main/public/demos/threejs2.html) for the above example.
+
+```js {13-22, 32, 55, 61}
+async function init(event){
+  // Init Playroom, let players create their profiles.
+  await insertCoin(); 
+  // Create the touch joystick.
+  createJoystick();
+  // Create the scene, lights, sea, sky, etc.
+  createScene();
+  createLights();
+  createSea();
+  createSky();
+
+  // Create the plane(s) when the player joins.
+  onPlayerJoin((state) => {
+    const plane = createPlane(state.getProfile().color.hex);
+    players.push({ state, plane });
+
+    // Remove the plane when the player leaves.
+    state.onQuit(() => {
+      scene.remove(plane.mesh);
+      players = players.filter((p) => p.state != state);
+    });
+  });
+
+  // Start the game loop.
+  loop();
+}
+
+function createJoystick() {
+  // Create a joystick, listen for events, and pass the events to the Playroom.
+  const joystick = nipplejs.create();
+  joystick.on("plain", (e, data) => {
+    myPlayer().setState("dir", data.direction);
+  });
+  joystick.on("end", () => {
+    myPlayer().setState("dir", undefined);
+  });
+}
+
+function loop(){
+  if (isHost()) {
+    // Host screen: Update the plane positions based on the joystick input.
+    for (const player of players) {
+      const controls = player.state.getState("dir") || {};
+      const curPos = player.state.getState("pos") || { x: 0, y: 0 };
+      if (controls.x == "left") {
+        curPos.x = Math.max(-0.4, curPos.x - 0.01);
+      } else if (controls.x == "right") {
+        curPos.x = Math.min(0.4, curPos.x + 0.01);
+      }
+      if (controls.y == "up") {
+        curPos.y = Math.min(1, curPos.y + 0.01);
+      } else if (controls.y == "down") {
+        curPos.y = Math.max(-1, curPos.y - 0.01);
+      }
+      player.state.setState("pos", curPos);
+      updatePlane(player.plane, curPos);
+    }
+  } else {
+    // Non-host screen: Update the plane positions based on the states from the host.
+    for (const player of players) {
+      const pos = player.state.getState("pos");
+      if (pos) {
+        updatePlane(player.plane, pos);
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+}
 ```
