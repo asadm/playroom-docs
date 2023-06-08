@@ -40,7 +40,6 @@ window.app = app;
 // Joystick connection
 const joystick = nipplejs.create();
 joystick.on("move", (e, data) => {
-  // console.log(data.vector);
   myPlayer().setState("dir", data.vector);
 });
 joystick.on("end", () => {
@@ -49,7 +48,7 @@ joystick.on("end", () => {
 
 let players = [];
 function getObjectFromSpline(name){
-  return app._scene.children.find((child)=> child.name === name);//.rigidBody.addForce({ x: -0.10, y: 0.0, z: 0.0 }, true); setTimeout(()=> app._scene.children.find((child)=> child.name === "Ball1").rigidBody.resetForces(true), 100);
+  return app._scene.children.find((child)=> child.name === name);
 };
 
 onPlayerJoin((state) => {
@@ -61,34 +60,11 @@ const loop = new AnimationFrame(120, () => {
   if (isHost()){
     for (const player of players) {
       const controls = player.state.getState("dir") || {};
-      // player.ball.rigidBody.resetForces(true);
-      // console.log(controls);
       player.ball.rigidBody.setLinvel({ 
         x: controls?.x * 4.0 || 0.0,
         y:player.ball.rigidBody.linvel().y, 
         z: controls?.y * -4.0 || 0.0
       }, true);
-      // if (controls.x == "left") {
-      //   player.ball.rigidBody.resetForces(true);
-      //   player.ball.rigidBody.addForce({ x: -4.0, y: 0.0, z: 0.0 }, true);
-      //   setTimeout(()=> player.ball.rigidBody.resetForces(true), 10);
-      // }
-      // else if (controls.x == "right") {
-      //   player.ball.rigidBody.resetForces(true);
-      //   player.ball.rigidBody.addForce({ x: 4.0, y: 0.0, z: 0.0 }, true);
-      //   setTimeout(()=> player.ball.rigidBody.resetForces(true), 10);
-      // }
-
-      // if (controls.y == "up") {
-      //   player.ball.rigidBody.resetForces(true);
-      //   player.ball.rigidBody.addForce({ x: 0.0, y: 0.0, z: -4.0 }, true);
-      //   setTimeout(()=> player.ball.rigidBody.resetForces(true), 10);
-      // }
-      // else if (controls.y == "down") {
-      //   player.ball.rigidBody.resetForces(true);
-      //   player.ball.rigidBody.addForce({ x: 0.0, y: 0.0, z: 4.0 }, true);
-      //   setTimeout(()=> player.ball.rigidBody.resetForces(true), 10);
-      // }
       player.state.setState("pos", player.ball.rigidBody.translation());
     }
   }

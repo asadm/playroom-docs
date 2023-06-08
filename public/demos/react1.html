@@ -27,13 +27,6 @@
     const App = () => {
       const players = usePlayersList();
       const [currentEmoji, setCurrentEmoji] = useMultiplayerState("emoji", []);
-      // useEffect(()=>{
-      //   if (currentEmoji) {
-      //     setTimeout(()=>{
-      //       setCurrentEmoji(null);
-      //     }, 2000);
-      //   }
-      // }, [currentEmoji])
       
       return (
         <div className="App" style={{backgroundColor: myPlayer().getProfile().color.hexString}}>

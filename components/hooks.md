@@ -2,6 +2,14 @@
 ### useMultiplayerState(key: string, defaultValue: any)
 Use this hook to listen and update a value in the Playroom state. The value will be synced across all players.
 
+The return value is an array with two values:
+- `state`: `any`
+- `setState`: `(value: any, reliable?: boolean) => void`
+
+If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner. 
+
+If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
+
 ```js
 import { useMultiplayerState } from 'playroomkit'
 ...
