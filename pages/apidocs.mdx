@@ -17,7 +17,7 @@ await insertCoin();
 |--------------|---------|---------|-----------------------------------------------------------------------------|
 | `streamMode` | boolean | false   | If  `true` , Playroom will start in [ stream mode ]( /multiplayer/stream ). |
 
-## getState(key: string): any
+## `getState(key: string): any`
 
 Returns the current value of the given key in the game state.
 
@@ -25,7 +25,7 @@ Returns the current value of the given key in the game state.
 const winnerId = getState('winner');
 ```
 
-## setState(key: string, value: any, reliable: boolean = false): void
+## `setState(key: string, value: any, reliable: boolean = false): void`
 
 Sets the value of the given key in the game state. If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner. 
 
