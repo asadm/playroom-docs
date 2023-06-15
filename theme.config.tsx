@@ -3,6 +3,7 @@ import { useConfig } from 'nextra-theme-docs'
 import React from 'react'
 
 export default {
+  docsRepositoryBase: "https://github.com/asadm/playroom-docs/tree/main/",
   head: () => {
     const { asPath, defaultLocale, locale } = useRouter()
     const { frontMatter } = useConfig()
