@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "mixpanel-browser": "^2.47.0",
     "next": "^13.0.6",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
