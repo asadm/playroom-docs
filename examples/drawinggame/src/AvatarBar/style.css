@@ -1,0 +1,64 @@
+.player-avatar-bar {
+  display: flex;
+  margin-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.player-avatar-bar .player-avatar-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0rem 0.5rem;
+  border-radius: 2rem;
+  position: relative;
+}
+
+.player-avatar-bar .player-avatar-container > span {
+  color: #ffffff;
+  font-family: "Open Sans" sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 0rem 0.7rem;
+}
+
+.player-avatar-bar .player-avatar-container .guessed{
+  background-image: url("./tick.png");
+  background-size: 1.5rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  position: absolute;
+  right: -0.5rem;
+  top: 0rem;
+}
+
+.player-avatar-bar .player-avatar-container .drawing{
+  background-image: url("./drawing.png");
+  background-size: 1.5rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  position: absolute;
+  right: -0.5rem;
+  top: 0rem;
+}
+
+.player-avatar-bar .avatar-holder {
+  background-color: rgba(255, 255, 255, 0.8);
+  background-size: 23px;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  border: 0.15rem solid transparent;
+}
+
+.player-avatar-bar .avatar-holder.empty {
+  background-color: #000;
+}

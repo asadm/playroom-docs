@@ -1,0 +1,22 @@
+.drawing-area #canvas, .drawing-area #picture img{
+  width: 350px;
+  height: 280px;
+}
+
+.drawing-area #picture img{
+  background-color: #fff;
+}
+
+.drawing-area #canvas .drawing-board-canvas,
+.drawing-area #picture img{
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.drawing-area #canvas .drawing-board-canvas-wrapper{
+  border: 0px;
+}
+
+.drawing-area #canvas .drawing-board-controls{
+  position: relative;
+  z-index: 22;
+}
