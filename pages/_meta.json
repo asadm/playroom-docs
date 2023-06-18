@@ -1,5 +1,10 @@
 {
-  "index": "⛳️ | Introduction",
+  "index": {
+    "title": "⛳️ | Introduction",
+    "theme": {
+      "layout": "full"
+    }
+  },
   "multiplayer": "🕹️ | Making Multiplayer",
   "setup": "🧩 | Setup",
   "usage": "📙 | Usage",

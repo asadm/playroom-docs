@@ -14,6 +14,9 @@ export default {
  
     return (
       <>
+      <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
       <meta
             name="description"
             content={frontMatter.description || 'Build multiplayer games in minutes.'}
@@ -45,6 +48,9 @@ export default {
             name="twitter:image"
             content={baseUrl + (frontMatter.image || "/images/ogimage.png")}
           />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet"></link>
+          
       </>
     )
   },
