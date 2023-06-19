@@ -96,3 +96,34 @@ Use Playroom Kit to make web-based games. We officially support the following en
     href=""
   />
 </Cards>
+
+## What's the API like?
+
+Playroom Kit provides a simple API to set or get the state of the game room. The state is automatically synced between all players and screens.
+
+```js
+import { getState, setState } from 'playroomkit'
+
+// Set some game state, this will be synced to all players
+setState({ timeRemaining: 60 });
+// ...
+
+// One some other device: Get the time remaining
+const state = getState("timeRemaining");
+```
+
+Playroom also takes care of player and room management. You just need to call `insertCoin()` somewhere in your game to show the lobby UI.
+
+```js
+import { insertCoin } from 'playroomkit'
+
+// Show the lobby UI
+await insertCoin();
+
+// Handle players joining the game
+onPlayerJoin((player) => {
+  console.log(`${player.getProfile().name} joined the game`);
+});
+```
+
+See the [API Reference](/apidocs) for more details.
