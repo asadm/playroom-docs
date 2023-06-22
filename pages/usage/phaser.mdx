@@ -68,8 +68,8 @@ class Main extends Phaser.Scene {
           player.sprite.body.setVelocityY(-330);
         }
         player.state.setState("pos", {
-          x: player.sprite.x,
-          y: player.sprite.y,
+          x: player.sprite.body.x,
+          y: player.sprite.body.y,
         });
       }
     }
@@ -77,8 +77,8 @@ class Main extends Phaser.Scene {
       for (const player of this.players) {
         const pos = player.state.getState("pos");
         if (pos){
-          player.sprite.x = pos.x;
-          player.sprite.y = pos.y;
+          player.sprite.body.x = pos.x;
+          player.sprite.body.y = pos.y;
         }
       }
     }
