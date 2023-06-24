@@ -1,0 +1,147 @@
+* {
+    margin:0;
+    padding:0;
+    font-family:'Avenir Next', Avenir, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html, body {
+  width:100%;
+  height:100%;
+}
+
+html, body {
+    background: linear-gradient(#badbe4, #aaf7e1);
+}
+
+#world {
+  position: absolute;
+  width:100%;
+  height: 100%;
+  right:0;
+  overflow: hidden;
+}
+
+.panel {
+    position:absolute;
+    top:0;
+    left:0;
+    padding: 2em 3em;
+    width: 25%;
+    box-sizing: border-box;
+}
+
+.game-title {
+    z-index:100;
+    position:relative;
+    text-align:center;
+}
+
+.game-title .title {
+    font-family: 'Playfair Display', serif;
+    font-weight:700;
+    font-size:3em;
+}
+
+.game-title .byline {
+    font-family: 'Playfair Display', serif;
+    text-transform:uppercase;
+    color:#333;
+    letter-spacing:0.2em;
+    font-size:0.8em;
+    font-weight:600;
+    margin-top:0.5em;
+}
+
+a {
+    font-family: 'Playfair Display', serif;
+    letter-spacing:0.2em;
+    font-weight:600;
+    text-decoration: none;
+}
+
+table {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 2em;
+}
+
+td {
+    letter-spacing:0.1em;
+    font-size:0.7em;
+    text-transform:uppercase;
+    font-weight:400;
+}
+
+td:first-child {
+    width: 30%;
+    text-align: right;
+    padding-right: 0.5em;
+}
+
+td:nth-child(2) {
+    width: 70%;
+    text-align: left;
+    padding-left: 0.5em;
+}
+
+.stat {
+    margin-top: 2em;
+    text-align:center;
+}
+
+.stat p {
+    width:100%;
+    text-align:center;
+    font-family:'Playfair Display';
+    font-size:2em;
+}
+
+.stat label {
+    text-align:center;
+    text-transform:uppercase;
+    letter-spacing:0.25em;
+    font-size:0.8em;
+    width:100%;
+    float:left;
+}
+
+#variable-content {
+    margin-top:2em;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    font-size:1em;
+    font-weight:100;
+    text-align:center;
+    line-height:150%;
+}
+
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+@-o-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+@-moz-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+@-webkit-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+.animate-flicker {
+   -webkit-animation: flickerAnimation 1.5s infinite;
+   -moz-animation: flickerAnimation 1.5s infinite;
+   -o-animation: flickerAnimation 1.5s infinite;
+    animation: flickerAnimation 1.5s infinite;
+}
