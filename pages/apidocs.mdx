@@ -39,6 +39,8 @@ setState('winner', 'player1');
 
 Register a callback that will be called when a new player joins the room. The callback will be called with the player's [`PlayerState`](#playerstate) object.
 
+If a new player joins after the game has started, the callback is called with all existing [`PlayerState`](#playerstate) objects, exclusively for the new player.
+
 ```js
 onPlayerJoin((player) => {
   console.log(`${player.id} joined!`);
