@@ -10,13 +10,16 @@
 	* and contains the main game loop.
 	*
 	*/
+
+const { onPlayerJoin, isHost, myPlayer } = Playroom;
+
 function World() {
 
 	// Explicit binding of this even in changing contexts.
 	var self = this;
 
 	// Scoped variables in this world.
-	var element, scene, camera, character, renderer, light, objects, paused, keysAllowed, score, difficulty, treePresenceProb, maxTreeSize, fogDistance, gameOver;
+	var element, scene, camera, character, renderer, light, objects, paused, keysAllowed, score, difficulty, treePresenceProb, maxTreeSize, fogDistance, gameOver, players = [];
 
 	// Initialize the world.
 	init();
@@ -60,8 +63,13 @@ function World() {
 		scene.add(light);
 
 		// Initialize the character and add it to the scene.
-		character = new Character();
-		scene.add(character.element);
+		onPlayerJoin((state)=>{
+			const model = new Character(state.getProfile().color.hex);
+			scene.add(model.element);
+			players.push({ model, state });
+		})
+		// character = new Character();
+		// scene.add(character.element);
 
 		var ground = createBox(3000, 20, 120000, Colors.sand, 0, -400, -60000);
 		scene.add(ground);
@@ -93,7 +101,7 @@ function World() {
 					keysAllowed[key] = false;
 					if (paused && !collisionsDetected() && key > 18) {
 						paused = false;
-						character.onUnpause();
+						players.forEach(({ model })=>model.onUnpause());
 						document.getElementById(
 							"variable-content").style.visibility = "hidden";
 						document.getElementById(
@@ -101,7 +109,7 @@ function World() {
 					} else {
 						if (key == p) {
 							paused = true;
-							character.onPause();
+							players.forEach(({ model })=>model.onPause());
 							document.getElementById(
 								"variable-content").style.visibility = "visible";
 							document.getElementById(
@@ -109,13 +117,16 @@ function World() {
 								"Game is paused. Press any key to resume.";
 						}
 						if (key == up && !paused) {
-							character.onUpKeyPressed();
+							getMyModel().onUpKeyPressed();
+							// character.onUpKeyPressed();
 						}
 						if (key == left && !paused) {
-							character.onLeftKeyPressed();
+							getMyModel().onLeftKeyPressed();
+							// character.onLeftKeyPressed();
 						}
 						if (key == right && !paused) {
-							character.onRightKeyPressed();
+							getMyModel().onRightKeyPressed();
+							// character.onRightKeyPressed();
 						}
 					}
 				}
@@ -208,7 +219,8 @@ function World() {
 			});
 
 			// Make the character move according to the controls.
-			character.update();
+			players.forEach(({ model })=>model.update());
+			// character.update();
 
 			// Check for collisions between the character and objects.
 			if (collisionsDetected()) {
@@ -282,6 +294,11 @@ function World() {
 		requestAnimationFrame(loop);
 	}
 
+	function getMyModel(){
+		const myId = myPlayer().id;
+		return players.find(player => player.state.id === myId).model;
+	}
+
 	/**
 		* A method called when window is resized.
 		*/
@@ -319,6 +336,7 @@ function World() {
 	 * an object on the map.
 	 */
 	function collisionsDetected() {
+		return false;
 		var charMinX = character.element.position.x - 115;
 		var charMaxX = character.element.position.x + 115;
 		var charMinY = character.element.position.y - 310;

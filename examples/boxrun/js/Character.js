@@ -9,7 +9,7 @@
  * The player's character in the game.
  */
 class Character {
-	constructor() {
+	constructor(color) {
 
 		// Explicit binding of this even in changing contexts.
 		var self = this;
@@ -17,7 +17,7 @@ class Character {
 		// Character defaults that don't change throughout the game.
 		this.skinColor = Colors.brown;
 		this.hairColor = Colors.black;
-		this.shirtColor = Colors.yellow;
+		this.shirtColor = color// Colors.yellow;
 		this.shortsColor = Colors.olive;
 		this.jumpDuration = 0.6;
 		this.jumpHeight = 2000;

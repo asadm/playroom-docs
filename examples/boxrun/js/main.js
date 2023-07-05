@@ -1,4 +1,4 @@
-
+const { insertCoin } = Playroom;
 /**
  *
  * BOXY RUN
@@ -26,7 +26,8 @@ var Colors = {
 };
 
 // Make a new world when the page is loaded.
-window.addEventListener('load', function(){
+window.addEventListener('load', async function(){
+	await insertCoin();
 	new World();
 });
 
