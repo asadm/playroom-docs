@@ -22,9 +22,9 @@ function applyMaterial(mesh, primaryColor) {
     'pureWhite': new THREE.MeshBasicMaterial({ color: 0xfffffc }),
     'pureBlack': new THREE.MeshBasicMaterial({ color: 0x160000 }),
     'pureYellow': new THREE.MeshBasicMaterial({ color: 0xffe889 }),
-    'shadeWhite': new THREE.MeshMatcapMaterial({ color: 0xfffffc }),
-    'shadeBlack': new THREE.MeshMatcapMaterial({ color: 0x160000 }),
-    'shadeRed': new THREE.MeshMatcapMaterial({ color: primaryColor || 0xff2800 }),
+    'shadeWhite': new THREE.MeshLambertMaterial({ color: 0xfffffc }),
+    'shadeBlack': new THREE.MeshLambertMaterial({ color: 0x160000 }),
+    'shadeRed': new THREE.MeshLambertMaterial({ color: primaryColor || 0xff2800 }),
   }
 
   // Get material name by matching with startsWith

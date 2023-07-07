@@ -2,39 +2,37 @@ import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import Time from "./Utils/Time"
-import Controls from './controls';
+import Controls from "./controls";
 import Car from "./car";
 import * as dat from 'dat.gui'
 import loadCar from './carmodel';
 // import loadCar from './carmodel_basic';
-
-async function addCar(color){
-  
-}
 
 function setupGame(){
   // Scene
   const scene = new THREE.Scene()
 
   // // Add global light
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
-  scene.add(ambientLight);
+  const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+  scene.add( light );
 
   // Renderer
   const renderer = new THREE.WebGLRenderer({
       alpha: true
   })
-  renderer.setClearColor(0x414141, 1)
+  renderer.setClearColor(0xf6893d, 1)
   renderer.setPixelRatio(2)
   renderer.setSize(window.innerWidth, window.innerHeight)
   document.body.appendChild(renderer.domElement);
 
   // Camera
   const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 80);
-  const cameraCoords = new THREE.Vector3(16.3, 18.38, 20);
+  const cameraCoords = new THREE.Vector3(19.36, 9.36, 11.61);
   camera.position.copy(cameraCoords);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
-  camera.rotation.z = Math.PI;
+  camera.rotation.x = -0.7;
+  camera.rotation.y = 1;
+  camera.rotation.z = 2.37;
   window.camera = camera;
 
   // Placeholder box
@@ -50,15 +48,15 @@ function setupGame(){
     gravity: new CANNON.Vec3(0, -9.83, 0)
   });
 
-  // const debugFolder = debug.addFolder('other')
-  // debugFolder.open()
+  const debugFolder = debug.addFolder('other')
+  debugFolder.open()
   // debugFolder.add(camera.position, 'x', -20, 20, 0.01)
-
-  // WASD and Touch Controls
-  let controls = new Controls({
-    time: time,
-  });
-
+  // debugFolder.add(camera.position, 'y', -20, 20, 0.01)
+  // debugFolder.add(camera.position, 'z', -20, 20, 0.01)
+  // debugFolder.add(camera.rotation, 'x', -Math.PI, Math.PI, 0.01)
+  // debugFolder.add(camera.rotation, 'y', -Math.PI, Math.PI, 0.01)
+  // debugFolder.add(camera.rotation, 'z', -Math.PI, Math.PI, 0.01)
+  
   let playersAndCars = [];
   window.playersAndCars = playersAndCars;
 
@@ -66,13 +64,14 @@ function setupGame(){
     const color = player.getProfile().color.hex;
     const isMyPlayer = myPlayer().id === player.id;
     const {chassisObject, wheelObject} = await loadCar(color);
+    let controls = new Controls(player, isMyPlayer);
     const car = new Car({
       // debug: debug,
       time: time,
       chassisObject: chassisObject,
       wheelObject: wheelObject,
       physicsWorld: PhysicsWorld,
-      controls: isMyPlayer ? controls : null,
+      controls: controls
     });
     scene.add(car.container);
     playersAndCars.push({player, car});
