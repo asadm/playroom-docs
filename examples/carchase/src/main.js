@@ -48,6 +48,14 @@ function setupGame(){
     gravity: new CANNON.Vec3(0, -9.83, 0)
   });
 
+  // Floor
+  const floor = new CANNON.Body({
+    mass: 0,
+    shape: new CANNON.Plane(),
+  })
+
+  PhysicsWorld.addBody(floor)
+
   const debugFolder = debug.addFolder('other')
   debugFolder.open()
   // debugFolder.add(camera.position, 'x', -20, 20, 0.01)
@@ -56,7 +64,7 @@ function setupGame(){
   // debugFolder.add(camera.rotation, 'x', -Math.PI, Math.PI, 0.01)
   // debugFolder.add(camera.rotation, 'y', -Math.PI, Math.PI, 0.01)
   // debugFolder.add(camera.rotation, 'z', -Math.PI, Math.PI, 0.01)
-  
+
   let playersAndCars = [];
   window.playersAndCars = playersAndCars;
 

@@ -14,8 +14,6 @@ export default class Physics {
     this.world = _options.world;
     this.setWorld()
     this.setModels()
-    this.setMaterials()
-    this.setFloor()
     this.setCar()
   }
 
@@ -44,39 +42,6 @@ export default class Physics {
     if (this.debug) {
       this.debugFolder.add(this.models.container, 'visible').name('modelsVisible')
     }
-  }
-
-  setMaterials() {
-    this.materials = {}
-
-    // All materials
-    this.materials.items = {}
-    this.materials.items.floor = new CANNON.Material('floorMaterial')
-    this.materials.items.dummy = new CANNON.Material('dummyMaterial')
-    this.materials.items.wheel = new CANNON.Material('wheelMaterial')
-
-    // Contact between materials
-    this.materials.contacts = {}
-
-    this.materials.contacts.floorDummy = new CANNON.ContactMaterial(this.materials.items.floor, this.materials.items.dummy, { friction: 0.05, restitution: 0.3, contactEquationStiffness: 1000 })
-    this.world.addContactMaterial(this.materials.contacts.floorDummy)
-
-    this.materials.contacts.dummyDummy = new CANNON.ContactMaterial(this.materials.items.dummy, this.materials.items.dummy, { friction: 0.5, restitution: 0.3, contactEquationStiffness: 1000 })
-    this.world.addContactMaterial(this.materials.contacts.dummyDummy)
-
-    this.materials.contacts.floorWheel = new CANNON.ContactMaterial(this.materials.items.floor, this.materials.items.wheel, { friction: 0.3, restitution: 0, contactEquationStiffness: 1000 })
-    this.world.addContactMaterial(this.materials.contacts.floorWheel)
-  }
-
-  setFloor() {
-    this.floor = {}
-    this.floor.body = new CANNON.Body({
-      mass: 0,
-      shape: new CANNON.Plane(),
-      material: this.materials.items.floor
-    })
-
-    this.world.addBody(this.floor.body)
   }
 
   setCar() {
@@ -227,7 +192,7 @@ export default class Physics {
 
       for (const _wheelInfos of this.car.vehicle.wheelInfos) {
         const shape = new CANNON.Cylinder(_wheelInfos.radius, _wheelInfos.radius, this.car.wheels.options.height, 20)
-        const body = new CANNON.Body({ mass: this.car.options.wheelMass, material: this.materials.items.wheel })
+        const body = new CANNON.Body({ mass: this.car.options.wheelMass })
         const quaternion = new CANNON.Quaternion()
         quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2)
 
@@ -411,52 +376,7 @@ export default class Physics {
       if (Math.abs(this.car.steering) > this.car.options.controlsSteeringMax) {
         this.car.steering = Math.sign(this.car.steering) * this.car.options.controlsSteeringMax
       }
-      // if (this.controls?.touch) {
-      //   let deltaAngle = 0
-
-      //   if (this.controls?.touch.joystick.active) {
-      //     // Calculate delta between joystick and car angles
-      //     deltaAngle = (this.controls?.touch.joystick.angle.value - this.car.angle + Math.PI) % (Math.PI * 2) - Math.PI
-      //     deltaAngle = deltaAngle < - Math.PI ? deltaAngle + Math.PI * 2 : deltaAngle
-      //   }
-
-      //   // Update steering directly
-      //   const goingForward = Math.abs(this.car.forwardSpeed) < 0.01 ? true : this.car.goingForward
-      //   this.car.steering = deltaAngle * (goingForward ? - 1 : 1)
-
-      //   // Clamp steer
-      //   if (Math.abs(this.car.steering) > this.car.options.controlsSteeringMax) {
-      //     this.car.steering = Math.sign(this.car.steering) * this.car.options.controlsSteeringMax
-      //   }
-      // }
-
-      // if (!this.controls?.touch || !this.controls?.touch.joystick.active) {
-      //   const steerStrength = this.time.delta * this.car.options.controlsSteeringSpeed
-
-      //   // Steer right
-      //   if (this.controls?.actions.right) {
-      //     this.car.steering += steerStrength
-      //   }
-      //   // Steer left
-      //   else if (this.controls?.actions.left) {
-      //     this.car.steering -= steerStrength
-      //   }
-      //   // Steer center
-      //   else {
-      //     if (Math.abs(this.car.steering) > steerStrength) {
-      //       this.car.steering -= steerStrength * Math.sign(this.car.steering)
-      //     }
-      //     else {
-      //       this.car.steering = 0
-      //     }
-      //   }
-
-      //   // Clamp steer
-      //   if (Math.abs(this.car.steering) > this.car.options.controlsSteeringMax) {
-      //     this.car.steering = Math.sign(this.car.steering) * this.car.options.controlsSteeringMax
-      //   }
-      // }
-
+      
       // Update wheels
       this.car.vehicle.setSteeringValue(- this.car.steering, this.car.wheels.indexes.frontLeft)
       this.car.vehicle.setSteeringValue(- this.car.steering, this.car.wheels.indexes.frontRight)
