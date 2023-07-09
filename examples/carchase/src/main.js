@@ -35,20 +35,22 @@ function setupGame(){
   camera.rotation.z = 2.37;
   window.camera = camera;
 
-  // Placeholder box
-  var box = new THREE.Mesh(new THREE.BoxGeometry(1.02, 1.16, 2.03), new THREE.MeshMatcapMaterial({
-    color: 0xf0ff00
-  }));
-  scene.add(box);
-
   // Physics
   let time = new Time();
   const debug = new dat.GUI({ width: 420 })
   const PhysicsWorld = new CANNON.World({
     gravity: new CANNON.Vec3(0, -9.83, 0)
   });
-
+  
   // Floor
+  const planeGeometry = new THREE.PlaneGeometry(250, 250);
+  const planeMesh = new THREE.Mesh(
+      planeGeometry,
+      new THREE.MeshMatcapMaterial({ color: "white" })
+  );
+  // planeMesh.rotateX(-Math.PI / 2);
+  planeMesh.receiveShadow = true;
+  scene.add(planeMesh);
   const floor = new CANNON.Body({
     mass: 0,
     shape: new CANNON.Plane(),
@@ -89,22 +91,28 @@ function setupGame(){
     renderer.render(scene, camera);
     PhysicsWorld.step(1 / 60, delta, 3);
 
-    // on host, update all player pos
+    // On host, update all player pos
     if(isHost()){
       playersAndCars.forEach(({player, car})=>{
         player.setState('pos', car.pos());
+        player.setState('quaternion', car.quaternion());
       });
     }
-    // on client, update everyone's pos
+    // On client, update everyone's pos
     else{
       playersAndCars.forEach(({player, car})=>{
         const pos = player.getState('pos');
         if(pos){
+          console.log(player.id, pos);
           car.setPos(pos);
+        }
+        const quaternion = player.getState('quaternion');
+        if(quaternion){
+          car.setQuaternion(quaternion);
         }
       });
     }
-    // follow my car
+    // Follow my car
     const pos = myPlayer().getState('pos');
     if(pos){
       camera.position.copy(pos);

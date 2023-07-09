@@ -59,7 +59,14 @@ export default class {
   }
 
   quaternion() {
-    return (this.physics.car.chassis.body.quaternion)
+    const quaternion = this.physics.car.chassis.body.quaternion
+    // round to 3 decimal places
+    return {
+      x: Math.round(quaternion.x * 1000) / 1000,
+      y: Math.round(quaternion.y * 1000) / 1000,
+      z: Math.round(quaternion.z * 1000) / 1000,
+      w: Math.round(quaternion.w * 1000) / 1000
+    }
   }
 
   setQuaternion(quaternion) {
