@@ -17,6 +17,10 @@ export default class Physics {
     this.setCar()
   }
 
+  destroy(){
+    this.car.destroy()
+  }
+
   setWorld() {
     this.world.gravity.set(0, 0, - 3.25)
     this.world.allowSleep = true

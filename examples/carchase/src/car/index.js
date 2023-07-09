@@ -3,7 +3,7 @@ import Physics from './Physics.js'
 import Car from './Car.js'
 
 export default class {
-  constructor({ debug, time, physicsWorld, controls, chassisObject, wheelObject }) {
+  constructor({ initialPos, debug, time, physicsWorld, controls, chassisObject, wheelObject }) {
     // Options
     this.debug = debug
     this.time = time
@@ -22,22 +22,15 @@ export default class {
     this.container = new THREE.Object3D()
     this.container.matrixAutoUpdate = false
 
-    this.start()
-  }
-
-  start() {
     this.setPhysics()
     this.setCar()
-    setTimeout(() => {
-      this.initCar();
-    }, 100);
-
+    this.initCar(initialPos);
   }
 
-  initCar() {
+  initCar(pos) {
     // Car
     this.physics.car.chassis.body.sleep()
-    this.physics.car.chassis.body.position.set(0, 0, 12)
+    this.physics.car.chassis.body.position.set(pos.x, pos.y, pos.z)
 
     window.setTimeout(() => {
       this.physics.car.chassis.body.wakeUp()
@@ -91,5 +84,9 @@ export default class {
       wheelObject: this.wheelObject,
     })
     this.container.add(this.car.container)
+  }
+
+  destroy() {
+    this.physics.destroy();
   }
 }

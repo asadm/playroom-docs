@@ -76,6 +76,7 @@ function setupGame(){
     const {chassisObject, wheelObject} = await loadCar(color);
     let controls = new Controls(player, isMyPlayer);
     const car = new Car({
+      initialPos: new THREE.Vector3(Math.random() * 10, Math.random() * 10, 12),
       // debug: debug,
       time: time,
       chassisObject: chassisObject,
@@ -84,6 +85,10 @@ function setupGame(){
       controls: controls
     });
     scene.add(car.container);
+    player.onQuit(()=>{
+      scene.remove(car.container);
+      car.destroy();
+    });
     playersAndCars.push({player, car});
   });
 
