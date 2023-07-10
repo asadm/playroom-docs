@@ -1,4 +1,4 @@
-# Car Chase Threejs + Cannon Sample
+# Car On Roof – Threejs + Cannon Sample
 
 This is a sample project that uses Three.js, Cannon and PlayroomKit to create an isometric car game. The car physics and model are from [Bruno Simon's website](https://bruno-simon.com/).
 
@@ -6,11 +6,11 @@ This is a sample project that uses Three.js, Cannon and PlayroomKit to create an
 
 ## Demo
 
-You can see a demo of this project [here](#).
+You can see a demo of this project [here](https://carsonroof.joinplayroom.com).
 
 ## Getting Started
 
 To get started, clone this directory and run `npm install` to install the dependencies.
 Then run `npm run dev` to start the development server.
 
-<!-- ![Screenshot of the game](./screenshot.png) -->
+![Screenshot of the game](./screenshot.png)

@@ -6,6 +6,8 @@ export default function loadCar(primaryColor=0xff2800) {
     }));
 
   torus.rotation.x = Math.PI / 2;
+  torus.castShadow = true;
+  torus.receiveShadow = true;
   const wheelContainer = new THREE.Object3D();
   wheelContainer.add(torus);
 
@@ -14,6 +16,8 @@ export default function loadCar(primaryColor=0xff2800) {
   }));
   box.rotation.y = Math.PI / 2;
   box.position.z = 0.7
+  box.castShadow = true;
+  box.receiveShadow = true;
   const chassisContainer = new THREE.Object3D();
   chassisContainer.add(box);
 
