@@ -142,11 +142,7 @@ function setupGame() {
   // Main loop
   time.on('tick', (delta) => {
     renderer.render(scene, camera);
-
-    // On host device, update physics
-    if (isHost()) {
-      PhysicsWorld.step(1 / 60, delta, 3);
-    }
+    PhysicsWorld.step(1 / 60, delta, 3);
 
     // On host device, update all player and spheres pos
     if (isHost()) {
