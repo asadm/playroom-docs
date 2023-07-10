@@ -19,4 +19,4 @@ You can see a demo of this project [here](https://carsonroof.joinplayroom.com).
 To get started, clone this directory and run `npm install` to install the dependencies.
 Then run `npm run dev` to start the development server.
 
-![Screenshot of the game](./screenshot.png)
+![Screenshot of the game](./screenshot.jpg)
