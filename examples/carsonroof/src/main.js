@@ -23,7 +23,6 @@ function addSphere(pos = {x:0, y: 20, z: 0}, color = 0xF9F9F9, radius = 1, mass 
 }
 
 function setupGame(){
-
   // Init world
   const scene = new THREE.Scene()
   const ambientLight = new THREE.AmbientLight( 0xffffbb, 0.4 );
@@ -102,7 +101,7 @@ function setupGame(){
     playersAndCars.push({player, car});
   });
 
-  // Add spheres
+  // Add some spheres
   const spheres = [
     addSphere({x: 0, y: 0, z: 40}, 0xff0000, 1, 10),
     addSphere({x: 15, y: 10, z: 40}, 0x00ff00, 0.5, 5),
@@ -117,7 +116,11 @@ function setupGame(){
   // Main loop
   time.on('tick', (delta)=>{
     renderer.render(scene, camera);
-    PhysicsWorld.step(1 / 60, delta, 3);
+
+    // On host device, update physics
+    if (isHost()){
+      PhysicsWorld.step(1 / 60, delta, 3);
+    }
 
     // On host device, update all player and spheres pos
     if(isHost()){
@@ -132,6 +135,7 @@ function setupGame(){
       // set sphere pos to playroom
       setState('spherePos', spheres.map(({mesh})=>mesh.position));
     }
+
     // On client, get everyone's pos and update locally
     else{
       playersAndCars.forEach(({player, car})=>{
