@@ -52,6 +52,8 @@ function processModel(obj, primaryColor) {
 
     if (_child instanceof THREE.Mesh) {
       const mesh = applyMaterial(_child, primaryColor);
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
       container.add(mesh);
     }
 

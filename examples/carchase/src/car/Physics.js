@@ -130,16 +130,6 @@ export default class Physics {
       this.car.chassis.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 0, 1), - Math.PI * 0.5)
 
       /**
-       * Sound
-       */
-      this.car.chassis.body.addEventListener('collide', (_event) => {
-        if (_event.body.mass === 0) {
-          const relativeVelocity = _event.contact.getImpactVelocityAlongNormal()
-          // this.sounds.play('carHit', relativeVelocity)
-        }
-      })
-
-      /**
        * Vehicle
        */
       this.car.vehicle = new CANNON.RaycastVehicle({
