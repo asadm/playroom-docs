@@ -10,10 +10,10 @@
   "usage": "📙 | Usage",
   "tutorials": "📺 | Tutorials",
   "templates": "🍱 | Templates",
-  "apidocs":"🔖 | API Reference",
-    "ai":"🧙🏻‍♀️ | Upcoming: Playroom AI",
-     "components":"🎲 | Upcoming: Components",
-     "billing":"🧾 | Billing FAQs",
+  "apidocs": "🔖 | API Reference",
+  "ai": "🧙🏻‍♀️ | Upcoming: Playroom AI",
+  "components": "🎲 | Upcoming: Components",
+  "billing": "🧾 | Billing FAQs",
   "about": {
     "title": "About Playroom ↗",
     "type": "page",
@@ -24,6 +24,12 @@
     "title": "NPM ↗",
     "type": "page",
     "href": "https://www.npmjs.com/package/playroomkit",
+    "newWindow": true
+  },
+  "feedback": {
+    "title": "Feature Requests ↗",
+    "type": "page",
+    "href": "https://playroom.canny.io/feature-requests",
     "newWindow": true
   }
 }
