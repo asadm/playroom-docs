@@ -3,11 +3,14 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon';
 
 import Time from "./utils/Time"
-import Controls from "./controls";
+import Joystick from "./joystick";
 import Car from "./car";
 import shape2mesh from "./utils/shape2mesh";
 import createWorld from "./world";
 import loadCar from './carmodel';
+import mobileRevTriangle from './images/trianglerev.png'
+import mobileTriangle from './images/triangle.png'
+import mobileCross from './images/cross.png'
 // import loadCar from './carmodel_basic';
 // import * as dat from 'dat.gui'
 
@@ -99,7 +102,21 @@ function setupGame() {
     const color = player.getProfile().color.hex;
     const isMyPlayer = myPlayer().id === player.id;
     const { chassisObject, wheelObject } = await loadCar(color);
-    let controls = new Controls(player, isMyPlayer);
+    let controls = new Joystick(player, isMyPlayer, {
+      buttons: [
+        {id: "down", icon: mobileRevTriangle},
+        {id: "left", label: "STOP"},
+        {id: "up", icon: mobileTriangle},
+      ],
+      joystick: {
+        zones: {
+          up: {id: "up", label: "FWD"},
+          down: {id: "down", icon: mobileRevTriangle},
+          left: {id: "left", label: "L"},
+          right: {id: "right", label: "R"}
+        }
+      }
+    });
     const car = new Car({
       initialPos: new THREE.Vector3(Math.random() * 10, Math.random() * 10, 12),
       time: time,
