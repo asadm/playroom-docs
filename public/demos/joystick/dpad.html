@@ -1,0 +1,42 @@
+<head>
+  <style>
+    body{
+      background-color: purple;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #dump{
+      color: #fff;
+      font-size: 16px;
+      font-family: monospace;
+      white-space: pre;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script>
+    window._PLAYROOM_CONFIG = {skipProfile: true};
+  </script>
+  <code id="dump"></code>
+  <script type="module">
+    const { onPlayerJoin, insertCoin, Joystick } = Playroom;
+
+    function start(){
+      onPlayerJoin((state)=>{
+        const joystick = new Joystick(state, {type: "dpad"});
+        const dump = document.getElementById("dump");
+        setInterval(()=>{
+          dump.innerText = `// joystick.dpad()\n${JSON.stringify(joystick.dpad(), null, 2)}`;
+        }, 100);
+      });
+    }
+
+    insertCoin().then(start);
+  </script>
+</body>

@@ -3,7 +3,7 @@ import useWindowDimensions from './useWindowDimensions'
 import { useEffect, useRef, useState } from 'react'
 import styles from './preview.module.css'
 
-export default function Preview({src}) {
+export default function Preview({src, maxPlayers=4}) {
   const { width, height } = useWindowDimensions();
   const iframeRef = useRef(null);
   const [joinedIframes, setJoinedIframes] = useState(0);
@@ -40,7 +40,7 @@ export default function Preview({src}) {
             }} src={url}></iframe>
           </FakeBrowser>
         ))}
-      {joinedIframes<3 &&
+      {joinedIframes<maxPlayers &&
       <a className={styles.btnNew}
       // style={{transform: `scale(${scale})`, transformOrigin: "top left"}}
       onClick={()=>{

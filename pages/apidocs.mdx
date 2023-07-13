@@ -148,3 +148,83 @@ player.onQuit(() => {
 import Hooks from '../components/hooks.md'
 
 <Hooks />
+
+
+## Joystick Controller
+
+### `Joystick(state: PlayerState, options: JoystickOptions)`
+
+A component that renders a joystick controller. The joystick can be used to control the player's position in the game.
+
+```js
+import { Joystick, myPlayer } from 'playroomkit';
+
+new Joystick(myPlayer, {
+  type: "dpad"
+})
+```
+
+`JoystickOptions` is an object with the following properties:
+
+| option       | type    | default | explanation
+|--------------|---------|---------|-----------------------------------------------------------------------------|
+| `type`       | string  | `angle` | The type of output joystick generates. Can be `dpad` or `angular`.          |
+| `buttons`    | Array&lt;`ButtonOptions`&gt; | `[]` | An array of buttons to render on the joystick. See below for `ButtonOptions`. |
+| `zones`      | `ZoneOptions` | `null` | An object to define custom zones on the 4 sides of the joystick. See below for `ZoneOptions`. |
+
+`ButtonOptions` is an object with the following properties:
+
+| option       | type    | default | explanation
+|--------------|---------|---------|-----------------------------------------------------------------------------|
+| `id`         | string  | `null`  | The ID of the button. This is used to identify the button in the `isPressed` method. |
+| `label`      | string  | ""  | The button can have a text label.
+| `icon`       | string  | `null`  | The button can have an icon. This is a URL to an image.
+
+
+`ZoneOptions` let's you define zones on Joystick that are triggered when player drags Joystick in that zone. 
+This behaves same as buttons above, `isPressed` method can be used to detect if a zone button is active or not. 
+`ZoneOptions` is an object with the following properties:
+
+| option       | type    | default | explanation
+|--------------|---------|---------|-----------------------------------------------------------------------------|
+| `up`        | `ButtonOptions`  | `null`  | The zone on the top side of the joystick. |
+| `down`      | `ButtonOptions`  | `null`  | The zone on the bottom side of the joystick. |
+| `left`      | `ButtonOptions`  | `null`  | The zone on the left side of the joystick. |
+| `right`     | `ButtonOptions`  | `null`  | The zone on the right side of the joystick. |
+
+### `isPressed(id: string): boolean`
+
+Returns `true` if the button with the given ID is pressed.
+
+```js
+if (joystick.isPressed('jump')) {
+  // Jump!
+}
+```
+
+### `isJoystickPressed(): boolean`
+
+Returns `true` if the joystick is pressed.
+
+```js
+if (joystick.isJoystickPressed()) {
+  // Do something?
+}
+```
+
+### `angle(): float`
+
+Returns the angle of the joystick, in radians. 
+
+```js
+const angle = joystick.angle();
+```
+
+### `dpad(): { x: string, y: string }`
+
+Returns the direction of the joystick, as a string. The string can be one of the following:
+
+- `up`
+- `down`
+- `left`
+- `right`

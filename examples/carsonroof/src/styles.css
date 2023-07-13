@@ -5,7 +5,7 @@ html,
 body {
   height: 100%;
 	overflow: hidden;
-  background-color: #ff00ff;
+  background-color: #000000;
 }
 canvas {
   display: block;
