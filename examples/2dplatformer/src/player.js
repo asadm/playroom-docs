@@ -1,7 +1,6 @@
-var playerOptions = {
-  // player gravity
-  playerGravity: 900,
+import Phaser from "phaser";
 
+var playerOptions = {
   // player horizontal speed
   playerSpeed: 300,
 
@@ -20,28 +19,34 @@ var playerOptions = {
   playerAcceleration: 1500
 }
 export default class Player {
-  constructor(game, layerTiles, x, y, spriteID) {
-
-    this.game = game;
+  constructor(scene, layerTiles, x, y, playerColor, joystick) {
+    this.scene = scene;
     this.layer = layerTiles;
 
+    this.joystick = joystick;
+    this.jumpKeyIsDown = false;
+    this.jumpKeyDownAt = 0;
+
     // adding the hero sprite
-    this.hero = game.add.sprite(x, y, spriteID);
+    // this.hero = scene.physics.add.sprite(x, y, spriteID);
+    this.hero = scene.add.rectangle(x, y, 20, 20, playerColor);
+    
+    scene.physics.add.existing(this.hero);
+
+    // scene.physics.world.addCollider(this.hero, scene.layer);
+    scene.physics.add.collider(this.hero, scene.layer);
+    // scene.physics.add.collider(this.hero, scene.layer, null, null, this);
 
     // setting hero anchor point
-    this.hero.anchor.set(0.5);
+    this.hero.setOrigin(0.5);
 
-    // enabling ARCADE physics for the  hero
-    game.physics.enable(this.hero, Phaser.Physics.ARCADE);
-
-    // setting hero gravity
-    this.hero.body.gravity.y = playerOptions.playerGravity;
+    this.hero.body.setCollideWorldBounds(true);
 
     // Set player minimum and maximum movement speed
-    this.hero.body.maxVelocity.setTo(playerOptions.playerSpeed, playerOptions.playerSpeed * 10); // x, y
+    this.hero.body.setMaxVelocity(playerOptions.playerSpeed, playerOptions.playerSpeed * 10);
 
     // Add drag to the player that slows them down when they are not accelerating
-    this.hero.body.drag.setTo(playerOptions.playerDrag, 0); // x, y
+    this.hero.body.setDrag(playerOptions.playerDrag, 0);
 
     // the hero can jump
     this.canJump = true;
@@ -51,14 +56,6 @@ export default class Player {
 
     // the hero is not on the wall
     this.onWall = false;
-
-    // to detect player input
-    this.input = game.input;
-
-    // to detect input from gamepad
-    game.input.gamepad.start();
-    this.pad = game.input.gamepad.pad1;
-
   }
 
   handleJump() {
@@ -66,20 +63,18 @@ export default class Player {
     // canJump is true AND the hero is on the ground (blocked.down)
     // OR
     // the hero is on the wall
-    if ((this.canJump) || this.onWall) {
-
+    if (this.canJump || this.onWall) {
       // applying jump force
-      this.hero.body.velocity.y = -playerOptions.playerJump;
+      this.hero.body.setVelocityY(-playerOptions.playerJump);
 
       // is the hero on a wall and this isn't the first jump (jump from ground to wall)
       // if yes then push to opposite direction
       if (this.onWall && !this.isFirstJump) {
-
         // flip horizontally the hero
-        this.hero.scale.x *= -1;
+        this.hero.flipX = !this.hero.flipX;
 
         // change the horizontal velocity too. This way the hero will jump off the wall
-        this.hero.body.velocity.x = playerOptions.playerSpeed * this.hero.scale.x;
+        this.hero.body.setVelocityX(playerOptions.playerSpeed * (this.hero.flipX ? -1 : 1));
       }
 
       // hero is not on the wall anymore
@@ -87,69 +82,69 @@ export default class Player {
     }
   }
 
+  pos(){
+    return { x: this.hero.x, y: this.hero.y };
+  }
+
+  setPos(x, y) {
+    this.hero.x = x;
+    this.hero.y = y;
+  }
+
   update() {
+    // hero on the ground
+    if (this.hero.body.blocked.down) {
+      // hero can jump
+      this.canJump = true;
 
-    // handling collision between the hero and the tiles
-    this.game.physics.arcade.collide(this.hero, this.layer, function (hero, layer) {
+      // hero not on the wall
+      this.onWall = false;
+    }
 
-      // hero on the ground
-      if (hero.body.blocked.down) {
-        // hero can jump
-        this.canJump = true;
+    // hero NOT on the ground and touching a wall on the right
+    if (this.hero.body.blocked.right && !this.hero.body.blocked.down) {
+      // hero on a wall
+      this.onWall = true;
 
-        // hero not on the wall
-        this.onWall = false;
+      // drag on wall only if key pressed and going downwards.
+      if (this.rightInputIsActive() && this.hero.body.velocity.y > playerOptions.playerWallDragMaxVelocity) {
+        this.hero.body.setVelocityY(playerOptions.playerWallDragMaxVelocity);
       }
+    }
 
-      // hero NOT on the ground and touching a wall on the right
-      if (this.hero.body.blocked.right && !this.hero.body.blocked.down) {
+    if (this.hero.body.blocked.left && !this.hero.body.blocked.down) {
+      this.onWall = true;
 
-        // hero on a wall
-        this.onWall = true;
-
-        // drag on wall only if key pressed and going downwards.
-        if (this.rightInputIsActive() && this.hero.body.velocity.y > playerOptions.playerWallDragMaxVelocity) {
-          this.hero.body.velocity.y = playerOptions.playerWallDragMaxVelocity;
-        }
-
+      // drag on wall only if key pressed and going downwards.
+      if (this.leftInputIsActive() && this.hero.body.velocity.y > playerOptions.playerWallDragMaxVelocity) {
+        this.hero.body.setVelocityY(playerOptions.playerWallDragMaxVelocity);
       }
-
-      if (this.hero.body.blocked.left && !this.hero.body.blocked.down) {
-        this.onWall = true;
-
-        // drag on wall only if key pressed and going downwards.
-        if (this.leftInputIsActive() && this.hero.body.velocity.y > playerOptions.playerWallDragMaxVelocity) {
-          this.hero.body.velocity.y = playerOptions.playerWallDragMaxVelocity;
-        }
-
-      }
-    }, null, this);
+    }
 
     if (this.hero.body.blocked.down || this.onWall) {
       // set total jumps allowed
       this.jumps = playerOptions.playerMaxJumps;
       this.jumping = false;
-    }
-    else if (!this.jumping) {
+    } else if (!this.jumping) {
       this.jumps = 0;
     }
 
     if (this.leftInputIsActive()) {
       // If the LEFT key is down, set the player velocity to move left
-      this.hero.body.acceleration.x = -playerOptions.playerAcceleration;
-      this.hero.scale.x = -1;
+      this.hero.body.setAccelerationX(-playerOptions.playerAcceleration);
+      this.hero.flipX = true;
     } else if (this.rightInputIsActive()) {
       // If the RIGHT key is down, set the player velocity to move right
-      this.hero.body.acceleration.x = playerOptions.playerAcceleration;
-      this.hero.scale.x = 1;
+      this.hero.body.setAccelerationX(playerOptions.playerAcceleration);
+      this.hero.flipX = false;
     } else {
-      this.hero.body.acceleration.x = 0;
+      this.hero.body.setAccelerationX(0);
     }
 
     if ((this.onWall || this.jumps > 0) && this.spaceInputIsActive(150)) {
       if (this.hero.body.blocked.down)
         this.isFirstJump = true;
-      this.handleJump()
+      this.handleJump();
       this.jumping = true;
     }
 
@@ -164,24 +159,26 @@ export default class Player {
   }
 
   spaceInputIsActive(duration) {
-    return this.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, duration)
-      || this.pad.justPressed(Phaser.Gamepad.XBOX360_A, duration)
+    if (!this.jumpKeyIsDown && this.joystick.isPressed("jump")) {
+      this.jumpKeyIsDown = true;
+      this.jumpKeyDownAt = Date.now();
+    }
+    return this.jumpKeyIsDown && ((Date.now() - this.jumpKeyDownAt) < duration);
   }
 
   spaceInputReleased() {
-    return this.input.keyboard.upDuration(Phaser.Keyboard.SPACEBAR)
-      || this.pad.justReleased(Phaser.Gamepad.XBOX360_A)
+    if (!this.joystick.isPressed("jump")) {
+      this.jumpKeyIsDown = false;
+      return true;
+    }
+    return false;
   }
 
   rightInputIsActive() {
-    return this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)
-      || this.pad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT)
-      || this.pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1
+    return this.joystick.dpad().x === "right";
   }
 
-  leftInputIsActive(duration) {
-    return this.input.keyboard.isDown(Phaser.Keyboard.LEFT)
-      || this.pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT)
-      || this.pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1
+  leftInputIsActive() {
+    return this.joystick.dpad().x === "left";
   }
 }

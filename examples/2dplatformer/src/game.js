@@ -1,57 +1,103 @@
-import Player from './player';
+import Phaser from "phaser";
+import Player from "./player";
+import { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick } from "playroomkit";
 
-var game;
+class PlayGame extends Phaser.Scene {
+  constructor() {
+    super("PlayGame");
+  }
+
+  preload() {
+    this.load.image("tile", "/tile.png");
+    this.load.image("hero", "/hero.png");
+    this.load.tilemapTiledJSON("level", "/level.json");
+  }
+
+  create() {
+    // setting background color
+    this.cameras.main.setBackgroundColor(gameOptions.bgColor);
+
+    // creatin of "level" tilemap
+    this.map = this.make.tilemap({ key: "level", tileWidth: 64, tileHeight: 64 });
+
+    // adding tiles (actually one tile) to tilemap
+    this.tileset = this.map.addTilesetImage("tileset01", "tile");
+
+    // which layer should we render? That's right, "layer01"
+    this.layer = this.map.createLayer("layer01", this.tileset, 0, 0);
+
+    this.layer.setCollisionBetween(0, 1, true);
+
+    // loading level tilemap
+    this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+
+    // players and their controllers
+    this.players = [];
+
+    onPlayerJoin(async (player) => {
+      const joystick = new Joystick(player, {
+        type: "dpad",
+        buttons: [
+          { id: "jump", label: "JUMP" }
+        ]
+      });
+      const hero = new Player(
+        this, 
+        this.layer, 
+        this.cameras.main.width / 2 + (this.players.length * 20), 
+        440, 
+        player.getProfile().color.hex, 
+        joystick);
+       
+      this.players.push({ player, hero, joystick });
+    });
+  }
+
+  update() {
+    this.players.forEach(({ player, hero }) => {
+      if (isHost()){
+        hero.update();
+        player.setState('pos', hero.pos());
+      }
+      else{
+        const pos = player.getState('pos');
+        if (pos){
+          hero.setPos(pos.x, pos.y);
+        }
+      }
+    });
+  }
+}
+
 var gameOptions = {
-    // width of the game, in pixels
-    gameWidth: 640,
-    // height of the game, in pixels
-    gameHeight: 480,
-    // background color
-    bgColor: 0x444444
-}
-window.onload = function () {
-    game = new Phaser.Game(gameOptions.gameWidth, gameOptions.gameHeight);
-    game.state.add("PlayGame", playGame);
-    game.state.start("PlayGame");
+  // width of the game, in pixels
+  gameWidth: 640,
+  // height of the game, in pixels
+  gameHeight: 480,
+  // background color
+  bgColor: 0x444444
 }
 
-
-var playGame = function (game) { }
-playGame.prototype = {
-    preload: function () {
-        game.stage.backgroundColor = gameOptions.bgColor;
-        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        game.scale.pageAlignHorizontally = true;
-        game.scale.pageAlignVertically = true;
-        game.stage.disableVisibilityChange = true;
-
-        // loading level tilemap
-        game.load.tilemap("level", '/level.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image("tile", "/tile.png");
-        game.load.image("hero", "/hero.png");
-    },
-    create: function () {
-
-        // starting ARCADE physics
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        // creatin of "level" tilemap
-        this.map = game.add.tilemap("level");
-
-        // adding tiles (actually one tile) to tilemap
-        this.map.addTilesetImage("tileset01", "tile");
-
-        // tile 1 (the black tile) has the collision enabled
-        this.map.setCollision(1);
-
-        // which layer should we render? That's right, "layer01"
-        this.layer = this.map.createLayer("layer01");
-
-
-        this.hero = new Player(game, this.layer, game.width / 2, 440, "hero")
-    },
-    update: function () {
-        this.hero.update()
+// Phaser 3 game configuration
+const config = {
+  type: Phaser.AUTO,
+  width: gameOptions.gameWidth,
+  height: gameOptions.gameHeight,
+  scene: [PlayGame],
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 900 },
+      debug: false
     }
+  },
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  }
+};
 
-}
+insertCoin().then(() => {
+  // creating a new Phaser 3 game instance
+  const game = new Phaser.Game(config);
+});
