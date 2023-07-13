@@ -1,0 +1,53 @@
+<head>
+  <style>
+    body{
+      background-color: rgb(241, 43, 76);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #dump{
+      color: #fff;
+      font-size: 16px;
+      font-family: monospace;
+      white-space: pre;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script>
+    window._PLAYROOM_CONFIG = {skipProfile: true};
+  </script>
+  <code id="dump"></code>
+  <script type="module">
+    const { onPlayerJoin, insertCoin, Joystick } = Playroom;
+
+    function start(){
+      onPlayerJoin((state)=>{
+        const joystick = new Joystick(state, {
+          zones: {
+            up: {id: "hop", label: "HOP"},
+          },
+          buttons: [
+            {id: "slide", label: "Slide"}
+          ]
+        });
+        const dump = document.getElementById("dump");
+        setInterval(()=>{
+          dump.innerText = "";
+          dump.innerText += `// joystick.angle()\n${JSON.stringify(joystick.angle(), null, 2)}\n\n`;
+          dump.innerText += `// joystick.isJoystickPressed()\n${JSON.stringify(joystick.isJoystickPressed(), null, 2)}\n\n`;
+          dump.innerText += `// joystick.isPressed('hop')\n${JSON.stringify(joystick.isPressed('hop'), null, 2)}\n\n`;
+          dump.innerText += `// joystick.isPressed('slide')\n${JSON.stringify(joystick.isPressed('slide'), null, 2)}\n\n`;
+        }, 100);
+      });
+    }
+
+    insertCoin().then(start);
+  </script>
+</body>

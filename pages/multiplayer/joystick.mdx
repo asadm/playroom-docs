@@ -1,0 +1,64 @@
+import Preview from '../../components/preview'
+
+# Customizable On-screen Joystick
+<video src="/images/4.mp4" style={{width: "100%", marginTop: '20px;'}} playsInline autoPlay muted loop>
+</video>
+
+Playroom includes a customizable on-screen joystick controller that can be used by players as input.
+It also supports additional buttons that can be used for actions such as jumping, shooting, etc.
+
+Here is a usage example, check out the **[API Docs](/apidocs#joystick-controller)** for more details:
+
+```js
+
+import { insertCoin, myPlayer, onPlayerJoin, Joystick } from 'playroomkit';
+
+// Start the game
+await insertCoin();
+
+let players = [];
+// Create a joystick controller for each joining player
+onPlayerJoin((state)=>{
+  // Joystick will only create UI for current player (myPlayer)
+  // For others, it will only sync their state
+  const joystick = new Joystick(state, {
+    type: "dpad",
+    buttons: [
+      {id: "jump", label: "Jump"}
+    ]
+  });
+  players.push({state, joystick});
+})
+
+// In your game loop
+players.forEach(({state, joystick})=>{
+  // Update player position based on joystick state
+  const dpad = joystick.dpad();
+  if (dpad.x === "left"){
+    // move player left
+  }
+  else if (dpad.x === "right"){
+    // move player right
+  }
+
+  // Check if jump button is pressed
+  if (joystick.isPressed("jump")){
+    // jump
+  }
+});
+
+```
+
+Here are a few examples of the joystick UI:
+
+### D-Pad
+
+<Preview src="/demos/joystick/dpad.html" maxPlayers={0} />
+
+### Angular with Buttons
+
+<Preview src="/demos/joystick/angular.html" maxPlayers={0} />
+
+### Angular with Button and Zone
+
+<Preview src="/demos/joystick/zones.html" maxPlayers={0} />

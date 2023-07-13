@@ -1,14 +1,14 @@
-import { onPlayerJoin, insertCoin, isHost, myPlayer, setState, getState } from "playroomkit";
+import { onPlayerJoin, insertCoin, isHost, myPlayer, setState, getState, Joystick } from "playroomkit";
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 
 import Time from "./utils/Time"
-import Controls from "./controls";
 import Car from "./car";
 import shape2mesh from "./utils/shape2mesh";
 import createWorld from "./world";
 import loadCar from './carmodel';
 // import loadCar from './carmodel_basic';
+import mobileRevTriangle from './images/trianglerev.png'
 // import * as dat from 'dat.gui'
 
 function addSphere(pos = { x: 0, y: 20, z: 0 }, color = 0xF9F9F9, radius = 1, mass = 1) {
@@ -97,9 +97,12 @@ function setupGame() {
   let playersAndCars = [];
   onPlayerJoin(async (player) => {
     const color = player.getProfile().color.hex;
-    const isMyPlayer = myPlayer().id === player.id;
     const { chassisObject, wheelObject } = await loadCar(color);
-    let controls = new Controls(player, isMyPlayer);
+    let controls = new Joystick(player, {
+      buttons: [
+        {id: "down", icon: mobileRevTriangle}
+      ],
+    });
     const car = new Car({
       initialPos: new THREE.Vector3(Math.random() * 10, Math.random() * 10, 12),
       time: time,

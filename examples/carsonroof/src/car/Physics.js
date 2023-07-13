@@ -318,7 +318,7 @@ export default class Physics {
       }
 
       // Slow down back
-      if (!this.controls.up() && !this.controls.down()) {
+      if (!this.controls.isJoystickPressed() && !this.controls.isPressed('down')) {
         let slowDownForce = this.car.worldForward.clone()
 
         if (this.car.goingForward) {
@@ -383,12 +383,12 @@ export default class Physics {
       /**
        * Accelerate
        */
-      const accelerationSpeed = this.controls.boost() ? this.car.options.controlsAcceleratingSpeedBoost : this.car.options.controlsAcceleratingSpeed
+      const accelerationSpeed = this.controls.isPressed('boost') ? this.car.options.controlsAcceleratingSpeedBoost : this.car.options.controlsAcceleratingSpeed
       const accelerateStrength = this.time.delta * accelerationSpeed
-      const controlsAcceleratinMaxSpeed = this.controls.boost() ? this.car.options.controlsAcceleratinMaxSpeedBoost : this.car.options.controlsAcceleratinMaxSpeed
+      const controlsAcceleratinMaxSpeed = this.controls.isPressed('boost') ? this.car.options.controlsAcceleratinMaxSpeedBoost : this.car.options.controlsAcceleratinMaxSpeed
 
       // Accelerate up
-      if (this.controls.up()) {
+      if (this.controls.isJoystickPressed() && !this.controls.isPressed('down')) {
         if (this.car.speed < controlsAcceleratinMaxSpeed || !this.car.goingForward) {
           this.car.accelerating = accelerateStrength
         }
@@ -398,7 +398,7 @@ export default class Physics {
       }
 
       // Accelerate Down
-      else if (this.controls.down()) {
+      else if (this.controls.isPressed('down')) {
         if (this.car.speed < controlsAcceleratinMaxSpeed || this.car.goingForward) {
           this.car.accelerating = - accelerateStrength
         }
@@ -421,7 +421,7 @@ export default class Physics {
       /**
        * Brake
        */
-      if (this.controls.brake()) {
+      if (this.controls.isPressed('brake')) {
         this.car.vehicle.setBrake(this.car.options.controlsBrakeStrength, 0)
         this.car.vehicle.setBrake(this.car.options.controlsBrakeStrength, 1)
         this.car.vehicle.setBrake(this.car.options.controlsBrakeStrength, 2)
