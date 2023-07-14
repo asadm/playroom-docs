@@ -6,7 +6,12 @@ This is an attempt to make the perfect platformer game mechanics as seen on game
 
 ## What's Included
 
-- Fully customizable player movement and wall climbing/jumping physics
+- Fully customizable player movement and wall climbing/jumping physics. This implementation includes:
+  - Player acceleration/deceleration on movement
+  - Variable jump height based on how long the jump button is pressed
+  - Option to enable double jump
+  - Wall jump and wall to wall jumping
+  - Wall sliding when holding the joystick towards the wall
 - 2D sample tile map to demonstrate the mechanics
 - Sync players using [PlayroomKit](https://docs.joinplayroom.com)
 - Uses PlayroomKit's [Joystick](https://docs.joinplayroom.com/multiplayer/joystick) component for touch controls
