@@ -7,7 +7,7 @@ This is a sample project that uses Three.js, Cannon and PlayroomKit to create an
 ## What's Included
 
 - A basic car model with car physics
-- A touch joystick using [nipplejs](https://yoannmoi.net/nipplejs/)
+- Uses PlayroomKit's [Joystick](https://docs.joinplayroom.com/multiplayer/joystick) component for touch controls
 - A simple isometric scene with a few spheres on the ground
 - Very basic networked physics using [PlayroomKit](https://docs.joinplayroom.com)
 ## Demo

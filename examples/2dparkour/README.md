@@ -1,15 +1,23 @@
-# **P**haserJS Arcade Controls 
+# 2D Parkour – PhaserJS Platformer Sample 
 
-This is my attempt to make the perfect game mechanics. Essentially a combination of learnings from [Game Mechanic Explorer](https://gamemechanicexplorer.com/#platformer-1) and [this](http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/) wonderful "wall jump" method by Emanuele Feronato. With some tweaks by myself.
+This sample project uses Phaser3 and Arcade Physics to create a 2D platformer with parkour mechanics.
 
-### Live Demo
+This is an attempt to make the perfect platformer game mechanics as seen on games like Super Meat Boy. Essentially a combination of learnings from [Game Mechanic Explorer](https://gamemechanicexplorer.com/#platformer-1) and [this](http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/) wonderful "wall jump" method by Emanuele Feronato.
 
-https://asadmemon.com/phaserjs-arcade-controls/
+## What's Included
 
-Controls: Arrow keys to move and space for jump.
+- Fully customizable player movement and wall climbing/jumping physics
+- 2D sample tile map to demonstrate the mechanics
+- Sync players using [PlayroomKit](https://docs.joinplayroom.com)
+- Uses PlayroomKit's [Joystick](https://docs.joinplayroom.com/multiplayer/joystick) component for touch controls
 
-### Features
-- Walking with acceleration/de-acceleration.
-- Variable jumping (pressing key for higher time results in higher jump)
-- Wall jump/climbing.
-- Wall sliding down (by holding key against the wall when coming down)
+### Demo
+
+You can see a demo of this project [here](https://2dparkour.joinplayroom.com).
+
+## Getting Started
+
+To get started, clone this directory and run `npm install` to install the dependencies.
+Then run `npm run dev` to start the development server.
+
+![Screenshot of the game](./screenshot.jpg)
