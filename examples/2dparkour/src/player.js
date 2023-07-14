@@ -1,5 +1,3 @@
-import Phaser from "phaser";
-
 var playerOptions = {
   // player horizontal speed
   playerSpeed: 300,
@@ -27,9 +25,14 @@ export default class Player {
     this.jumpKeyIsDown = false;
     this.jumpKeyDownAt = 0;
 
-    // adding the hero sprite
-    // this.hero = scene.physics.add.sprite(x, y, spriteID);
-    this.hero = scene.add.rectangle(x, y, 20, 20, playerColor);
+    // adding the hero sprite and replace it's color with playerColor
+    this.hero = scene.physics.add.sprite(x, y, "hero");
+    scene.plugins.get('rexColorReplacePipeline').add(this.hero, {
+      originalColor: 0x2B2FDA,
+      newColor: playerColor,
+      epsilon: 0.4
+    });
+    // this.hero = scene.add.rectangle(x, y, 20, 20, playerColor);
     
     scene.physics.add.existing(this.hero);
 

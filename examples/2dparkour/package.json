@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "phaser": "^3.60.0",
+    "phaser3-rex-plugins": "^1.60.3",
     "playroomkit": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

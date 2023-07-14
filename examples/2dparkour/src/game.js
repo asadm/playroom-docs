@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Player from "./player";
 import { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick } from "playroomkit";
+import ColorReplacePipelinePlugin from 'phaser3-rex-plugins/plugins/colorreplacepipeline-plugin.js';
 
 class PlayGame extends Phaser.Scene {
   constructor() {
@@ -42,13 +43,13 @@ class PlayGame extends Phaser.Scene {
         ]
       });
       const hero = new Player(
-        this, 
-        this.layer, 
-        this.cameras.main.width / 2 + (this.players.length * 20), 
-        440, 
-        player.getProfile().color.hex, 
+        this,
+        this.layer,
+        this.cameras.main.width / 2 + (this.players.length * 20),
+        440,
+        player.getProfile().color.hex,
         joystick);
-       
+
       this.players.push({ player, hero, joystick });
       player.onQuit(() => {
         this.players = this.players.filter(({ player: _player }) => _player !== player);
@@ -59,13 +60,13 @@ class PlayGame extends Phaser.Scene {
 
   update() {
     this.players.forEach(({ player, hero }) => {
-      if (isHost()){
+      if (isHost()) {
         hero.update();
         player.setState('pos', hero.pos());
       }
-      else{
+      else {
         const pos = player.getState('pos');
-        if (pos){
+        if (pos) {
           hero.setPos(pos.x, pos.y);
         }
       }
@@ -79,7 +80,7 @@ var gameOptions = {
   // height of the game, in pixels
   gameHeight: 15 * 32,
   // background color
-  bgColor: 0x444444
+  bgColor: 0xF7DEB5
 }
 
 // Phaser 3 game configuration
@@ -99,6 +100,14 @@ const config = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  plugins: {
+    global: [{
+      key: 'rexColorReplacePipeline',
+      plugin: ColorReplacePipelinePlugin,
+      start: true
+    },
+    ]
   }
 };
 
