@@ -76,9 +76,9 @@ class PlayGame extends Phaser.Scene {
 
 var gameOptions = {
   // width of the game, in pixels
-  gameWidth: 9 * 32,
+  gameWidth: 14 * 32,
   // height of the game, in pixels
-  gameHeight: 15 * 32,
+  gameHeight: 23 * 32,
   // background color
   bgColor: 0xF7DEB5
 }
