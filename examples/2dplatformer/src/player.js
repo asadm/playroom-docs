@@ -91,6 +91,14 @@ export default class Player {
     this.hero.body.y = y;
   }
 
+  body(){
+    return this.hero.body;
+  }
+
+  destroy(){
+    this.hero.destroy();
+  }
+
   update() {
     // hero on the ground
     if (this.hero.body.blocked.down) {

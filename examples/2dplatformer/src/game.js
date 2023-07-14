@@ -50,6 +50,10 @@ class PlayGame extends Phaser.Scene {
         joystick);
        
       this.players.push({ player, hero, joystick });
+      player.onQuit(() => {
+        this.players = this.players.filter(({ player: _player }) => _player !== player);
+        hero.destroy();
+      });
     });
   }
 
@@ -101,14 +105,4 @@ const config = {
 insertCoin().then(() => {
   // creating a new Phaser 3 game instance
   const game = new Phaser.Game(config);
-  window.game = game;
-  // scaleCanvasToFit();
-  // window.addEventListener("resize", scaleCanvasToFit);
 });
-
-// function scaleCanvasToFit(){
-//   // scale canvas container to fit window
-//   const container = document.getElementById("container");
-//   const scale = Math.min(window.innerWidth / gameOptions.gameWidth, (window.innerHeight - 100) / gameOptions.gameHeight);
-//   container.style.transform = `scale(${scale})`;
-// }
