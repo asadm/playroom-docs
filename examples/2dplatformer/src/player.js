@@ -83,12 +83,12 @@ export default class Player {
   }
 
   pos(){
-    return { x: this.hero.x, y: this.hero.y };
+    return { x: this.hero.body.x, y: this.hero.body.y };
   }
 
   setPos(x, y) {
-    this.hero.x = x;
-    this.hero.y = y;
+    this.hero.body.x = x;
+    this.hero.body.y = y;
   }
 
   update() {

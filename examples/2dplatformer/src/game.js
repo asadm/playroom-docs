@@ -71,9 +71,9 @@ class PlayGame extends Phaser.Scene {
 
 var gameOptions = {
   // width of the game, in pixels
-  gameWidth: 640,
+  gameWidth: 9 * 32,
   // height of the game, in pixels
-  gameHeight: 480,
+  gameHeight: 15 * 32,
   // background color
   bgColor: 0x444444
 }
@@ -83,6 +83,7 @@ const config = {
   type: Phaser.AUTO,
   width: gameOptions.gameWidth,
   height: gameOptions.gameHeight,
+  parent: "container",
   scene: [PlayGame],
   physics: {
     default: "arcade",
@@ -100,4 +101,14 @@ const config = {
 insertCoin().then(() => {
   // creating a new Phaser 3 game instance
   const game = new Phaser.Game(config);
+  window.game = game;
+  // scaleCanvasToFit();
+  // window.addEventListener("resize", scaleCanvasToFit);
 });
+
+// function scaleCanvasToFit(){
+//   // scale canvas container to fit window
+//   const container = document.getElementById("container");
+//   const scale = Math.min(window.innerWidth / gameOptions.gameWidth, (window.innerHeight - 100) / gameOptions.gameHeight);
+//   container.style.transform = `scale(${scale})`;
+// }
