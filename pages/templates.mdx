@@ -1,3 +1,4 @@
+
 # Templates and Starter Kits
 import { Callout } from 'nextra-theme-docs'
 import imgPictionary from "../examples/drawinggame/screenshot.png"
@@ -6,8 +7,35 @@ import imgPictionary from "../examples/drawinggame/screenshot.png"
   This section is under development. We are adding more templates here.
 </Callout>
 
+import { Card, Cards } from 'nextra-theme-docs'
+
+<Cards>
+  <Card
+    style={{padding:"0px"}}
+    title={<div><img src="/images/templates/pictionary.png" style={{}}></img></div>}
+    href=""
+  />
+    <Card
+    style={{padding:"0px"}}
+    title={<div><img src="/images/templates/parkour.png" style={{}}></img></div>}
+    href=""
+  />
+    <Card
+    style={{padding:"0px"}}
+    title={<div><img src="/images/templates/cars.png" style={{}}></img></div>}
+    href=""
+  />
+
+
+
+
+</Cards>
+
+
+
 ## Pictionary Drawing Game
 **[Code](https://github.com/asadm/playroom-docs/tree/main/examples/drawinggame)** | **[Demo](https://draw.joinplayroom.com/)**
+
 
 Pictionary is a game where one player is given a word and he/she has to draw it so that other players can guess it. It is a fun game to play with friends and family. This game is built using React, drawingboard.js, and Playroom Kit.
 
