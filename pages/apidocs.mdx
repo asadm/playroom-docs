@@ -16,6 +16,7 @@ await insertCoin();
 | option       | type    | default | explanation                                                                 |
 |--------------|---------|---------|-----------------------------------------------------------------------------|
 | `streamMode` | boolean | false   | If  `true` , Playroom will start in [ stream mode ]( /multiplayer/stream ). |
+| `allowGamepads` | boolean | false   | If  `true` , Playroom will let players play game using gamepads connected to the stream device itself. This requires `streamMode` to also be `true`.<br/><br/>The gamepads need to be connected to device where stream screen is running. No phones are required in this mode but are optionally allowed as an alternative controller if there aren't enough physical gamepads in the room. Players who join via phone in this mode see an on-screen [Joystick](/multiplayer/joystick). |
 | `baseUrl`    | string  | *Current Page URL*      | The base URL used for generating room link that host shares with other players. |
 
 ## `getState(key: string): any`

@@ -1,0 +1,16 @@
+## Version Changes
+
+An overview of what's new in each version of `playroomkit`?
+
+| Version   | Changes                                                                                                                              |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `v0.0.29` | - Added `allowGamepads` flag to `insertCoin` method to allow players to use gamepads to control the game when `streamMode` is also enabled. |                            |
+| `v0.0.28` | - Fixed a minor bug in `Joystick` API and added zones to `Joystick` API to allow customizing the button-like triggers that fire on joystick's direction movement. |
+| `v0.0.27` | - Added `Joystick` API to allow controlling the game using a virtual joystick. |
+| `v0.0.26` | - Fix a timing bug where newer state change coming from unreliable (WebRTC) is discarded in favor of older state coming from reliable (WebSockets). |
+| `v0.0.24` | - Added `baseUrl` option to `insertCoin` method to allow customizing the base url of the game. |
+| `v0.0.23` | - Fixed setState bug where object typed state is not updated properly. |
+| `v0.0.20` | - Fixed issue where game running inside an iframe won't be able to copy link to clipboard, so we show an alternative way to copy link |
+| `v0.0.19` | - Added `setState` and `getState` methods to set or get multiplayer state |
+| `v0.0.18` | - Fixed issue where disconnected player won't disappear from all screens. <br/> - Fixed issue where profile is not reflected to all screens. |
+| `v0.0.17` | - Added `isStreamScreen()` method to check if game is running on stream screen.
