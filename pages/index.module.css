@@ -39,3 +39,26 @@ a.cta:focus-visible {
 a.cta:focus-visible span {
   transform: translateX(3px);
 }
+
+.halfhalf {
+  display: flex;
+}
+
+.halfhalf > * {
+  /* Style for the items to take half width on larger screens */
+  flex: 1;
+  gap: 1rem;
+  border: 1px solid #000;
+}
+
+/* Media query for smaller screens (phones) */
+@media (max-width: 767px) {
+  .halfhalf {
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  }
+
+  .halfhalf > * {
+    flex-basis: 100%; /* Take full width on smaller screens */
+    margin-bottom: 1rem;
+  }
+}
