@@ -4,6 +4,12 @@ import React, { useEffect } from 'react'
 import { track } from './components/analytics'
 export default {
   docsRepositoryBase: "https://github.com/asadm/playroom-docs/tree/main/",
+  nextThemes: {
+    forcedTheme: "dark",
+  },
+  themeSwitch: {
+    component: false
+  },
   head: () => {
     const { asPath, defaultLocale, locale } = useRouter()
     const { frontMatter } = useConfig()
