@@ -42,13 +42,17 @@ a.cta:focus-visible span {
 
 .halfhalf {
   display: flex;
+  align-items: center;
 }
 
 .halfhalf > * {
   /* Style for the items to take half width on larger screens */
   flex: 1;
   gap: 1rem;
-  border: 1px solid #000;
+}
+
+.halfhalf p{
+align-items: center;
 }
 
 /* Media query for smaller screens (phones) */
