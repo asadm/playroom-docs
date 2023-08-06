@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js xr - ball shooter</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<style>
+			body{
+				background-color: black;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="info">
+			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> xr - ball shooter
+		</div>
+
+		<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+
+		<!-- Import maps polyfill -->
+		<!-- Remove this when import maps will be widely supported -->
+		<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://unpkg.com/three@0.155.0/build/three.module.min.js",
+					"three/addons/": "https://unpkg.com/three@0.155.0/examples/jsm/"
+				}
+			}
+		</script>
+
+		<script  src="./plane.js"></script>
+		<script type="module">
+			const { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick, isStreamScreen } = Playroom;
+
+			import * as THREE from 'three';
+
+			import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
+			import { XRButton } from 'three/addons/webxr/XRButton.js';
+			import { ARButton } from 'three/addons/webxr/ARButton.js';
+			import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+			import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
+			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+			window.THREE = THREE;
+
+			function trimPositionAndRotation(pos, rotation){
+				return [{
+					x: pos.x.toFixed(4),
+					y: pos.y.toFixed(4),
+					z: pos.z.toFixed(4)
+				}, {
+					x: rotation.x.toFixed(4),
+					y: rotation.y.toFixed(4),
+					z: rotation.z.toFixed(4)
+				}];
+			}
+
+			function parsePositionAndRotation([pos, rotation]){
+				return [new THREE.Vector3(pos.x, pos.y, pos.z), new THREE.Euler(rotation.x, rotation.y, rotation.z)];
+			}
+
+			function radians_to_degrees(radians)
+{
+  var pi = Math.PI;
+  return radians * (180/pi);
+}
+
+			let camera, scene, renderer;
+			let controller1, controller2;
+			let controllerGrip1, controllerGrip2;
+
+			let room, spheres;
+			let physics, velocity = new THREE.Vector3();
+
+			let count = 0;
+
+			let players = [];
+
+			await insertCoin({streamMode: true, allowGamepads: true});
+			init();
+
+			function init() {
+
+				scene = new THREE.Scene();
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 50 );
+				camera.position.set( 0, 1.6, 3 );
+				scene.add( new THREE.HemisphereLight( 0xbbbbbb, 0x888888, 3 ) );
+
+				const light = new THREE.DirectionalLight( 0xffffff, 3 );
+				light.position.set( 1, 1, 1 ).normalize();
+				scene.add( light );
+
+				//
+
+				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setAnimationLoop( render );
+				renderer.xr.enabled = true;
+				document.body.appendChild( renderer.domElement );
+
+				onPlayerJoin((playerState) => {
+					const plane = createPlane(scene, playerState.getProfile().color.hex);
+					players.push({state: playerState, plane: plane, joystick: new Joystick(playerState, {type: "dpad"})});
+					playerState.onQuit(()=>{
+						scene.remove(plane.mesh);
+						players = players.filter((p) => p.state.id !== playerState.id);
+					})
+				});
+
+				const controls = new OrbitControls( camera, renderer.domElement );
+				controls.maxDistance = 10;
+				controls.target.y = 1.6;
+				controls.update();
+
+				document.body.appendChild( XRButton.createButton( renderer ) );
+				window.addEventListener( 'resize', onWindowResize );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function render() {
+				renderer.render( scene, camera );
+				players.forEach((player) => {
+					const playerState = player.state;
+					const plane = player.plane;
+					const joystick = player.joystick;
+					plane.propeller.rotation.x += 0.3;
+					plane.pilot.updateHairs();
+
+					const dpad = joystick.dpad() || {};
+					if (dpad.x === "left"){
+						plane.mesh.rotation.y += 0.03;
+					}
+					if (dpad.x === "right"){
+						plane.mesh.rotation.y -= 0.03;
+					}
+					if (dpad.y === "up"){
+						plane.mesh.rotation.z -= 0.03;
+					}
+					if (dpad.y === "down"){
+						plane.mesh.rotation.z += 0.03;
+					}
+
+					const forwardVector = new THREE.Vector3(0, 0, 1); // The initial forward direction of the plane
+					const rotationMatrix = new THREE.Matrix4();
+					rotationMatrix.makeRotationFromEuler(plane.mesh.rotation);
+					const eulerOffset = new THREE.Euler(0, Math.PI/2, 0);
+					const direction = forwardVector.clone().applyMatrix4(rotationMatrix).applyEuler(eulerOffset);
+					const speed = 0.03; // Adjust the speed as desired
+
+					const pitchAngle = plane.mesh.rotation.z; // Assuming rotation.z controls pitch
+					const degrees =(((radians_to_degrees(pitchAngle) + 90) % 360) + 360) % 360;
+					const altitudeSpeed = 1; // Adjust the altitude change speed as desired
+					const planeIsInverted = degrees > 180 ? -1 : 1;
+					const verticalComponent = Math.sin(pitchAngle);
+
+					plane.mesh.position.add(direction.multiplyScalar(speed * planeIsInverted * (1-Math.abs(verticalComponent)) ));
+
+					// Adjust the plane's altitude based on pitch (facing direction)
+					plane.mesh.position.y += verticalComponent * speed * altitudeSpeed;
+
+					// Only stream screen should update positions
+					if (isStreamScreen()){
+						console.log(trimPositionAndRotation(plane.mesh.position, plane.mesh.rotation))
+						playerState.setState("pos", trimPositionAndRotation(plane.mesh.position, plane.mesh.rotation));
+					}
+					else{
+						const [pos, rot] = parsePositionAndRotation(playerState.getState("pos"));
+						plane.mesh.position.copy(pos);
+						plane.mesh.rotation.copy(rot);
+					}
+				});
+			}
+
+		</script>
+	</body>
+</html>
