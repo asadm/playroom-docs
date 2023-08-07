@@ -1,0 +1,101 @@
+import Preview from '../../components/preview'
+
+# Connect Gamepad Controllers to Your Game
+<div style={{
+  background: "url('/images/m4.png') no-repeat center center",
+  backgroundSize: "contain",
+  backgroundColor: "#000",
+  width: "100%", 
+  display: "block",
+  height: "400px",
+  marginTop: '20px;'
+  }}></div>
+
+Playroom also lets you make games that are played on a central screen with physical game controllers that are connected to PC via Bluetooth/USB.
+
+This is great for making couch multiplayer games.
+
+If you ran out of controllers, more players can also join the action with their mobile devices. Players on phones see on-screen [Joystick controls](/multiplayer/joystick) to play the game. The API remains common for both types of controllers, so as a developer you don't have to worry about the type of controller being used.
+
+## How to enable Gamepad Controllers in your game
+
+### 1. Enable `streamMode` in your game
+
+Gamepad controllers are only supported in [Stream Mode](/multiplayer/stream). This is because the players need some screen to look at while playing with their gamepads. 🙂
+
+```js
+await insertCoin({
+  streamMode: true
+})
+```
+
+### 2. Also toggle `allowGamepads` in your game
+
+```js
+await insertCoin({
+  streamMode: true,
+  allowGamepads: true
+})
+```
+
+Once you enable both `allowGamepads` and `streamMode`, you will see the following screen when you start your game:
+
+<img src="/images/gamepadstreammode.png" alt="Party maker UI with instructions on how to start the game from gamepad." style={{marginTop: "20px"}}/>
+
+The players who have joined from their gamepads have a small icon next to their name. If all the players in the game are using gamepads, they see a "hold button to start" option. If there are players who have joined from their phones, one of them become the host and can start the game.
+
+Players who have joined from their phones see an [on-screen joystick](/multiplayer/joystick#angular-with-buttons) to play the game.
+
+### 3. Use `Joystick` API to get player inputs.
+
+The gamepads use the existing `Joystick` API so you can have same logic for both gamepad and mobile players.
+
+```js
+
+import { insertCoin, myPlayer, onPlayerJoin, Joystick } from 'playroomkit';
+
+// Start the game
+await insertCoin();
+
+let players = [];
+// Create a joystick controller for each joining player
+onPlayerJoin((state)=>{
+  // Joystick API is same for both gamepad and mobile players.
+  // The buttons are mapped to the gamepad buttons in the order they are defined.
+  // If no buttons are defined, the gamepad buttons are mapped to `button1`, `button2`, etc.
+  const joystick = new Joystick(state, {
+    type: "dpad",
+    buttons: [
+      {id: "jump", label: "Jump"}
+    ]
+  });
+  players.push({state, joystick});
+})
+
+// In your game loop
+players.forEach(({state, joystick})=>{
+  // Update player position based on joystick state
+  const dpad = joystick.dpad();
+  if (dpad.x === "left"){
+    // move player left
+  }
+  else if (dpad.x === "right"){
+    // move player right
+  }
+
+  // Check if jump button is pressed
+  if (joystick.isPressed("jump")){
+    // jump
+  }
+});
+
+```
+
+See [Joystick API](/multiplayer/joystick) for more details.
+
+## Limitations
+
+- Gamepad controllers are only supported in [Stream Mode](/multiplayer/stream).
+- Gamepad API exposes only one thumbstick and 4 buttons. This is to make it compatible with most gamepad controllers and also to keep the API the same for both gamepad and mobile players.
+- The `zones` option in the Joystick API is not supported for gamepad controllers.
+- The gamepad API is still experimental and may change in future versions.
