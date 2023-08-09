@@ -1,0 +1,57 @@
+---
+title: "Making a multiplayer game is not simple"
+image: "/images/blog/multiplayerhard.jpg"
+---
+
+import AuthorBio from "../../components/AuthorBio";
+
+# Making a multiplayer game is not simple
+
+<AuthorBio author="asad" date="June 22 2023" />
+
+Whether it's a shared adventure or a competition, you need to connect players together via netcode. On web this is either via WebSockets or WebRTC. Both challenging. Let's dive into the complexities.
+
+<br/><img src="/images/blog/multiplayerhard.jpg" alt="Multiplayer is hard" width="100%" />
+
+## WebSockets
+Most games on web just resort with using WebSockets only. WebSockets & TCP-based protocols are good for reliable delivery of messages, good for things like chat messages, but not great for player positions, etc. You will likely see rubber-banding and backpressure issues.
+
+For your multiplayer game, you at-least need a basic server that can just be taking incoming messages and broadcasting them to all others. You can likely use a library like http://socket.io that [@rauchg](https://twitter.com/rauchg) made in his past life.
+
+## Rooms
+
+You do need some concept of *Rooms* so that players  get messages from their room only. You also need some room-code or room-link that players can share with each other to join the same room.
+
+<br/><img src="/images/blog/multiplayerhard1.png" alt="Rooms" width="100%" />
+
+## Scaling
+
+Scaling your game server beyond 1 is hard. You need to spin up/down servers as needed, add a load balancer in front. You can do this with Kubernetes (don't!) but Google's Cloud Run or something similar is much easier to work with. Also check out Cloudflare workers.
+
+Oh wait, horizontal scaling brings a few problems. First, you need to make sure that players are connected to the same server as their friends or implement some sort of server-to-server communication to sync the room state between servers. You can use Redis or maybe Vercel's KV.
+
+Your servers should be close to your players. Place servers such that players can connect to their closest server. This is important for reducing latency and making the game responsive. You don't want players from Europe connecting to servers in the US and experiencing lag 👀
+
+## WebRTC
+
+At some point, you will need WebRTC. Even co-locating servers isn't enough for some games because each state update is first sent to the server and then sent to all players. WebRTC (or UDP) is great when you need to transmit data fast ⚡️
+
+<br/><img src="/images/blog/multiplayerhard2.jpg" alt="WebRTC vs Websockets" width="100%" />
+
+Implementing WebRTC is really hard! Even the browser API is complex. You need a signaling server, TURN server, do signaling sync dance in the right order, etc. It's a lot of work.
+
+WebRTC is unavailable for some user networks, you need to fallback to WebSockets for them 🌩️
+
+## Enter Playroom Kit
+
+We made Playroom Kit to make the multiplayer games simple. There are many existing multiplayer backends that manage servers for you like Playfab or Photon; great for AAA games but too complex for simpler "io" games. We can make it simpler and easier!
+
+Playroom provides UI to take care of players creating and joining rooms, also provides you with APIs to sync game and player states across all devices.
+
+It actively maintains WebSockets and WebRTC connections between players and let's you switch between those at runtime.
+
+<br/><img src="/images/blog/multiplayerhard3.jpg" alt="Code example using Playroom Kit" width="100%" />
+
+Playroom's mission is to make #gamedev simpler by focusing primarily on developer experience. Playroom likely works with your fav web game engine already.
+
+Check out https://docs.joinplayroom.com 🙏
