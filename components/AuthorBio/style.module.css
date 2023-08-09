@@ -1,0 +1,27 @@
+.authorBio{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.authorBio img{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.authorBio b{
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.twitterLink{
+  background: url('./images/tw.png') no-repeat;
+  background-size: contain;
+  background-position: left center;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+  margin-left: 0.2rem;
+}

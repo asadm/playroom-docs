@@ -16,6 +16,11 @@
   "components": "🎲 | Upcoming: Components",
   "billing": "🧾 | Billing FAQs",
   "changelog": "📜 | Changelog",
+  "---": {
+    "title":"",
+    "type": "separator"
+  },
+  "blog": "📝 | Blog",
   "about": {
     "title": "About Playroom ↗",
     "type": "page",

@@ -1,0 +1,36 @@
+---
+title: "WebXR on Apple Vision Pro"
+description: "I got hands on the Vision Pro device for a day with XCode set up 🎉"
+image: "/images/blog/webxr0.png"
+---
+
+import AuthorBio from "../../components/AuthorBio";
+
+# WebXR, Vision Pro, and multiplayer
+
+<AuthorBio author="asad" date="Aug 8 2023" />
+
+**I got hands on the Vision Pro device for a day with XCode set up 🎉**
+
+I got access to the Vision Pro device via Apple's developer labs at Cupertino. I was invited on the first day and was probably one of the earliest non-Apple devs to get my hands on Vision Pro.
+
+My main goal was to try a few code demos, mostly explore WebXR on it, make a multiplayer demo using [Playroom](https://docs.joinplayroom.com) and try to benchmark the device for a bunch of AI use-cases that I am interested in (like inference time with Stable Diffusion running on-device). Unfortunately, I am not allowed to talk much about my experience. But I had fun!
+
+<br/><img src="/images/blog/webxr0.png" alt="WebXR on Vision Pro" />
+
+## Preparing for cross-platform XR revolution
+
+Right now we only have ~~Oculus~~ Quest headsets in the mainstream world, but when Vision Pro arrives, we will likely need to make cross-platform XR stack to make games in since the tech stack is completely different for both platforms. In short, the main options for making a cross-platform XR game are either by using Unity or by WebXR.
+
+I like WebXR because there is no installation required which reduces friction, specially for a multiplayer game. This is the same reason we at Playroom are betting on web-first multiplayer games.
+
+## WebXR on Vision Pro
+
+I developed a quick multiplayer game to test WebXR and Playroom Multiplayer SDK on Vision Pro. I used three.js and uses Playroom's built-in [Gamepad API](https://docs.joinplayroom.com/multiplayer/gamepads) to connect my game controller to the game. I wasn't allowed to record on Vision Pro, but here is a video of me playing the game an iPhone using Mozilla's [WebXR Viewer](https://apps.apple.com/us/app/webxr-viewer/id1295998056) and a game controller:
+
+<video src="/images/blog/webxr1.webm" controls muted style={{height: "500px"}}></video>
+
+*Code coming soon*
+
+### Caveats
+Do note that WebXR on Vision Pro is not perfect. It doesn't yet support `immersive-ar`, which means no mixed-reality experiences yet. I hope the support for `immersive-ar` lands soon.
