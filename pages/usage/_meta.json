@@ -3,5 +3,6 @@
   "react":"Usage with React",
   "phaser":"Usage with Phaser",
   "kaboom":"Usage with Kaboom",
-  "spline":"Usage with Spline"
+  "spline":"Usage with Spline",
+  "unity":"Usage with Unity"
 }
