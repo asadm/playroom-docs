@@ -2,13 +2,16 @@
 
 import { Callout } from 'nextra/components'
 
-<Callout type="info" emoji="ℹ️">
-The Unity SDK currently only supports **Unity Web.**
+<Callout type="info" emoji="🧪">
+    The Unity SDK currently only supports **Unity Web.** This is an experimental technology.
 </Callout>
 
-Unity is a versatile platform for creating dynamic experiences, ranging from engaging games to immersive simulations. The Playroom Kit complements Unity by simplifying the development of multiplayer games and interactive web-based applications.
+Unity is a versatile platform for creating dynamic experiences, ranging from engaging games to immersive simulations. Playroom Kit complements Unity by simplifying the development of multiplayer games and interactive web-based applications.
 
 Playroom provides a Unity-friendly API for interacting with common Playroom states and player data. 
+
+## Mock mode
+Since the current SDK only supports Unity Web, we've introduced **Mock mode** - a way to test out your game's logic in Unity's Preview mode, without having to build for web every time.
 
 
 {/* 
@@ -25,4 +28,5 @@ You can see the full source code [here](https://github.com/asadm/playroom-docs/b
 <br />
 import UnityAPIDocs from '../../components/unity_apidocs.mdx'
 
+# API Reference
 <UnityAPIDocs /> 

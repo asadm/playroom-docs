@@ -1,17 +1,18 @@
-# API Reference
-
-## `InsertCoin({ callback, InitOptions })`
+## `InsertCoin(callback, InitOptions)`
 
 Tell Playroom to start! Playroom Kit will then handle room creation, players joining and also let players pick their names, colors and avatars. Once host taps "Launch", the promise resolves. At this point you can start your game.
 
-```js
+```cs
 // Show Playroom UI, let it handle players joining etc and wait for host to tap "Launch"
-await InsertCoin();
+PlayroomKit.InsertCoin(() =>
+{
+    Debug.Log("Insert Coin Callback Fired! Time to play.");
+}, options);
 
 // Start your game!
 ```
 
-`InitOptions` is an object with the following properties:
+`InitOptions` is an optional parameter with the following properties:
 
 | option       | type    | default | explanation                                                                 |
 |--------------|---------|---------|-----------------------------------------------------------------------------|
@@ -19,33 +20,43 @@ await InsertCoin();
 | `allowGamepads` | boolean | false   | If  `true` , Playroom will let players play game using gamepads connected to the stream device itself. This requires `streamMode` to also be `true`.<br/><br/>The gamepads need to be connected to device where stream screen is running. No phones are required in this mode but are optionally allowed as an alternative controller if there aren't enough physical gamepads in the room. Players who join via phone in this mode see an on-screen [Joystick](/multiplayer/joystick). |
 | `baseUrl`    | string  | *Current Page URL*      | The base URL used for generating room link that host shares with other players. |
 
-## `GetState<T>(key: string): any`
+## `GetState<T>(string key): T`
 
 Returns the current value of the given key in the game state.
 
-```js
-const winnerId = GetState('winner');
+import { Callout } from 'nextra/components'
+
+<Callout type="info" emoji="ℹ️">
+    Since C# is a static-typed language, you would have to mention the data type of the variable in place of `T`.
+</Callout>
+
+```cs
+string winnerId = PlayroomKit.GetState<string>('winner');
 ```
 
-## `SetState(key: string, value: any, reliable: boolean = false): void`
+## `SetState(string key, T value, bool reliable = false): void`
 
 Sets the value of the given key in the game state. If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner. 
 
 If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
 
-```js
-setState('winner', 'player1');
+<Callout type="info" emoji="ℹ️">
+    Currently tested for the following types: `string`, `int`, `bool`, `float` and `Dictionary<string, T>`.
+</Callout>
+
+```cs
+PlayroomKit.SetState('winner', 'player1');
 ```
 
 ## `OnPlayerJoin(callback)`
 
-Register a callback that will be called when a new player joins the room. The callback will be called with the player's [`PlayerState`](#playerstate) object.
+Register a callback that will be called when a new player joins the room. The callback will be called with the player's [`PlayroomKit.Player`](#playroomkitplayer) object.
 
-If a new player joins after the game has started, the callback is called with all existing [`PlayerState`](#playerstate) objects, exclusively for the new player.
+If a new player joins after the game has started, the callback is called with all existing [`PlayroomKit.Player`](#playroomkitplayer) objects, exclusively for the new player.
 
-```js
-onPlayerJoin((player) => {
-  console.log(`${player.id} joined!`);
+```cs
+PlayroomKit.OnPlayerJoin((player) => {
+  Debug.Log($"{player.id} joined!");
 });
 ```
 
@@ -53,8 +64,8 @@ onPlayerJoin((player) => {
 
 Returns `true` if the current player is the host.
 
-```js
-if (IsHost()) {
+```cs
+if (PlayroomKit.IsHost()) {
   // Do something only the host should do, like reading player input and setting game state
 }
 ```
@@ -63,26 +74,37 @@ if (IsHost()) {
 
 Returns `true` if the current screen is the stream screen; a non-player screen that is shown when the game is in [ stream mode ]( /multiplayer/stream ).
 
-```js
-if (IsStreamScreen()) {
+```cs
+if (PlayroomKit.IsStreamScreen()) {
   // Do something only the stream screen should do, like showing a countdown
 }
 ```
 
 ## `MyPlayer()` or `Me()`
 
-Returns the current player's [`PlayerState`](#playerstate) object.
+Returns the current player's [`PlayroomKit.Player`](#playroomkitplayer) object.
 
-```js
-const player = MyPlayer();
-console.log(`Hello ${player.getProfile().name}!`);
+```cs
+PlayroomKit.Player player = PlayroomKit.MyPlayer();
+Debug.Log($"Hello {player.getProfile().name}!");
 ```
 
-## PlayerState
+## `GetPlayer(id)`
 
-A `PlayerState` object represents a player in the room. It has the following methods:
+Returns a player's [`PlayroomKit.Player`](#playroomkitplayer) object by their ID.
 
-### `GetProfile(): PlayerProfile`
+```cs
+PlayroomKit.Player player = PlayroomKit.GetPlayer("abcd1234");
+Debug.Log($"Hello {player.getProfile().name}!");
+```
+
+## PlayroomKit.Player
+
+A `PlayroomKit.Player` object represents a player in the room. In the Unity SDK, this is usually retrieved through `OnPlayerJoin`, `MyPlayer` or `GetPlayer`.
+
+It has the following methods:
+
+### `GetProfile(): PlayroomKit.Player.Profile`
 
 Returns the player's profile, which has the following properties:
 
@@ -104,28 +126,32 @@ The `Color` type is an object with the following properties:
 | `hex`    | number | The color as a hex number, e.g. `0xff0000` for red.                         |
 
 
-### `GetState<T>(key: string): any`
+### `GetState<T>(string key): T`
 
 Returns the value of the given key in the player's state.
 
-```js
-const score = player.getState('score');
+<Callout type="info" emoji="ℹ️">
+    Since C# is a static-typed language, you would have to mention the data type of the variable in place of `T`.
+</Callout>
+
+```cs
+int score = player.GetState<int>('score');
 ```
 
-### `SetState(key: string, value: any)`
+### `SetState(string key, T value, bool reliable = false)`
 
 Sets the value of the given key in the player's state.
 
-```js
-player.setState('score', 10);
+```cs
+player.SetState('score', 10);
 ```
 
 ### `OnQuit(callback)`
 
 Register a callback that will be called when the player quits the room.
 
-```js
+```cs
 player.OnQuit(() => {
-  console.log(`${player.id} quit!`);
+  Debug.Log($"{player.id} quit!");
 });
 ```
