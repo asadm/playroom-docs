@@ -18,6 +18,7 @@ export default function BlogIndex() {
         style={{border:"1px solid #8D6BED"}}
         // className="blog-card"
         key={key}
+        // @ts-ignore
         title={<div><h3 style={{fontSize: "1.5rem"}}>{title}</h3>{formattedDate}</div>}
         // description={}
         href={`/blog/${key}`}
