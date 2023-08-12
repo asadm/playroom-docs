@@ -1,20 +1,20 @@
 ---
-title: "WebXR on Apple Vision Pro"
+title: "WebXR, Vision Pro, and Multiplayer"
 description: "I got hands on the Vision Pro device for a day with XCode set up 🎉"
 image: "/images/blog/webxr0.png"
 ---
 
 import AuthorBio from "../../components/AuthorBio";
 
-# WebXR, Vision Pro, and multiplayer
+# WebXR, Vision Pro, and Multiplayer
 
 <AuthorBio author="asad" date="Aug 8 2023" />
 
 **I got hands on the Vision Pro device for a day with XCode set up 🎉**
 
-I got access to the Vision Pro device via Apple's developer labs at Cupertino. I was invited on the first day and was probably one of the earliest non-Apple devs to get my hands on Vision Pro.
+We applied for Apple's Developer Labs to get access to Vision Pro at Cupertino. Luckily, we got selected for the first day! I was probably one of the earliest non-Apple devs to get my hands on Vision Pro.
 
-My main goal was to try a few code demos, mostly explore WebXR on it, make a multiplayer demo using [Playroom](https://docs.joinplayroom.com) and try to benchmark the device for a bunch of AI use-cases that I am interested in (like inference time with Stable Diffusion running on-device). Unfortunately, I am not allowed to talk much about my experience. But I had fun!
+My main goal was to try a few code demos, mostly explore WebXR on it, make a multiplayer demo using [Playroom](https://docs.joinplayroom.com) and try to benchmark the device for a bunch of AI use-cases that I am interested in (like inference time with Stable Diffusion running on-device). Unfortunately, I am not allowed to talk much about my experience. But it was positive overall and I had fun!
 
 <br/><img src="/images/blog/webxr0.png" alt="WebXR on Vision Pro" />
 
@@ -26,11 +26,71 @@ I like WebXR because there is no installation required which reduces friction, s
 
 ## WebXR on Vision Pro
 
+The simulator supports WebXR but right now it only supports the fully immersive mode and not the mixed-reality mode. WebXR is hidden behind a feature flag in Safari on Vision Pro. You need to enable it from Settings:
+
+<br/><img src="/images/blog/webxr2.jpg" alt="WebXR flags in Safari" />
+
 I developed a quick multiplayer game to test WebXR and Playroom Multiplayer SDK on Vision Pro. I used three.js and uses Playroom's built-in [Gamepad API](https://docs.joinplayroom.com/multiplayer/gamepads) to connect my game controller to the game. I wasn't allowed to record on Vision Pro, but here is a video of me playing the game an iPhone using Mozilla's [WebXR Viewer](https://apps.apple.com/us/app/webxr-viewer/id1295998056) and a game controller:
 
 <video src="/images/blog/webxr1.webm" controls muted style={{height: "500px"}}></video>
 
-*Code coming soon*
+### Code Overview
+This is a standard three.js game with xr enabled:
+```js {7,9}
+import { XRButton } from 'three/addons/webxr/XRButton.js';
+// ...
+renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setAnimationLoop( render );
+renderer.xr.enabled = true;
+document.body.appendChild( renderer.domElement );
+document.body.appendChild( XRButton.createButton( renderer ) );
+```
 
-### Caveats
-Do note that WebXR on Vision Pro is not perfect. It doesn't yet support `immersive-ar`, which means no mixed-reality experiences yet. I hope the support for `immersive-ar` lands soon.
+I added Playroom SDK which handles the multiplayer and gamepad API for me:
+```js {6, 11 }
+const { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick, isStreamScreen } = Playroom;
+let players = [];
+
+// ...
+
+await insertCoin({streamMode: true, allowGamepads: true});
+onPlayerJoin((state) => {
+  // Create a plane for the player
+  const plane = createPlane(scene, state.getProfile().color.hex);
+  // Create a joystick for the player
+  const joystick = new Joystick(state, {type: "dpad"})
+  players.push({state: state, plane, joystick });
+});
+```
+
+My game can now be played using game controllers. I just needed to read the gamepad state and update the player's plane position in my main game loop:
+```js {6}
+function render() {
+  renderer.render( scene, camera );
+  players.forEach((player) => {
+    const playerState = player.state;
+    const plane = player.plane;
+    const dpad = player.joystick.dpad() || {};
+    if (dpad.x === "left"){
+      plane.mesh.rotation.y += 0.03;
+    }
+    if (dpad.x === "right"){
+      plane.mesh.rotation.y -= 0.03;
+    }
+    if (dpad.y === "up"){
+      plane.mesh.rotation.z -= 0.03;
+    }
+    if (dpad.y === "down"){
+      plane.mesh.rotation.z += 0.03;
+    }
+
+    // Move the plane forward towards the direction it is facing
+    // ...
+  });
+}
+```
+
+### Limitations
+- Do note that WebXR on Vision Pro is not perfect. It doesn't yet support `immersive-ar`, which means no mixed-reality experiences yet. I hope the support for `immersive-ar` lands soon.
