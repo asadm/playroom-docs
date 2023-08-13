@@ -1,3 +1,5 @@
+import UnityAPIDocs from '../../components/unity_apidocs.mdx'
+
 # Using Unity with Playroom Kit
 
 import { Callout } from 'nextra/components'
@@ -6,27 +8,45 @@ import { Callout } from 'nextra/components'
     The Unity SDK currently only supports **Unity Web.** This is an experimental technology.
 </Callout>
 
-Unity is a versatile platform for creating dynamic experiences, ranging from engaging games to immersive simulations. Playroom Kit complements Unity by simplifying the development of multiplayer games and interactive web-based applications.
+Unity is the most popular game engine, it's also a great way to make web games thanks to the [WebGL export option](https://docs.unity3d.com/Manual/webgl-building.html). 
 
-Playroom provides a Unity-friendly API for interacting with common Playroom states and player data. 
+Playroom Kit complements Unity by simplifying the development of multiplayer games and interactive web-based applications.
+
+## Getting started
+
+### 1. Install the SDK
+The SDK is available as a Unity package. You can download the latest version from the [releases page](https://github.com/asadm/playroom-unity/releases) (download `playroomkit.unitypackage` file).
+
+To install, simply drag the package into your Unity project and import all files.
+
+### 2. Initialize Playroom
+The SDK can be initialized by calling `PlayroomKit.InsertCoin` in your game's `Start` method. You'll need to pass in a callback function that will be called when the host launches the game.
+
+```csharp
+using Playroom;
+// ...
+
+void Start() {
+    PlayroomKit.InsertCoin(() => {
+        // The host has launched the game, you can start your game logic here.
+    });
+}
+```
+
+### 3. Set / Get game state
+You can set and get the game state using the `PlayroomKit.SetState` and `PlayroomKit.GetState` methods. The game state is automatically synced with other players.
+
+See the [API reference](/apidocs/unity) for more information.
+
+### 4. Export to WebGL
+
+To export your game to WebGL, go to `File > Build Settings` and select `WebGL` as the platform. Then click `Build and Run` to export your game as a web page.
+Do note that Playroom Kit only works with WebGL builds. 
 
 ## Mock mode
 Since the current SDK only supports Unity Web, we've introduced **Mock mode** - a way to test out your game's logic in Unity's Preview mode, without having to build for web every time.
+The mock mode doesn't connect to the Playroom server, instead it just mocks the API calls within Unity. This allows you to test out your game's logic without having to build for web every time.
 
+## API Reference
 
-{/* 
-Here is a simple demo React app that uses Playroom Kit:
-
-
-import Preview from '../../components/preview'
-
-<Preview src="/demos/react1.html" />
-
-You can see the full source code [here](https://github.com/asadm/playroom-docs/blob/main/public/demos/react1.html).
-
-*/}
-<br />
-import UnityAPIDocs from '../../components/unity_apidocs.mdx'
-
-# API Reference
-<UnityAPIDocs /> 
+See the [API reference](/apidocs/unity) for more information.
