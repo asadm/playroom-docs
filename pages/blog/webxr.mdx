@@ -12,9 +12,9 @@ import AuthorBio from "../../components/AuthorBio";
 
 **I got hands on the Vision Pro device for a day with XCode set up 🎉**
 
-We applied for Apple's Developer Labs to get access to Vision Pro at Cupertino. Luckily, we got selected for the first day! I was probably one of the earliest non-Apple devs to get my hands on Vision Pro.
+We applied for Apple's Developer Labs to get access to Vision Pro at Cupertino. Luckily, we got selected for the first day! Probably one of the earliest non-Apple devs to get hands on Vision Pro.
 
-My main goal was to try a few code demos, mostly explore WebXR on it, make a multiplayer demo using [Playroom](https://docs.joinplayroom.com) and try to benchmark the device for a bunch of AI use-cases that I am interested in (like inference time with Stable Diffusion running on-device). Unfortunately, I am not allowed to talk much about my experience. But it was positive overall and I had fun!
+My main goal was to try a few code demos, mostly explore WebXR on it, make a multiplayer demo using [Playroom Kit](https://docs.joinplayroom.com) and try to benchmark the device for a bunch of AI use-cases that we are interested in (like inference time with Stable Diffusion running on-device). Unfortunately, I am not allowed to talk much about my experience. But it was positive overall and I had fun!
 
 <br/><img src="/images/blog/webxr0.png" alt="WebXR on Vision Pro" />
 
@@ -22,7 +22,7 @@ My main goal was to try a few code demos, mostly explore WebXR on it, make a mul
 
 Right now we only have ~~Oculus~~ Quest headsets in the mainstream world, but when Vision Pro arrives, we will likely need to make cross-platform XR stack to make games in since the tech stack is completely different for both platforms. In short, the main options for making a cross-platform XR game are either by using Unity or by WebXR.
 
-I like WebXR because there is no installation required which reduces friction, specially for a multiplayer game. This is the same reason we at Playroom are betting on web-first multiplayer games.
+We like WebXR because there is no installation required which reduces friction, specially for a multiplayer game. This is the same reason we at Playroom are betting on web-first multiplayer games.
 
 ## WebXR on Vision Pro
 
@@ -30,7 +30,7 @@ The simulator supports WebXR but right now it only supports the fully immersive 
 
 <br/><img src="/images/blog/webxr2.jpg" alt="WebXR flags in Safari" />
 
-I developed a quick multiplayer game to test WebXR and Playroom Multiplayer SDK on Vision Pro. I used three.js and uses Playroom's built-in [Gamepad API](https://docs.joinplayroom.com/multiplayer/gamepads) to connect my game controller to the game. I wasn't allowed to record on Vision Pro, but here is a video of me playing the game an iPhone using Mozilla's [WebXR Viewer](https://apps.apple.com/us/app/webxr-viewer/id1295998056) and a game controller:
+Developing a quick multiplayer game with WebXR and Playroom Multiplayer SDK on Vision Pro proved fairly seamless! Used three.js and Playroom's built-in [Gamepad API](https://docs.joinplayroom.com/multiplayer/gamepads) to connect game controller to the game. Video recording wasn't allowed with Vision Pro, but here is a video of me playing the game an iPhone using a game controller [WebXR Viewer](https://apps.apple.com/us/app/webxr-viewer/id1295998056).
 
 <video src="/images/blog/webxr1.webm" controls muted style={{height: "500px"}}></video>
 
@@ -48,7 +48,7 @@ document.body.appendChild( renderer.domElement );
 document.body.appendChild( XRButton.createButton( renderer ) );
 ```
 
-I added Playroom SDK which handles the multiplayer and gamepad API for me:
+Added Playroom SDK which handles the multiplayer and gamepad API:
 ```js {6, 11 }
 const { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick, isStreamScreen } = Playroom;
 let players = [];
@@ -65,7 +65,7 @@ onPlayerJoin((state) => {
 });
 ```
 
-My game can now be played using game controllers. I just needed to read the gamepad state and update the player's plane position in my main game loop:
+Game can now be played using game controllers. It just needed to read the gamepad state and update the player's plane position in the main game loop:
 ```js {6}
 function render() {
   renderer.render( scene, camera );
