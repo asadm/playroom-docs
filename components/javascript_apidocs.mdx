@@ -1,8 +1,3 @@
-# API Reference
-
-import { Tabs, Tab, Callout } from 'nextra/components'
-import JavaScriptAPIDocs from '../components/javascript_apidocs.mdx'
-
 ## `insertCoin({ InitOptions })`
 
 Tell Playroom to start! Playroom Kit will then handle room creation, players joining and also let players pick their names, colors and avatars. Once host taps "Launch", the promise resolves. At this point you can start your game.
@@ -149,7 +144,9 @@ player.onQuit(() => {
 
 ## Hooks for React
 
-See the [React API here](/apidocs/react).
+import Hooks from '../components/hooks.md'
+
+<Hooks />
 
 
 ## Joystick Controller
@@ -230,8 +227,3 @@ Returns the direction of the joystick, as a string. The string can be one of the
 - `down`
 - `left`
 - `right`
-
-
-## Unity (C#) API
-
-See the [Unity API here](/apidocs/unity).

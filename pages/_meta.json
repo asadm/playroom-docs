@@ -11,7 +11,12 @@
   "usage": "📙 | Usage",
   "tutorials": "📺 | Tutorials",
   "templates": "🍱 | Templates",
-  "apidocs": "🔖 | API Reference",
+  "apidocs": {
+    "theme":{
+      "collapsed": true
+    },
+    "title": "🔖 | API Reference"
+  },
   "ai": "🧙🏻‍♀️ | Upcoming: Playroom AI",
   "components": "🎲 | Upcoming: Components",
   "billing": "🧾 | Billing FAQs",
@@ -20,7 +25,13 @@
     "title":"",
     "type": "separator"
   },
-  "blog": "📝 | Blog",
+  "blog": {
+    "theme":{
+      "collapsed": true
+    },
+    "title": "📝 | Blog"
+
+  },
   "about": {
     "title": "About Playroom ↗",
     "type": "page",
