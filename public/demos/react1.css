@@ -3,6 +3,7 @@ body {
   color: #fff;
   margin: 0;
   overflow: hidden;
+  user-select: none;
 }
 
 .App{
