@@ -25,7 +25,7 @@ export default {
       <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
       <meta
             name="description"
-            content={frontMatter.description || 'Build multiplayer games in minutes.'}
+            content={frontMatter.description || title || 'Build multiplayer games in minutes.'}
             key="desc"
           />
           {/* <!-- Facebook Meta Tags --> */}
