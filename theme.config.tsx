@@ -12,7 +12,7 @@ export default {
   },
   head: () => {
     const { asPath, defaultLocale, locale } = useRouter()
-    const { frontMatter } = useConfig()
+    const { frontMatter, title } = useConfig()
     const baseUrl = 'https://docs.joinplayroom.com';
     const url =
       baseUrl +
@@ -31,7 +31,7 @@ export default {
           {/* <!-- Facebook Meta Tags --> */}
           <meta property="og:url" content={url} />
           <meta property="og:type" content="website" />
-          <meta property="og:title" content={frontMatter.title || 'Playroom Kit'}/>
+          <meta property="og:title" content={frontMatter.title || title || 'Playroom Kit'}/>
           <meta
             property="og:description"
             content={frontMatter.description || 'Build multiplayer games in minutes.'}
@@ -45,7 +45,7 @@ export default {
           <meta name="twitter:card" content="summary_large_image" />
           <meta property="twitter:domain" content="joinplayroom.com" />
           <meta property="twitter:url" content={url} />
-          <meta name="twitter:title" content={frontMatter.title || 'Playroom Kit'}/>
+          <meta name="twitter:title" content={frontMatter.title || title || 'Playroom Kit'}/>
           <meta
             name="twitter:description"
             content={frontMatter.description || 'Build multiplayer games in minutes.'}
