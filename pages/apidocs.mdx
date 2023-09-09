@@ -96,7 +96,15 @@ const winnerId = await waitForState('winner');
 
 ## PlayerState
 
-A `PlayerState` object represents a player in the room. It has the following methods:
+A `PlayerState` object represents a player in the room. It has the following methods and properties:
+
+### `id: string`
+
+The player's unique ID.
+
+```js
+console.log(`Player ID: ${player.id}`);
+```
 
 ### `getProfile(): PlayerProfile`
 
