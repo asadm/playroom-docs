@@ -30,7 +30,7 @@ Returns the current value of the given key in the game state.
 const winnerId = getState('winner');
 ```
 
-## `setState(key: string, value: any, reliable: boolean = false): void`
+## `setState(key: string, value: any, reliable: boolean = true): void`
 
 Sets the value of the given key in the game state. If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner. 
 
@@ -137,9 +137,12 @@ Returns the value of the given key in the player's state.
 const score = player.getState('score');
 ```
 
-### `setState(key: string, value: any)`
+### `setState(key: string, value: any, reliable: boolean = false)`
 
 Sets the value of the given key in the player's state.
+
+If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner. 
+If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
 
 ```js
 player.setState('score', 10);
