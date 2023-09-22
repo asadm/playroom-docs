@@ -1,0 +1,135 @@
+# Introduction to Bot Integration in Playroom
+
+Playroom lets you transform the way players interact and experience your multiplayer games. This documentation provides an overview and guide for the Bot Integration feature we've integrated into Playroom. Our vision is to empower game developers with the tools they need to elevate gameplay, making games more dynamic, engaging, and challenging.
+
+With this latest enhancement, you can now seamlessly incorporate bot capabilities into your games. These bots pave the way for richer player interactions and open the door to enhanced gameplay testing. If you're looking to craft a custom bot that aligns perfectly with your game's unique mechanics, we've got you covered.
+
+Now that you're familiar with the potential of bot integration within Playroom, it's time to dive into the specifics.
+
+## Custom Bot Overview
+In Playroom's SDK, we've provided you with the flexibility to design and implement bots according to their own game mechanics and requirements. This not only allows for personalization but also ensures that the bot integrates seamlessly with the unique dynamics of each game.
+
+## How Custom Bot Integration Works
+
+### 1. Import and Extend the SDK's Bot Class
+Start by importing the 'Bot' class from the 'playroomkit'
+
+```js
+import { insertCoin, onPlayerJoin, Bot } from 'playroomkit';
+```
+
+Simply extend the basic Bot class to create your custom bot. 
+
+```js
+class YourCustomBot extends Bot {
+    // Implement your custom bot logic and methods here
+    
+    // Sample Custom Bot Code
+    constructor() {
+        super();
+        this.name = "Sample Bot";
+        this.health = 100;
+    }
+
+    // A simple method for the bot to take action based on some game state
+    decideAction(gameState) {
+        if (gameState.enemyNearby) {
+            return 'ATTACK';
+        }
+        return 'MOVE_FORWARD';
+    }
+
+    // Receive damage and reduce health
+    takeDamage(damageAmount) {
+        this.health -= damageAmount;
+    }
+
+    // Check if the bot is still alive
+    isAlive() {
+        return this.health > 0;
+    }
+}
+```
+
+### 2. Implement Your Custom Bot Logic
+
+You have complete autonomy over the bot's logic and behavior. 
+Implement methods, decision-making processes, 
+and any other necessary components in your derived class to make 
+your bot function according to your game's needs.
+
+### 3. Initialize Your Bot with the SDK
+
+Once your custom bot class is ready, use the insertCoin() method 
+provided by the SDK to pass your bot type and its parameters. 
+This step allows the SDK to recognize and initialize your custom bot.
+
+```js
+await insertCoin({
+  ... other parameters,
+  
+  enableBots: true,   // Indicates to the SDK to activate bot functionality
+  
+  botOptions: {
+    botClass: YourCustomBot,  // Specifies the custom bot class to be utilized by the SDK
+
+    // OPTIONAL: If you want botParams object for the initialization of custom bot class.
+    // Sample botParams
+    botParams: {
+      name: "Sample Bot",
+      health: 100
+    }                 
+  },
+})
+```
+
+The code above activates bots in your game. It creates an instance of botClass using the botParams you provide. Here's how you'd use botParams your constructor:
+
+```js
+class YourCustomBot extends Bot {
+    // Implement your custom bot logic and methods here
+    
+    // Sample Custom Bot Code
+    constructor(botParams) {
+        super();
+        this.name = botParams.name;
+        this.health = botParams.health;
+    }
+}
+```
+
+
+
+### 4. Integrate Bot into the Game Loop
+
+After initialization, the player.isBot() method allows you to check 
+if a player is a bot or a human player. You can use this information to 
+integrate your bot's actions within the game loop, ensuring that it interacts 
+with the game environment as intended.
+
+```js
+if (player.isBot()) {
+    // Logic to make the bot act within the game loop
+
+    // Sample implementation
+    if (!player.bot.isAlive()) { return }
+
+    const action = player.bot.decideAction(gameState)
+    if (action === "ATTACK") {
+        // Attack Logic Here
+    }
+
+    if (action === "MOVE_FORWARD") {
+        // Move Forward Logic Here
+    }
+
+    // Game mechanics
+
+    // Updating the damage taken
+    player.bot.takeDamage(damageAmount)
+}
+```
+
+## Conclusion
+Integrating a custom bot with Playroom's SDK offers a level of personalization and control that can significantly enhance gameplay dynamics. 
+By following the steps outlined above, you can seamlessly incorporate your custom bots and redefine the player experience.
