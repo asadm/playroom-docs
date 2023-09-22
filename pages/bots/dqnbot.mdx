@@ -29,6 +29,18 @@ insertCoin({
       numberOfStates: x,  // Replace 'x' with the number of states you want to pass to the agent
       numberOfActions: y, // Replace 'y' with the number of potential actions the bot can take
 
+      // OPTIONAL: Customize hyperparameters. If not specified, the following default values are utilized:
+      specifications: {
+        gamma: 0.75,  // Discount factor for future rewards
+        epsilon: 0.1,  // Exploration rate in epsilon-greedy strategy
+        alpha: 0.01,  // Learning rate
+        experience_add_every: 25,  // Frequency of adding experiences to the replay memory
+        experience_size: 5000,  // Size of the replay memory
+        learning_steps_per_iteration: 10,  // Number of learning steps per iteration
+        tderror_clamp: 1.0,  // Clamp to prevent large TD errors
+        num_hidden_units: 100,  // Number of neurons in the hidden layer
+      }
+
       // OPTIONAL: If you have pretrained weights or previous training data
       weights: {
         
@@ -43,6 +55,8 @@ insertCoin({
       // OPTIONAL: Automatically stores model weights to local storage and load while initialization of bot
       // Defaults to true, won't retreive from local storage if weights are given
       retrieveFromLocalStorage: true
+
+
     }
 
     // OPTIONAL: Enable training mode to visualize and interact with the bot's learning process

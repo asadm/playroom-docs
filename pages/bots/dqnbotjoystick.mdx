@@ -27,9 +27,14 @@ insertCoin({
     
     numberOfStates: x,  // Replace 'x' with the number of states you want to pass to the agent.
 
-    joystickConfig: {  // Your joystick configuration here. Actions will be derived from this joystick config.
-     
-    },
+
+    // Your joystick configuration here. Actions will be derived from this joystick config.
+    joystickConfig: { // Sample configuration
+      type: "dpad",
+      buttons: [
+        {id: "jump", label: "Jump"}
+      ]
+    }
 
     // OPTIONAL: Weights, training mode, and other configurations can also be passed as DQN Bot
   },
