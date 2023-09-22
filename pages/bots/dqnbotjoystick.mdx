@@ -1,0 +1,66 @@
+# DQN Bot Integration with Playroom
+## Overview
+Enter the DQNBotJoystick, an extension of the already robust DQNBot offered by Playroom's SDK. 
+This specialized bot class harmoniously marries the capabilities of the DQN with the intuitive control of a joystick. 
+By allowing developers to input joystick configurations, the gameplay experience becomes more fluid, while still harnessing the intelligence of reinforcement learning.
+
+## How DQN Bot with Joystick Integration Works
+
+### 1. Import DQN Bot with Joystick
+Start by importing the 'DQNBotJoystick' from the 'playroomkit'
+
+```js
+import { insertCoin, onPlayerJoin, DQNBotJoystick } from 'playroomkit';
+```
+
+### 2. Initialization Using insertCoin
+Initiate the joystick-augmented DQN bot by using the insertCoin method, making sure to include your joystick configuration:
+
+```js
+insertCoin({
+  ... other parameters,
+  
+  enableBots: true, // Signals the SDK to activate the DQN bot
+  
+  botOptions: {
+    botClass: DQNBotJoystick,  // Specifies the DQN bot class
+    
+    numberOfStates: x,  // Replace 'x' with the number of states you want to pass to the agent.
+
+    joystickConfig: {  // Your joystick configuration here. Actions will be derived from this joystick config.
+     
+    },
+
+    // OPTIONAL: Weights, training mode, and other configurations can also be passed as DQN Bot
+  },
+}).then(() => {
+  // Callback or subsequent logic after the bot initialization completes
+});
+```
+
+
+### 3. Fluid Game Loop Integration with Joystick Control
+Interweave the joystick-driven bot decisions within your game loop to achieve a seamless gameplay experience:
+
+```js
+if (player.isBot()) {
+    const currentState = [/* array of numbers or booleans defining the game state */];
+    
+    // With the joystick configuration in place, just set the game state
+    player.setDQNBotState(currentState);
+    
+    // The DQNBotJoystick, equipped with your joystick configuration, will automatically set the corresponding action
+    // No need to explicitly extract or set the action
+
+    // Reward the bot based on the outcome of its action, refining its decision-making process
+    const rewardValue = computeRewardForJoystickAction();
+    player.setDQNBotReward(rewardValue);
+}
+```
+
+To train the bot, continually provide rewards based on its actions to refine its decision-making capabilities. 
+If you wish to use the bot without additional training, simply utilize the DQN bot's decisions without supplying reward feedback.
+
+## Conclusion
+The DQNBotJoystick offers game developers an amplified experience, combining the strategic depth of DQN with the tangible and immediate feedback of joystick controls. 
+Whether you're crafting intricate game scenarios or merely exploring reinforcement learning's potential, the joystick-augmented DQN bot promises a dynamic gaming adventure.

@@ -21,6 +21,8 @@ await insertCoin();
 | `allowGamepads` | boolean | false   | If  `true` , Playroom will let players play game using gamepads connected to the stream device itself. This requires `streamMode` to also be `true`.<br/><br/>The gamepads need to be connected to device where stream screen is running. No phones are required in this mode but are optionally allowed as an alternative controller if there aren't enough physical gamepads in the room. Players who join via phone in this mode see an on-screen [Joystick](/multiplayer/joystick). |
 | `baseUrl`    | string  | *Current Page URL*      | The base URL used for generating room link that host shares with other players. |
 | `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
+| `enableBots` | boolean | false | If 'true' , Playroom initializes a bot using the provided botOptions. |
+| `botOptions` | Object | undefined | An object containing parameters for bot instantiation and configuration. |
 
 ## `getState(key: string): any`
 
