@@ -1,0 +1,90 @@
+# DQN Bot Integration with Playroom
+## Overview
+The Playroom SDK offers a seamless integration with the Deep Q-Network (DQN) bot, 
+providing a powerful tool for developers aiming to harness the capabilities of reinforcement learning in their games. 
+The integrated DQN Agent means you don’t have to start from scratch – simply configure, train (if required), and use.
+
+## How DQN Bot Integration Works
+
+### 1. Import DQN Bot
+Start by importing the 'DQNBot' from the 'playroomkit'
+
+```js
+import { insertCoin, onPlayerJoin, DQNBaseBot } from 'playroomkit';
+```
+
+### 2. Initialization Using insertCoin
+To activate the DQN bot within your game, you'll employ the insertCoin method. Here's a comprehensive breakdown:
+
+```js
+insertCoin({
+  ... other parameters,
+  
+  enableBots: true, // Signals the SDK to activate the DQN bot
+  
+  botOptions: {
+    botClass: DQNBaseBot, // Specifies the DQN bot class
+
+    botParams: {
+      numberOfStates: x,  // Replace 'x' with the number of states you want to pass to the agent
+      numberOfActions: y, // Replace 'y' with the number of potential actions the bot can take
+
+      // OPTIONAL: Customize hyperparameters. If not specified, the following default values are utilized:
+      specifications: {
+        gamma: 0.75,  // Discount factor for future rewards
+        epsilon: 0.1,  // Exploration rate in epsilon-greedy strategy
+        alpha: 0.01,  // Learning rate
+        experience_add_every: 25,  // Frequency of adding experiences to the replay memory
+        experience_size: 5000,  // Size of the replay memory
+        learning_steps_per_iteration: 10,  // Number of learning steps per iteration
+        tderror_clamp: 1.0,  // Clamp to prevent large TD errors
+        num_hidden_units: 100,  // Number of neurons in the hidden layer
+      }
+
+      // OPTIONAL: If you have pretrained weights or previous training data
+      weights: {
+        
+        // Serialized pretrained weights
+        modelWeights: "{\"nh\":100,\"ns\":11,\"na\":19,\"net\":{\"W1\":{\"n\":100,\"d\":11,\"w\":{\"0\":0.0013967478508977644,\"1\":-0.004024754355529853,\"2\":-0.005107000776689768,\"3\,....}}}}"
+        
+        iterations: previousIterationsCount, // Previous training iterations count
+        rewards: previousRewardValue, // Cumulative reward from previous sessions
+        startTime: previousStartTime, // Start time from previous training sessions
+      },
+
+      // OPTIONAL: Automatically stores model weights to local storage and load while initialization of bot
+      // Defaults to true, won't retreive from local storage if weights are given
+      retrieveFromLocalStorage: true
+    }
+
+    // OPTIONAL: Enable training mode to visualize and interact with the bot's learning process
+    trainingMode: true
+  },
+}).then(() => {
+  // Callback or subsequent logic after the bot initialization completes
+});
+```
+
+
+### 3. Integrating DQN Bot Actions Within Game Loop
+
+To achieve a smooth gameplay experience, you'll incorporate the bot's decisions within your game loop:
+
+```js
+if (player.isBot()) {
+    const currentState = [/* array of x numbers or booleans representing the game state */];
+    const chosenAction = player.bot.act(currentState); // Get the bot's chosen action based on the current state
+    // Implement the chosen action in the game
+
+    // If you're training the bot, provide a reward based on the outcome of the chosen action
+    const rewardValue = computeReward(chosenAction);
+    player.bot.learn(rewardValue);
+}
+```
+
+To train the bot, continually provide rewards based on its actions to refine its decision-making capabilities. 
+If you wish to use the bot without additional training, simply utilize the DQN bot's decisions without supplying reward feedback.
+
+## Conclusion
+By integrating the DQN bot with Playroom's SDK, game developers can delve into the captivating realm of reinforcement learning. 
+Whether you're keen on crafting an intelligent adversary or an adept ally, the DQN bot facilitates a thrilling gaming experience.
