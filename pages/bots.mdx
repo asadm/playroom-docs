@@ -1,3 +1,5 @@
+import { Callout } from 'nextra-theme-docs'
+
 # Introduction to Bot Integration in Playroom
 
 Playroom now lets you add bots to your games. Customize them to fit your game's style and elevate game experience!
@@ -16,7 +18,6 @@ import { insertCoin, isHost, onPlayerJoin, Bot } from 'playroomkit';
 ```
 
 Simply extend the Bot class to create your bot. Since bot is essentially a player, you can utilize all methods from the [PlayerState API Reference](/apidocs#playerstate). Ensure you receive botParams in the constructor and pass it to super().
-
 
 ```js
 class YourBot extends Bot {
@@ -49,10 +50,9 @@ class YourBot extends Bot {
     }
 }
 ```
-
-##### WARNING: 
-Constructor for your bot is called multiple times. If you want to set some state or do an actions once, do it on host only with ‘if (!isHost()) return'
-
+<Callout>
+ The constructor for your bot is called multiple times. If you want to set some state or perform an action only once, do it on the host using the condition if (!isHost()) return. An example is shown below.
+</Callout>
 ```js
     constructor(botParams) {
         super(botParams);
@@ -60,6 +60,7 @@ Constructor for your bot is called multiple times. If you want to set some state
         this.setState("health", 100);
     }
 ```
+
 ### 2. Define Your Bot with the SDK
 
 Once your bot class is ready, use the insertCoin() method 
