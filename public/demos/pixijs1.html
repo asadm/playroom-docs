@@ -1,0 +1,105 @@
+<head>
+  <style>
+    body {
+      background-color: #000;
+      margin: 0;
+    }
+    canvas {
+      zoom: 0.5;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <script src="https://unpkg.com/pixi.js@7.3.1/dist/pixi.min.js"></script>
+  <script src="https://unpkg.com/pixi-filters@5.2.1/dist/browser/pixi-filters.js"></script>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script type="module">
+    window._USETEMPSTORAGE = true;
+
+    const { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick } = Playroom;
+    const { Application, Graphics } = PIXI;
+    const { AsciiFilter } = PIXI.filters;
+
+    let players = [];
+    const playerSpeed = 2;
+
+    function start(app) {
+    
+      // 1. Handle players joining and quiting.
+      onPlayerJoin((state) => {
+        // create a joystick for the player
+        const joystick = new Joystick(state, { type: "angular" });
+
+        // create a circle sprite for the player
+        const sprite = new Graphics();
+        sprite.beginFill(state.getProfile().color.hex); // let's use the player's profile color
+        sprite.drawCircle(0, 0, 64, 64);
+        sprite.position.set(app.view.width / 2, app.view.height / 2);
+        app.stage.addChild(sprite);
+        
+        // add the player's state with their joystick and sprite to the players array
+        players.push({ state, joystick, sprite });
+        
+        // what should happen when the player leaves?
+        state.onQuit(() => {
+          // remove the sprite from the stage
+          sprite.removeFromParent();
+          // remove the player from the players array
+          players = players.filter(player => player.state !== state);
+        });
+      });
+
+      // 2. Let the host calculate everyone's state.
+      app.ticker.add(() => {
+        if (!isHost()) return; // only the host executes this block!
+
+        // for each player in the game
+        players.forEach(({ state, joystick, sprite }) => {
+          // get their joystick direction in terms of x and y
+          const isPressed = joystick.isJoystickPressed();
+          const direction = { 
+            x: isPressed ? Math.sin(joystick.angle()) : 0, 
+            y: isPressed ? Math.cos(joystick.angle()) : 0
+          }
+          // calculate their new position
+          const newPosition = { 
+            x: sprite.x + direction.x * playerSpeed,
+            y: sprite.y + direction.y * playerSpeed 
+          }
+          // update their position state
+          state.setState("position", newPosition)
+        });
+      });
+
+      // 3. Everyone updates their screen!
+      app.ticker.add(() => {
+        // for each player in the game, get position state and update their sprite
+        players.forEach(({ state, joystick, sprite }) => {
+          const newPosition = state.getState("position");
+          // only update sprite if position state is available!
+          if (newPosition) sprite.position.set(newPosition.x, newPosition.y);
+        });
+
+        // make sprites that are closer to the bottom of the screen appear in front
+        app.stage.children.sort((a, b) => a.y - b.y);
+      });
+    }
+
+    // 4. Insert Coin! Start the game.
+    insertCoin().then(() => {
+      // create PixiJS app and attach to DOM
+      const app = new Application({
+        resizeTo: window
+      });
+      document.body.appendChild(app.view);
+      // call our start function on the app
+      start(app);
+      // just for fun, let's apply a filter
+      app.stage.filters = [new AsciiFilter(16)]
+    });
+
+  </script>
+</body>

@@ -1,0 +1,97 @@
+# PixiJS
+
+[PixiJS](https://pixijs.com/) is a fast and lightweight 2D WebGL graphics library with rich support for visual effects and interactive content.
+
+Use the [Joystick](/multiplayer/joystick) to control ascii blobs in this simple, top-down demo!
+
+import Preview from '../../components/preview'
+
+<Preview src="/demos/pixijs1.html" />
+
+### Code for the above demo
+The multiplayer parts are highlighted so you can see Playroom in action! Find the full code [here](https://github.com/asadm/playroom-docs/blob/main/public/demos/pixijs1.html): 
+
+```js {11,13,17,26-31,36,41-45,52,60-62,71,78}
+import { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick } from "playroomkit";
+import { Application, Graphics } from "pixi.js";
+import { AsciiFilter } from "@pixi/filter-ascii";
+
+let players = [];
+const playerSpeed = 2;
+
+function start(app) {
+
+  // 1. Handle players joining and quiting.
+  onPlayerJoin((state) => {
+    // create a joystick for the player
+    const joystick = new Joystick(state, { type: "angular" });
+
+    // create a circle sprite for the player
+    const sprite = new Graphics();
+    sprite.beginFill(state.getProfile().color.hex); // let's use the player's profile color
+    sprite.drawCircle(0, 0, 64, 64);
+    sprite.position.set(app.view.width / 2, app.view.height / 2);
+    app.stage.addChild(sprite);
+    
+    // add the player's state with their joystick and sprite to the players array
+    players.push({ state, joystick, sprite });
+    
+    // what should happen when the player leaves?
+    state.onQuit(() => {
+      // remove the sprite from the stage
+      sprite.removeFromParent();
+      // remove the player from the players array
+      players = players.filter(player => player.state !== state);
+    });
+  });
+
+  // 2. Let the host calculate everyone's state.
+  app.ticker.add(() => {
+    if (!isHost()) return; // only the host executes this block!
+
+    // for each player in the game
+    players.forEach(({ state, joystick, sprite }) => {
+      // get their joystick direction in terms of x and y
+      const isPressed = joystick.isJoystickPressed();
+      const direction = { 
+        x: isPressed ? Math.sin(joystick.angle()) : 0, 
+        y: isPressed ? Math.cos(joystick.angle()) : 0
+      }
+      // calculate their new position
+      const newPosition = { 
+        x: sprite.x + direction.x * playerSpeed,
+        y: sprite.y + direction.y * playerSpeed 
+      }
+      // update their position state
+      state.setState("position", newPosition)
+    });
+  });
+
+  // 3. Everyone updates their screen!
+  app.ticker.add(() => {
+    // for each player in the game, get position state and update their sprite
+    players.forEach(({ state, joystick, sprite }) => {
+      const newPosition = state.getState("position");
+      // only update sprite if position state is available!
+      if (newPosition) sprite.position.set(newPosition.x, newPosition.y);
+    });
+
+    // make sprites that are closer to the bottom of the screen appear in front
+    app.stage.children.sort((a, b) => a.y - b.y);
+  });
+}
+
+// 4. Insert Coin! Start the game.
+insertCoin().then(() => {
+  // create PixiJS app and attach to DOM
+  const app = new Application({
+    resizeTo: window
+  });
+  document.body.appendChild(app.view);
+  // call our start function on the app
+  start(app);
+  // just for fun, let's apply a filter
+  app.stage.filters = [new AsciiFilter(16)]
+});
+
+```
