@@ -5,5 +5,6 @@
   "playcanvas":"Usage with PlayCanvas",
   "phaser":"Usage with Phaser",
   "kaboom":"Usage with Kaboom",
+  "pixijs":"Usage with PixiJS",
   "spline":"Usage with Spline"
 }
