@@ -1,23 +1,23 @@
 import { Callout } from 'nextra-theme-docs'
 
-# Introduction to Bot Integration in Playroom
+# Bots in Playroom
 
-Playroom now lets you add bots to your games. Customize them to fit your game's style and elevate game experience!
+Playroom lets you define bots for your game. These bots act the same as players; have player state, but can hold custom logic to act within the game loop.
 
-## Bot Overview
-With Playroom's SDK, you can easily create bots 
-tailored to your game's unique mechanics and dynamics.
+### Why Should I Use Bots?
 
-## How Bot Integration Works
+Playing with friends is fun but you can't always have your friends around. Having bots in your game increase engagement and retention. Bots can fill empty rooms in your game, or provide a single player experience.
 
-### 1. Import and Extend the SDK's Bot Class
-Start by importing the 'Bot' class from the 'playroomkit'
+## Adding Bot to Your Game
+
+### 1. Define the Bot Class
+Start by importing the `Bot` class from the Playroom.
 
 ```js
 import { insertCoin, isHost, onPlayerJoin, Bot } from 'playroomkit';
 ```
 
-Simply extend the Bot class to create your bot. Since bot is essentially a player, you can utilize all methods from the [PlayerState API Reference](/apidocs#playerstate). Ensure you receive botParams in the constructor and pass it to super().
+Extend the Bot class to create your bot with your custom game logic. Bots are essentially players, you can utilize all methods from the [PlayerState API Reference](/apidocs#playerstate). Make sure to receive `botParams` in the constructor and pass it to base class by doing `super(botParams)` in your bot's constructor.
 
 ```js
 class YourBot extends Bot {
@@ -26,7 +26,7 @@ class YourBot extends Bot {
     // Sample Bot Code
     constructor(botParams) {
         super(botParams);
-        this.setState("health", 100)
+        this.setState("health", 100);
     }
 
     // A simple method for the bot to take action based on some game state
@@ -61,7 +61,7 @@ class YourBot extends Bot {
     }
 ```
 
-### 2. Define Your Bot with the SDK
+### 2. Tell Playroom to Use Your Bot
 
 Once your bot class is ready, use the insertCoin() method 
 provided by the SDK to pass your bot type and its parameters. 
@@ -71,7 +71,7 @@ This step allows the SDK to recognize your bot.
 await insertCoin({
   ... other parameters,
   
-  enableBots: true,   // Indicates to the SDK to activate bot functionality
+  enableBots: true,   // Tells Playroom to activate bots in your game
   
   botOptions: {
     botClass: YourBot,  // Specifies the bot class to be utilized by the SDK
@@ -101,9 +101,9 @@ class YourBot extends Bot {
 }
 ```
 
-### 3. Initialize Your Bot in the Lobby
+### 3. Try Your Bot in Playroom
 
-Once you have defined your bot with the SDK, you can initialize your bot by simply pressing '🤖 +' button
+Once you have defined your bot, game host see a new `🤖 +` button to add bots to the game. Tap on the button to add a bot to the room. 
 
 <img src="/images/add-bot.png" style={{width: "100%", marginTop: '25px', borderRadius: '10px'}} />
 
@@ -116,7 +116,7 @@ integrate your bot's actions within the game loop, ensuring that it interacts
 with the game environment as intended.
 
 ```js
-players = []
+let players = [];
 
 onPlayerJoin(async (player) => {
     // Custom logic for handling player join events.
@@ -138,7 +138,8 @@ function gameLoop() {
             // Sample implementation
             if (!player.bot.isAlive()) { return }
 
-            const action = player.bot.decideAction()
+            // Call the methods defined in your bot class
+            const action = player.bot.decideAction();
             if (action === "ATTACK") {
                 // Attack Logic Here
             }
@@ -147,10 +148,8 @@ function gameLoop() {
                 // Move Forward Logic Here
             }
 
-            // Game mechanics
-
             // Updating the damage taken
-            player.bot.takeDamage(damageAmount)
+            player.bot.takeDamage(damageAmount);
         }
     }
 }
