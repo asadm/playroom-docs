@@ -102,7 +102,7 @@ class PlayScene extends Phaser.Scene {
             this.ground.width += 17 * 2;
           }
 
-          if (this.ground.width >= 1000) {
+          if (this.ground.width >= this.game.config.width) {
             this.ground.width = width;
             this.isGameRunning = true;
             this.dino.setVelocityX(0);

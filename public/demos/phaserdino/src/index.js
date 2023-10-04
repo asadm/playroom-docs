@@ -5,8 +5,10 @@ import PlayScene from './PlayScene.js';
 import PreloadScene from './PreloadScene.js';
 
 const config = {
+  mode: Phaser.Scale.FIT,
+  autoCenter: Phaser.Scale.CENTER_BOTH,
   type: Phaser.AUTO,
-  width: 1000,
+  width: window.innerWidth,
   height: 340,
   pixelArt: true,
   transparent: true,
