@@ -1,12 +1,13 @@
 // import Phaser from 'phaser';
-
+const { onPlayerJoin, insertCoin, isHost, myPlayer, setState, getState, Joystick } = Playroom;
 class PlayScene extends Phaser.Scene {
 
   constructor() {
     super('PlayScene');
   }
 
-  create() {
+  async create() {
+    await insertCoin();
     const { height, width } = this.game.config;
     this.gameSpeed = 10;
     this.isGameRunning = false;
@@ -49,17 +50,41 @@ class PlayScene extends Phaser.Scene {
       this.gameOverText,  this.restart
     ])
 
-    this.obsticles = this.physics.add.group();
+    this.obstacles = this.physics.add.group();
+    this.currentObstacleIds = [];
 
     this.initAnims();
     this.initStartTrigger();
     this.initColliders();
     this.handleInputs();
     this.handleScore();
+
+    this.otherDinosContainer = this.physics.add.group();
+    this.otherDinos = [];
+    const joystickConfig = {
+      type: "dpad",
+      buttons: [
+        {id: "jump", label: "Jump"},
+        {id: "crouch", label: "Crouch"}
+      ]
+    }
+    this.myJoystick = new Joystick(myPlayer(), joystickConfig);
+
+    onPlayerJoin(state=>{
+      if (state.id === myPlayer().id) { return; }
+      const joystick = new Joystick(state, joystickConfig);
+      const sprite = this.otherDinosContainer.create(0, height, 'dino-idle');
+      sprite.alpha = 0.6;
+      this.otherDinos.push({state, sprite, joystick});
+      state.onQuit(()=>{
+        this.otherDinos = this.otherDinos.filter(({state: s})=>s.id !== state.id);
+        this.otherDinosContainer.killAndHide(sprite);
+      })
+    });
   }
 
   initColliders() {
-    this.physics.add.collider(this.dino, this.obsticles, () => {
+    this.physics.add.collider(this.dino, this.obstacles, () => {
       this.highScoreText.x = this.scoreText.x - this.scoreText.width - 20;
 
       const highScore = this.highScoreText.text.substr(this.highScoreText.text.length - 5);
@@ -68,8 +93,8 @@ class PlayScene extends Phaser.Scene {
       this.highScoreText.setText('HI ' + newScore);
       this.highScoreText.setAlpha(1);
 
-      this.physics.pause();
-      this.isGameRunning = false;
+      // this.physics.pause();
+      // this.isGameRunning = false;
       this.anims.pauseAll();
       this.dino.setTexture('dino-hurt');
       this.respawnTime = 0;
@@ -113,6 +138,16 @@ class PlayScene extends Phaser.Scene {
         }
       });
     }, null, this)
+
+    setState('obstacles', undefined);
+    console.log("clearing")
+
+    // jump!
+    this.jumpSound.play();
+    this.dino.body.height = 92;
+    this.dino.body.offset.y = 0;
+    this.dino.setVelocityY(-1600);
+    this.dino.setTexture('dino', 0);
   }
 
   initAnims() {
@@ -177,7 +212,7 @@ class PlayScene extends Phaser.Scene {
       this.dino.body.height = 92;
       this.dino.body.offset.y = 0;
       this.physics.resume();
-      this.obsticles.clear(true, true);
+      this.obstacles.clear(true, true);
       this.isGameRunning = true;
       this.gameOverScreen.setAlpha(0);
       this.anims.resumeAll();
@@ -208,43 +243,101 @@ class PlayScene extends Phaser.Scene {
     })
   }
 
-  placeObsticle() {
-    const obsticleNum = Math.floor(Math.random() * 7) + 1;
+  placeObstacleHost(){
+    const obstacleNum = Math.floor(Math.random() * 7) + 1;
     const distance = Phaser.Math.Between(600, 900);
-
-    let obsticle;
-    if (obsticleNum > 6) {
+    const randomStringId = Math.random().toString(36).substring(7);
+    let currentEnemyHeight = 0;
+    if (obstacleNum > 6) {
       const enemyHeight = [20, 50];
-      obsticle = this.obsticles.create(this.game.config.width + distance, this.game.config.height - enemyHeight[Math.floor(Math.random() * 2)], `enemy-bird`)
+      currentEnemyHeight = enemyHeight[Math.floor(Math.random() * 2)];
+    }
+    const obstacle = {
+      id: randomStringId,
+      x: distance,
+      y: currentEnemyHeight,
+      type: obstacleNum,
+    }
+    const obstacles = getState('obstacles') || [];
+    obstacles.push(obstacle);
+    setState('obstacles', obstacles);
+  }
+
+  placeObstacle(data) {
+    let obstacle;
+    const obstacleNum = data.type;
+    const enemyHeight = data.y;
+    const distance = data.x;
+    if (obstacleNum > 6) {
+      obstacle = this.obstacles.create(this.game.config.width + distance, this.game.config.height - enemyHeight, `enemy-bird`)
         .setOrigin(0, 1)
-        obsticle.play('enemy-dino-fly', 1);
-      obsticle.body.height = obsticle.body.height / 1.5;
+        obstacle.play('enemy-dino-fly', 1);
+      obstacle.body.height = obstacle.body.height / 1.5;
     } else {
-      obsticle = this.obsticles.create(this.game.config.width + distance, this.game.config.height, `obsticle-${obsticleNum}`)
+      console.log("obstacleNum", `obstacle-${obstacleNum}`);
+      obstacle = this.obstacles.create(this.game.config.width + distance, this.game.config.height, `obstacle-${obstacleNum}`)
         .setOrigin(0, 1);
 
-     obsticle.body.offset.y = +10;
+      obstacle.body.offset.y = +10;
     }
 
-    obsticle.setImmovable();
+    obstacle._obstacleId = data.id;
+
+    obstacle.setImmovable();
+
+    this.currentObstacleIds.push(obstacle._obstacleId);
+    console.log("currentObstacleIds", this.currentObstacleIds)
   }
 
   update(time, delta) {
     if (!this.isGameRunning) { return; }
 
+    if (this.myJoystick.isPressed('jump') && !this.keyJumpIsDown){
+      this.keyJumpIsDown = true;
+      if (!this.dino.body.onFloor() || this.dino.body.velocity.x > 0) { return; }
+
+      this.jumpSound.play();
+      this.dino.body.height = 92;
+      this.dino.body.offset.y = 0;
+      this.dino.setVelocityY(-1600);
+      this.dino.setTexture('dino', 0);
+    }
+    else if (!this.myJoystick.isPressed('jump')){
+      this.keyJumpIsDown = false;
+    }
+
+    const obstacles = getState('obstacles') || [];
+    obstacles.forEach(obstacle => {
+      // console.log("obstacle", this.currentObstacleIds)
+      if (this.currentObstacleIds.indexOf(obstacle.id)===-1) {
+        this.placeObstacle(obstacle);
+      }
+    });
+
     this.ground.tilePositionX += this.gameSpeed;
-    Phaser.Actions.IncX(this.obsticles.getChildren(), -this.gameSpeed);
+    Phaser.Actions.IncX(this.obstacles.getChildren(), -this.gameSpeed);
     Phaser.Actions.IncX(this.environment.getChildren(), - 0.5);
 
     this.respawnTime += delta * this.gameSpeed * 0.08;
     if (this.respawnTime >= 1500) {
-      this.placeObsticle();
-      this.respawnTime = 0;
+      if (isHost()){
+        console.log("place obstacle")
+        this.placeObstacleHost();
+        this.respawnTime = 0;
+      }
     }
 
-    this.obsticles.getChildren().forEach(obsticle => {
-      if (obsticle.getBounds().right < 0) {
-        this.obsticles.killAndHide(obsticle);
+    this.obstacles.getChildren().forEach(obstacle => {
+      if (obstacle.getBounds().right < 0) {
+        this.obstacles.killAndHide(obstacle);
+        // console.log("updating currentObstacleIds", this.currentObstacleIds);
+        // this.currentObstacleIds = this.currentObstacleIds.filter(id => id !== obstacle._obstacleId);
+        // console.log("updated currentObstacleIds", this.currentObstacleIds);
+        if (isHost()){
+          const obstacles = getState('obstacles') || [];
+          const newObstacles = obstacles.filter(obs => obs.id !== obstacle._obstacleId);
+          setState('obstacles', newObstacles);
+        }
       }
     })
 
@@ -260,6 +353,15 @@ class PlayScene extends Phaser.Scene {
     } else {
       this.dino.body.height <= 58 ? this.dino.play('dino-down-anim', true) : this.dino.play('dino-run', true);
     }
+
+    myPlayer().setState('pos', [this.dino.body.x, this.dino.body.y]);
+    myPlayer().setState('anim', this.dino.anims.currentAnim.key);
+    this.otherDinos.forEach(({state, sprite}) => {
+      const pos =  state.getState('pos') || [0, 0];
+      sprite.body.x = pos[0];
+      sprite.body.y = pos[1];
+      sprite.anims.play(state.getState('anim'), true);
+    });
   }
 }
 

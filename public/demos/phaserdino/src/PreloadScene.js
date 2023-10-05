@@ -42,12 +42,12 @@ class PreloadScene extends Phaser.Scene {
       frameHeight: 77
     })
 
-    this.load.image('obsticle-1', 'assets/cactuses_small_1.png')
-    this.load.image('obsticle-2', 'assets/cactuses_small_2.png')
-    this.load.image('obsticle-3', 'assets/cactuses_small_3.png')
-    this.load.image('obsticle-4', 'assets/cactuses_big_1.png')
-    this.load.image('obsticle-5', 'assets/cactuses_big_2.png')
-    this.load.image('obsticle-6', 'assets/cactuses_big_3.png')
+    this.load.image('obstacle-1', 'assets/cactuses_small_1.png')
+    this.load.image('obstacle-2', 'assets/cactuses_small_2.png')
+    this.load.image('obstacle-3', 'assets/cactuses_small_3.png')
+    this.load.image('obstacle-4', 'assets/cactuses_big_1.png')
+    this.load.image('obstacle-5', 'assets/cactuses_big_2.png')
+    this.load.image('obstacle-6', 'assets/cactuses_big_3.png')
   }
 
   create() {
