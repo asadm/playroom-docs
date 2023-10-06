@@ -14,13 +14,13 @@ import { insertCoin, onPlayerJoin, DQNBaseBot } from 'playroomkit';
 ```
 
 ### 2. Initialization Using insertCoin
-To activate the DQN bot within your game, you'll employ the insertCoin method. Here's a comprehensive breakdown:
+To activate the DQN bot within your game, you'll utilize the insertCoin method. Here's a comprehensive breakdown:
 
 ```js
-insertCoin({
+await insertCoin({
   ... other parameters,
   
-  enableBots: true, // Signals the SDK to activate the DQN bot
+  enableBots: true, // Signals the SDK to activate bot
   
   botOptions: {
     botClass: DQNBaseBot, // Specifies the DQN bot class
@@ -41,7 +41,7 @@ insertCoin({
         num_hidden_units: 100,  // Number of neurons in the hidden layer
       }
 
-      // OPTIONAL: If you have pretrained weights or previous training data
+      // OPTIONAL: Initialize with weights if you have pretrained weights or previous training data
       weights: {
         
         // Serialized pretrained weights
@@ -57,11 +57,9 @@ insertCoin({
       retrieveFromLocalStorage: true
     }
 
-    // OPTIONAL: Enable training mode to visualize and interact with the bot's learning process
+    // OPTIONAL: Enable training mode to visualize graph of iteration/rewards.
     trainingMode: true
   },
-}).then(() => {
-  // Callback or subsequent logic after the bot initialization completes
 });
 ```
 
@@ -84,7 +82,3 @@ if (player.isBot()) {
 
 To train the bot, continually provide rewards based on its actions to refine its decision-making capabilities. 
 If you wish to use the bot without additional training, simply utilize the DQN bot's decisions without supplying reward feedback.
-
-## Conclusion
-By integrating the DQN bot with Playroom's SDK, game developers can delve into the captivating realm of reinforcement learning. 
-Whether you're keen on crafting an intelligent adversary or an adept ally, the DQN bot facilitates a thrilling gaming experience.
