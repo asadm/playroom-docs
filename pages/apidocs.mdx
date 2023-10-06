@@ -23,6 +23,8 @@ await insertCoin();
 | `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
 | `enableBots` | boolean | false | If 'true' , Playroom initializes a bot using the provided botOptions. |
 | `botOptions` | Object | undefined | An object containing parameters for bot instantiation and configuration. |
+| `roomCode` | string | undefined | Override the room to join. If this is not set, a random room code is assigned. Do note that if the URL has room `#r=` param, that is used instead of this.|
+| `skipLobby` | boolean | false | Skips the Playroom's lobby screen altogether. This is useful if you want to design your own multiplayer lobby. |
 
 ## `getState(key: string): any`
 
