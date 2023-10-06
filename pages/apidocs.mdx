@@ -1,7 +1,6 @@
 # API Reference
 
 import { Tabs, Tab, Callout } from 'nextra/components'
-import JavaScriptAPIDocs from '../components/javascript_apidocs.mdx'
 
 ## `insertCoin({ InitOptions })`
 
@@ -21,6 +20,11 @@ await insertCoin();
 | `streamMode` | boolean | false   | If  `true` , Playroom will start in [ stream mode ]( /multiplayer/stream ). |
 | `allowGamepads` | boolean | false   | If  `true` , Playroom will let players play game using gamepads connected to the stream device itself. This requires `streamMode` to also be `true`.<br/><br/>The gamepads need to be connected to device where stream screen is running. No phones are required in this mode but are optionally allowed as an alternative controller if there aren't enough physical gamepads in the room. Players who join via phone in this mode see an on-screen [Joystick](/multiplayer/joystick). |
 | `baseUrl`    | string  | *Current Page URL*      | The base URL used for generating room link that host shares with other players. |
+| `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
+| `enableBots` | boolean | false | If 'true' , Playroom initializes a bot using the provided botOptions. |
+| `botOptions` | Object | undefined | An object containing parameters for bot instantiation and configuration. |
+| `roomCode` | string | undefined | Override the room to join. If this is not set, a random room code is assigned. Do note that if the URL has room `#r=` param, that is used instead of this.|
+| `skipLobby` | boolean | false | Skips the Playroom's lobby screen altogether. This is useful if you want to design your own multiplayer lobby. |
 
 ## `getState(key: string): any`
 
@@ -30,7 +34,7 @@ Returns the current value of the given key in the game state.
 const winnerId = getState('winner');
 ```
 
-## `setState(key: string, value: any, reliable: boolean = false): void`
+## `setState(key: string, value: any, reliable: boolean = true): void`
 
 Sets the value of the given key in the game state. If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner. 
 
@@ -96,7 +100,15 @@ const winnerId = await waitForState('winner');
 
 ## PlayerState
 
-A `PlayerState` object represents a player in the room. It has the following methods:
+A `PlayerState` object represents a player in the room. It has the following methods and properties:
+
+### `id: string`
+
+The player's unique ID.
+
+```js
+console.log(`Player ID: ${player.id}`);
+```
 
 ### `getProfile(): PlayerProfile`
 
@@ -107,6 +119,7 @@ Returns the player's profile, which has the following properties:
 | `name`   | string | The player's name.                                                          |
 | `color`  | Color  | The player's color.                                                         |
 | `photo`  | string | The player's avatar. This is a `dataURL` to an image.                       |
+| `avatarIndex` | number | The index of the player's picked avatar. This is an index into the `avatars` array passed to `insertCoin`. If no `avatars` array was passed, this is `-1`. |
 
 
 The `Color` type is an object with the following properties:
@@ -128,9 +141,12 @@ Returns the value of the given key in the player's state.
 const score = player.getState('score');
 ```
 
-### `setState(key: string, value: any)`
+### `setState(key: string, value: any, reliable: boolean = false)`
 
 Sets the value of the given key in the player's state.
+
+If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner. 
+If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
 
 ```js
 player.setState('score', 10);
@@ -145,12 +161,6 @@ player.onQuit(() => {
   console.log(`${player.id} quit!`);
 });
 ```
-
-
-## Hooks for React
-
-See the [React API here](/apidocs/react).
-
 
 ## Joystick Controller
 
@@ -231,6 +241,13 @@ Returns the direction of the joystick, as a string. The string can be one of the
 - `left`
 - `right`
 
+### `destroy(): void`
+
+Destroy and remove the Joystick and its UI.
+
+## Hooks for React
+
+See the [React API here](/apidocs/react).
 
 ## Unity (C#) API
 

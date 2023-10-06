@@ -1,0 +1,79 @@
+---
+title: "Making Playroom's JavaScript Plugin for Unity"
+description: "As we launch our Unity plugin, I wanted to share some of the learnings from the process."
+image: "/images/blog/unity-blog.png"
+---
+
+import AuthorBio from "../../components/AuthorBio";
+import { Callout } from 'nextra-theme-docs'
+
+# Making Playroom Plugin for Unity
+
+<AuthorBio author="asad" date="Aug 23 2023" />
+![Playroom Unity Plugin](/images/blog/unity-blog.png)
+ 
+<Callout type="info" emoji="ℹ️">
+  **TL;DR:** We made a plugin for Unity to make it easy for Unity developers to use Playroom in their games. Docs are [here](/usage/unity) and plugin code is [here](https://github.com/asadm/playroom-unity/).
+</Callout>
+
+Playroom is mostly written in JavaScript which makes sense for web games. But we wanted to make it easy for Unity developers to use Playroom in their games. Considering it's the most popular game engine, it was a no-brainer to make a plugin for it. So we began investigating on ways we can tackle this.
+
+Here are a few options we considered:
+
+## Write a Complete Port in C#
+**Difficulty:** Hard
+
+**Benefits:** Native to Unity, somewhat performant, works on all platforms that Unity supports.
+
+> A Series-A CTO: "Let's just rewrite the whole thing in C#! Sure, it's a bit challenging - but hey, no pain, no gain, right? And just imagine the thrill of maintaining not one, but TWO separate codebases. Let's hire a team of C# developers and get started. We need to spend that VC money somehow."
+
+This was the first option we considered (and quickly discarded). We would have to port the entire codebase to C# and then maintain it. This would include the core networking code, the API and the UI components and screens. We would also have to make sure that the C# code is in sync with the JavaScript code and always will be. Just to support Unity. We all agreed that this was a bad idea.
+
+## Embed a JS/WebView in Unity
+**Difficulty:** Medium
+
+**Benefits:** Works on all platforms that Unity supports.
+
+By combining some native code for each platform, we could embed a WebView in Unity and load the Playroom client in it. This would be a lot easier than porting the entire codebase to C#. But it would still require us to write native code for each platform. We could have used a cross-platform WebView library like [UniWebView](https://uniwebview.com/) (if we had figured out licensing) or an open-source one like [unity-webview](https://github.com/gree/unity-webview).
+
+After embedding a webview, we would write bindings for Unity to communicate with the webview. We would then show webview when the user is in lobby. When the user joins a room, we would hide the webview and show the game screen.
+
+**We actually prototyped and benchmarked this option for a bit. It works really well and the bridging is performant enough.**
+
+But we didn't go with this option for two reasons:
+
+1. The installation for the plugin would be a bit more complicated and flaky for the user.
+2. It would still be hard to maintain as embedding a browser just means native code for each platform.
+
+We may still go with this option in the future but we wanted something more lean for now. So we decided to go with the next option.
+
+## C# Wrapper for JavaScript
+
+**Difficulty:** Easy
+
+**Benefits:** While only works for browser games, it's the easiest to maintain.
+
+Enabling web games is our mission at Playroom. This integration was the easiest to implement. Unity WebGL has [a way to interact with browser scripts](https://docs.unity3d.com/Manual/webgl-interactingwithbrowserscripting.html) from C# code.
+
+We would just write a C# wrapper for the Playroom JavaScript client and expose it to Unity. This would allow us to use the same client code for both web and Unity games. We would just have to write a wrapper for Unity to communicate with the client.
+
+One caveat though: When developing locally, we found that it's difficult to rebuild the WebGL export in Unity every time we make a change and test. We decided to make a local mock API that works in the Unity editor, so that you can test your core game without multiplayer and then switch to the real API when you're ready to test multiplayer. 
+
+This was a good solution for a small team like ours. We could focus on the core game and not worry about maintaining a separate codebase for Unity. We could also focus on making the plugin easy to use and maintain.
+
+Here is a quick demo of the plugin in action:
+
+<video controls autoplay loop muted>
+  <source src="/images/blog/unityjumpingcube.mp4" type="video/mp4" />
+</video>
+
+
+## Future Implications
+
+One benefit of current approach is that we can add-in other platform bindings as we go. Developers won't have to change their code since the Playroom API would remain unchanged. For example, we can add a Swift binding for iOS and a Java binding for Android while keeping the APi surface intact.
+
+*We can even silently go with approach #1 in the future without devs having to change their code. Who knows, maybe we'll have a gazillion dollars in funding and a team of .NET Certified developers.*
+
+## Code
+
+The code for plugin is open-source and available on [GitHub](https://github.com/asadm/playroom-unity/) if you want to check it out. Do check out the [documentation](/usage/unity) to see how easy it is to get started.

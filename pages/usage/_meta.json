@@ -2,7 +2,9 @@
   "threejs":"Usage with Three.js",
   "react":"Usage with React",
   "unity":"Usage with Unity",
+  "playcanvas":"Usage with PlayCanvas",
   "phaser":"Usage with Phaser",
   "kaboom":"Usage with Kaboom",
+  "pixijs":"Usage with PixiJS",
   "spline":"Usage with Spline"
 }

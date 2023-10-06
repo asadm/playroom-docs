@@ -17,6 +17,7 @@ const [count, setCount] = useMultiplayerState('count', 0);
 ```
 
 ### usePlayersList(triggerOnPlayerStateChange?: boolean)
+Returns [PlayerState](/apidocs#playerstate) objects for all players in the game.
 Use this hook to get a list of all players in the game. The list will be updated as players join and leave the game.
 
 If `triggerOnPlayerStateChange` is `true`, the hook will trigger a re-render when a player's state changes. This is useful for times when you want to display a list of players and their state values like scores.

@@ -1,0 +1,60 @@
+import Preview from '../../components/preview'
+
+# Using PlayCanvas with Playroom Kit
+
+PlayCanvas is great for making web games as it uses web-native APIs under the hood. Playroom Kit complements PlayCanvas by simplifying the development of multiplayer games.
+
+## Getting started
+
+### 1. Add Playroom Kit as External Scripts
+After you create a new project or open an existing one, go to the Settings and add the following URLs to the External Scripts list:
+
+```
+https://unpkg.com/react@18.2.0/umd/react.production.min.js
+https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js
+https://unpkg.com/playroomkit/multiplayer.umd.js
+```
+
+This will make `Playroom` global variable available in your project scripts.
+
+### 2. Insert Coin
+
+In any of the scripts where you want to initialize and use Playroom, add the following code at the top of the file:
+
+```javascript
+const { onPlayerJoin, insertCoin, isHost, myPlayer, getState, setState, Joystick } = Playroom;
+
+```
+
+### 3. Initialize Playroom
+
+In the same script, call the `insertCoin()` method likely somewhere inside your `prototype.initialize` to start Playroom on page load.
+
+#### Example
+```javascript
+const { onPlayerJoin, insertCoin, isHost, myPlayer, getState, setState, Joystick } = Playroom;
+var GameManager = pc.createScript('gameManager');
+GameManager.prototype.initialize = async function () {
+  await insertCoin(); // Show Playroom lobby screen and wait for players to join
+  // ... your game code
+}
+```
+
+### 4. Follow rest of the [Multiplayer Steps](/multiplayer) to build your game in PlayCanvas.
+The rest of the steps are the same as for any other web game. You can also use all of APIs including [On-screen Joystick](/multiplayer/joystick), [Gamepads](/multiplayer/gamepads), [Stream mode](/multiplayer/stream), etc.
+
+### Sample Project
+
+Here is a simple multiplayer example project that uses Playroom Kit with PlayCanvas. 
+
+<Preview src="/demos/playcanvascubes/index.html" maxPlayers={1} />
+
+#### Code
+
+You can download the ZIP project from below and import it into your PlayCanvas.
+
+[Download ZIP](/demos/playcanvascubes.zip)
+
+## API Reference
+
+See the [API reference](/apidocs) for more information.
