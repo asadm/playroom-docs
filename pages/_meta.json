@@ -6,9 +6,9 @@
     }
   },
   "multiplayer": "🕹️ | Making Multiplayer",
-  "bots": "🤖 | Bots",
   "typesofgames": "🎮 | Types of Games",
   "setup": "🧩 | Setup",
+      "components": "🤖 | Multiplayer Modules",
   "usage": "📙 | Usage",
   "tutorials": "📺 | Tutorials",
   "templates": "🍱 | Templates",
@@ -19,7 +19,6 @@
     "title": "🔖 | API Reference"
   },
   "ai": "🧙🏻‍♀️ | Upcoming: Playroom AI",
-  "components": "🎲 | Upcoming: Components",
   "billing": "🧾 | Billing FAQs",
   "changelog": "📜 | Changelog",
   "---": {
