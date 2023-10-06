@@ -45,9 +45,9 @@ class PlayScene extends Phaser.Scene {
 
     this.gameOverScreen = this.add.container(width / 2, height / 2 - 50).setAlpha(0)
     this.gameOverText = this.add.image(0, 0, 'game-over');
-    this.restart = this.add.image(0, 80, 'restart').setInteractive();
+    // this.restart = this.add.image(0, 80, 'restart').setInteractive();
     this.gameOverScreen.add([
-      this.gameOverText,  this.restart
+      this.gameOverText, // this.restart
     ])
 
     this.obstacles = this.physics.add.group();
@@ -56,7 +56,7 @@ class PlayScene extends Phaser.Scene {
     this.initAnims();
     this.initStartTrigger();
     this.initColliders();
-    this.handleInputs();
+    // this.handleInputs();
     this.handleScore();
 
     this.otherDinosContainer = this.physics.add.group();
@@ -64,8 +64,8 @@ class PlayScene extends Phaser.Scene {
     const joystickConfig = {
       type: "dpad",
       buttons: [
+        {id: "crouch", label: "Crouch"},
         {id: "jump", label: "Jump"},
-        {id: "crouch", label: "Crouch"}
       ]
     }
     this.myJoystick = new Joystick(myPlayer(), joystickConfig);
@@ -102,6 +102,7 @@ class PlayScene extends Phaser.Scene {
       this.gameOverScreen.setAlpha(1);
       this.score = 0;
       this.hitSound.play();
+      myPlayer().setState('gameover', true);
     }, null, this);
   }
 
@@ -292,7 +293,7 @@ class PlayScene extends Phaser.Scene {
   update(time, delta) {
     if (!this.isGameRunning) { return; }
 
-    if (this.myJoystick.isPressed('jump') && !this.keyJumpIsDown){
+    if (!myPlayer().getState('gameover') && this.myJoystick.isPressed('jump') && !this.keyJumpIsDown){
       this.keyJumpIsDown = true;
       if (!this.dino.body.onFloor() || this.dino.body.velocity.x > 0) { return; }
 
@@ -304,6 +305,38 @@ class PlayScene extends Phaser.Scene {
     }
     else if (!this.myJoystick.isPressed('jump')){
       this.keyJumpIsDown = false;
+    }
+
+    // this.input.keyboard.on('keydown_DOWN', () => {
+    //   if (!this.dino.body.onFloor() || !this.isGameRunning) { return; }
+
+    //   this.dino.body.height = 58;
+    //   this.dino.body.offset.y = 34;
+    // })
+
+    // this.input.keyboard.on('keyup_DOWN', () => {
+    //   if ((this.score !== 0 && !this.isGameRunning)) { return; }
+
+    //   this.dino.body.height = 92;
+    //   this.dino.body.offset.y = 0;
+    // })
+    if (!myPlayer().getState('gameover') && this.myJoystick.isPressed('crouch') && !this.keyCrouchIsDown){
+      this.keyCrouchIsDown = true;
+      if (!this.dino.body.onFloor() || !this.isGameRunning) { return; }
+
+      this.dino.body.height = 58;
+      this.dino.body.offset.y = 34;
+    }
+    else if (!this.myJoystick.isPressed('crouch') && this.keyCrouchIsDown){
+      this.keyCrouchIsDown = false;
+      if ((this.score !== 0 && !this.isGameRunning)) { return; }
+
+      this.dino.body.height = 92;
+      this.dino.body.offset.y = 0;
+    }
+
+    if (myPlayer().getState('gameover')){
+      this.dino.play('dino-hurt');
     }
 
     const obstacles = getState('obstacles') || [];
@@ -356,12 +389,40 @@ class PlayScene extends Phaser.Scene {
 
     myPlayer().setState('pos', [this.dino.body.x, this.dino.body.y]);
     myPlayer().setState('anim', this.dino.anims.currentAnim.key);
+    let totalGameovers = 0;
     this.otherDinos.forEach(({state, sprite}) => {
       const pos =  state.getState('pos') || [0, 0];
       sprite.body.x = pos[0];
       sprite.body.y = pos[1];
       sprite.anims.play(state.getState('anim'), true);
+      if (state.getState('gameover')) {
+        totalGameovers++;
+      }
     });
+    if (!this.restartingInProgress && myPlayer().getState('gameover') && totalGameovers === this.otherDinos.length) {
+      this.restartingInProgress = true;
+      setTimeout(() => {
+        if (isHost()){
+          this.otherDinos.forEach(({state}) => {
+            state.setState('gameover', undefined);
+          });
+          myPlayer().setState('gameover', undefined);
+          setState('obstacles', undefined);
+        }
+        
+        this.dino.setVelocityY(0);
+        this.dino.body.height = 92;
+        this.dino.body.offset.y = 0;
+        this.physics.resume();
+        this.obstacles.clear(true, true);
+        this.isGameRunning = true;
+        this.gameOverScreen.setAlpha(0);
+        this.anims.resumeAll();
+        this.dino.setVelocityY(-1600);
+
+        this.restartingInProgress = false;
+      }, 2000);
+    }
   }
 }
 
