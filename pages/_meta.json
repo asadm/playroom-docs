@@ -5,8 +5,13 @@
       "layout": "full"
     }
   },
-  "multiplayer": "🕹️ | Making Multiplayer",
-  "typesofgames": "🎮 | Types of Games",
+  "multiplayer": {
+    "theme":{
+      "collapsed": true
+    },
+    "title": "🕹️ | Making Multiplayer"
+
+  },
   "setup": "🧩 | Setup",
       "components": "🤖 | Multiplayer Modules",
   "usage": "📙 | Usage",
