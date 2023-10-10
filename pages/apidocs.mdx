@@ -97,6 +97,18 @@ const winnerId = await waitForState('winner');
 // Do something with the winner
 ```
 
+## waitForPlayerState(player: [`PlayerState`](#playerstate), stateKey: string): Promise&lt;any&gt;
+
+Returns a promise that resolves to the state value only when the player state has the given key set, to any truthy value.
+
+In other words, it waits until a player state is set. This is useful for waiting for a player to play their turn, for example.
+
+```js
+// Wait for the the player to play their turn
+const chosenThing = await waitForState('playedTurn');
+// Do something with the thing
+```
+
 
 ## PlayerState
 
