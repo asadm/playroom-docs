@@ -8,7 +8,7 @@ Playroom also lets you make games that are played on a central screen with physi
 
 This is great for making couch multiplayer games.
 
-If you ran out of controllers, more players can also join the action with their mobile devices. Players on phones see on-screen [Joystick controls](/multiplayer/joystick) to play the game. The API remains common for both types of controllers, so as a developer you don't have to worry about the type of controller being used.
+If you ran out of controllers, more players can also join the action with their mobile devices. Players on phones see on-screen [Joystick controls](/components/joystick) to play the game. The API remains common for both types of controllers, so as a developer you don't have to worry about the type of controller being used.
 
 ## How to enable Gamepad Controllers in your game
 
@@ -37,7 +37,7 @@ Once you enable both `allowGamepads` and `streamMode`, you will see the followin
 
 The players who have joined from their gamepads have a small icon next to their name. If all the players in the game are using gamepads, they see a "hold button to start" option. If there are players who have joined from their phones, one of them become the host and can start the game.
 
-Players who have joined from their phones see an [on-screen joystick](/multiplayer/joystick#angular-with-buttons) to play the game.
+Players who have joined from their phones see an [on-screen joystick](/components/joystick#angular-with-buttons) to play the game.
 
 ### 3. Use `Joystick` API to get player inputs.
 
@@ -84,7 +84,7 @@ players.forEach(({state, joystick})=>{
 
 ```
 
-See [Joystick API](/multiplayer/joystick) for more details.
+See [Joystick API](/components/joystick) for more details.
 
 ## Limitations
 
