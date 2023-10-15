@@ -2,8 +2,67 @@ import { Callout } from 'nextra-theme-docs'
 
 # Lobby UI in Playroom
 
- 
-<Callout emoji="👷🏼‍♀️">
-  This section is under development. We are actively working on building components.
-</Callout>
+A multiplayer lobby is a place where players can create or join a game. It is also where players can set their nickname, avatar, color, etc.
 
+Playroom includes a Lobby component that is enabled by default. It looks like this:
+
+import Preview from '../../components/preview'
+
+<Preview src="/demos/react1.html" maxPlayers={0} />
+
+### Hosting and Joining a Game
+
+In order to allow players to host and join games, Playroom's lobby lets them copy the room link and share it with other players. The lobby also includes a QR code that can be scanned by other players to join the game easily.
+
+### Avatar
+
+Playroom lobby includes a procedurally-generated avatar system. Players get a pretty unique avatar that they can regenerate by tapping on the avatar itself.
+
+### Nickname and Color
+
+Players can set their nickname and color. The color can be used to identify players in the game.
+
+
+## Advanced Usage
+
+### Changing the Avatar System
+
+Playroom's lobby includes a procedurally-generated avatar system. If you want to use your own avatars, you can do so by passing a custom `avatars` image list to the [`insertCoin` method](https://docs.joinplayroom.com/apidocs#insertcoin-initoptions-). This list should contain a list of image URLs.
+
+```js
+import { insertCoin } from 'playroomkit';
+
+const avatars = [
+  'https://example.com/avatar1.png',
+  'https://example.com/avatar2.png',
+  'https://example.com/avatar3.png',
+];
+
+await insertCoin({
+  avatars,
+});
+
+// much later, when you want to get the avatar for a player
+// see: https://docs.joinplayroom.com/apidocs#getprofile-playerprofile
+const avatar = avatars[player.getProfile().avatarIndex];
+```
+
+
+### Skipping the Lobby UI
+
+If your game needs to have a custom lobby UI, you can skip Playroom's lobby UI by passing `skipLobby: true` to the [`insertCoin` method](https://docs.joinplayroom.com/apidocs#insertcoin-initoptions-).
+
+This will skip the lobby UI and take the player directly to the game.
+
+Few things to consider when going this route:
+#### 1. You will need to implement your own profile system
+The existing `player.getProfile()` method will not work. You can set profile info just like any other state of your game. 
+
+#### 2. Hosting and joining UI
+You can compose your own URL scheme or a "room code"-type of method to allow players to host and join games. You can use the [`getRoomCode`](https://docs.joinplayroom.com/apidocs#getroomcode) method to get the unique room code for the current game.
+
+On the other side, you can pass the `roomCode` param to the [`insertCoin` method](https://docs.joinplayroom.com/apidocs#insertcoin-initoptions-) to join the room.
+
+Using these methods, either show room code in your own UI (like: "Your room code is: ABCD") or use it to compose a URL (like: `https://example.com/#codeparam=ABCD`) that players can use to join the same room. 
+
+Do note that you need to handle reading the `roomCode` param from the URL and passing it to the `insertCoin` method yourself. Playroom does not handle this for you.
