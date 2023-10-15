@@ -25,6 +25,17 @@ Players can set their nickname and color. The color can be used to identify play
 
 ## Advanced Usage
 
+### Setting room code, name and photo from URL params
+Playroom defaults to picking a random room code, player name, color, avatar for each player. If you want to set these values from URL params, you can do so by passing `r`, `player_name` and `player_photo` params to the URL. The photo is a URL to an image.
+
+For example, if you want to join room `ABCD` and also set the name to "John" and the photo to "https://example.com/john.png", you can do so by opening the following URL:
+
+```
+https://mygame.com/#r=ABCD&player_name=John&player_photo=https://example.com/john.png
+```
+
+You can also combine this with the `skipLobby` option to skip the lobby UI and take the player directly to the room with the name and photo already set from the URL params.
+
 ### Changing the Avatar System
 
 Playroom's lobby includes a procedurally-generated avatar system. If you want to use your own avatars, you can do so by passing a custom `avatars` image list to the [`insertCoin` method](https://docs.joinplayroom.com/apidocs#insertcoin-initoptions-). This list should contain a list of image URLs.
