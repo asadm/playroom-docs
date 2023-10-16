@@ -2,25 +2,42 @@ import { Callout } from 'nextra-theme-docs'
 
 # Lobby UI in Playroom
 
-A multiplayer lobby is a place where players can create or join a game. It is also where players can set their nickname, avatar, color, etc.
+Integrating Playroom provides you with synchronized in-game multiplayer lobby. This UI is enabled by default, streamlining the process of testing your multiplayer game right away. It takes care of all aspects of player and room management, allowing you to dive into your testing immediately.
 
-Playroom includes a Lobby component that is enabled by default. It looks like this:
+You have the flexibility to retain, customize, or completely remove this UI from your game. The lobby currently consists of following components with more features to be added in future releases.
+
+import { Card, Cards } from 'nextra-theme-docs'
+
+<Cards>
+  <Card
+    style={{}}
+    title={<div><h4>Room</h4><div style={{fontSize:"0.8em"}}>In order to allow players to host and join games, Lobby creates a room with unique code that users can share with other players. </div></div>}
+    href=""
+  />
+   <Card
+    style={{}}
+    title={<div><h4>Sharing</h4><div style={{fontSize:"0.8em"}}>Lobby also includes a QR code UI that can be scanned by other players to join the game easily.</div></div>}
+    href=""
+  />
+
+  <Card
+    style={{}}
+    title={<div><h4>Avatar System</h4><div style={{fontSize:"0.8em"}}>A procedurally-generated avatar system is hooked in the lobby that generates unique avatar for the players.</div></div>}
+    href=""
+  />
+  <Card
+    style={{}}
+    title={<div><h4>Player</h4><div style={{fontSize:"0.8em"}}>Players can set their nickname and color. The color can be used to identify players in the game.</div></div>}
+    href=""
+  />
+
+</Cards>
+
+## Example
 
 import Preview from '../../components/preview'
 
 <Preview src="/demos/react1.html" maxPlayers={0} />
-
-### Hosting and Joining a Game
-
-In order to allow players to host and join games, Playroom's lobby lets them copy the room link and share it with other players. The lobby also includes a QR code that can be scanned by other players to join the game easily.
-
-### Avatar System
-
-Playroom lobby includes a procedurally-generated avatar system. Players get a pretty unique avatar that they can regenerate by tapping on the avatar itself.
-
-### Nickname and Color
-
-Players can set their nickname and color. The color can be used to identify players in the game.
 
 
 ## Advanced Usage
