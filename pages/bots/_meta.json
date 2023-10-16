@@ -1,5 +1,4 @@
 {
   "bot":"Bot",
-  "dqnbot":"DQN Bot",
-  "dqnbotjoystick": "DQN Bot with Joystick"
+  "dqnbot":"DQN Bot"
 }

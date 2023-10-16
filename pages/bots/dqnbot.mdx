@@ -1,35 +1,48 @@
-# DQN Bot Integration with Playroom
+# DQN Bot
 ## Overview
-The Playroom SDK offers a seamless integration with the Deep Q-Network (DQN) bot, 
-providing a powerful tool for developers aiming to harness the capabilities of reinforcement learning in their games. 
-The integrated DQN Agent means you don’t have to start from scratch – simply configure, train (if required), and use.
+Playroom SDK seamlessly integrates with the DQN Bot, a smart computer player that learns and plays games effectively using a special technique called Deep Q-Network (DQN). This integration offers a robust tool for game developers looking to use reinforcement learning in their games without starting from scratch. You can easily configure, train (if needed), and use the DQN Bot.
 
-## How DQN Bot Integration Works
+We provide two options for the DQN Bot:
+1. **[DQN Bot (Joystick):](#how-dqn-bot-joystick-integration-works)** Designed for Playroom's Joystick users.
+2. **[DQN Bot:](#how-dqn-bot-integration-works)**: Suited for those who don't use Playroom's Joystick.
 
-### 1. Import DQN Bot
-Start by importing the 'DQNBot' from the 'playroomkit'
+
+## How DQN Bot (Joystick) Integration Works
+
+### 1. Importing DQN Bot
+Begin by importing the `DQNBotJoystick` from the Playroom.
 
 ```js
-import { insertCoin, onPlayerJoin, DQNBaseBot } from 'playroomkit';
+import { insertCoin, isHost, onPlayerJoin, DQNBotJoystick } from 'playroomkit';
 ```
 
-### 2. Initialization Using insertCoin
-To activate the DQN bot within your game, you'll utilize the insertCoin method. Here's a comprehensive breakdown:
+### 2. Tell Playroom to Use DQN Bot
+
+Once you have imported DQN Bot, use the insertCoin() method 
+provided by the SDK to pass the bot and its parameters. 
+This step allows the SDK to recognize DQN bot.
 
 ```js
 await insertCoin({
   ... other parameters,
   
-  enableBots: true, // Signals the SDK to activate bot
+  enableBots: true, // Activate the bot in the SDK
   
   botOptions: {
-    botClass: DQNBaseBot, // Specifies the DQN bot class
+    botClass: DQNBotJoystick, // Specify the DQN bot class
 
     botParams: {
-      numberOfStates: x,  // Replace 'x' with the number of states you want to pass to the agent
-      numberOfActions: y, // Replace 'y' with the number of potential actions the bot can take
+      numberOfStates: x,  // Replace 'x' with the number of states to pass to the agent
+      
+      // Your joystick configuration here. Actions will be derived from this joystick config.
+      joystickConfig: { // Sample configuration
+        type: "dpad",
+        buttons: [
+          {id: "jump", label: "Jump"}
+        ]
+      }
 
-      // OPTIONAL: Customize hyperparameters. If not specified, the following default values are utilized:
+      // OPTIONAL: Customize hyperparameters. following values would be used if not specified.
       specifications: {
         gamma: 0.75,  // Discount factor for future rewards
         epsilon: 0.1,  // Exploration rate in epsilon-greedy strategy
@@ -53,32 +66,166 @@ await insertCoin({
       },
 
       // OPTIONAL: Automatically stores model weights to local storage and load while initialization of bot
-      // Defaults to true, won't retreive from local storage if weights are given
+      // Defaults to true, won't retrieve from local storage if weights are given
       retrieveFromLocalStorage: true
     }
 
-    // OPTIONAL: Enable training mode to visualize graph of iteration/rewards.
+    // OPTIONAL: Enable training mode to visualize a graph of iteration/rewards.
     trainingMode: true
   },
 });
 ```
 
+### 3. Try Your Bot in Playroom
 
-### 3. Integrating DQN Bot Actions Within Game Loop
+Once you have defined your bot, game host see a new `🤖 +` button to add bots to the game. Tap on the button to add a bot to the room. 
 
-To achieve a smooth gameplay experience, you'll incorporate the bot's decisions within your game loop:
+<img src="/images/add-bot.png" style={{width: "100%", marginTop: '25px', borderRadius: '10px'}} />
+
+
+### 4. Integrating DQN Bot into the Game Loop
+
+After initialization, the player.isBot() method allows you to check if a player is a bot or a human player. You can use this information to integrate your bot's actions within the game loop, ensuring that it interacts with the game environment as intended.
 
 ```js
-if (player.isBot()) {
-    const currentState = [/* array of x numbers or booleans representing the game state */];
-    const chosenAction = player.bot.act(currentState); // Get the bot's chosen action based on the current state
-    // Implement the chosen action in the game
+let players = [];
+ 
+onPlayerJoin(async (player) => {
+    // Custom logic for handling player join events.
+ 
+    // Appending player to players array in order to access it within gameloop
+    players.push(player);
+});
+ 
+function gameLoop() {
+    // Custom Logic
+ 
+    for (const player in players) {
+        // Custom Logic
+ 
+        // Bot usage
+        if (player.isBot()) {
+            const currentState = [/* array of x numbers representing the game state */];
+            player.bot.setDQNBotState(currentState); // This will set bot state and set the predicted joystick action 
+        }
 
-    // If you're training the bot, provide a reward based on the outcome of the chosen action
-    const rewardValue = computeReward(chosenAction);
-    player.bot.learn(rewardValue);
+        // Game Logic
+
+        if (player.isBot()) {
+            
+            // If you're training the bot, provide a reward based on the outcome of the chosen action
+            const rewardValue = computeReward();
+            player.bot.learn(rewardValue);
+        }
+    }
 }
 ```
 
-To train the bot, continually provide rewards based on its actions to refine its decision-making capabilities. 
-If you wish to use the bot without additional training, simply utilize the DQN bot's decisions without supplying reward feedback.
+## How DQN Bot Integration Works
+
+### 1. Importing DQN Bot
+Begin by importing the `DQNBaseBot` from the Playroom.
+
+```js
+import { insertCoin, isHost, onPlayerJoin, DQNBaseBot } from 'playroomkit';
+```
+
+### 2. Tell Playroom to Use DQN Bot
+
+Once you have imported DQN Bot, use the insertCoin() method 
+provided by the SDK to pass the bot and its parameters. 
+This step allows the SDK to recognize DQN bot.
+
+```js
+await insertCoin({
+  ... other parameters,
+  
+  enableBots: true, // Activate the bot in the SDK
+  
+  botOptions: {
+    botClass: DQNBaseBot, // Specify the DQN bot class
+
+    botParams: {
+      numberOfStates: x,  // Replace 'x' with the number of states to pass to the agent
+      numberOfActions: y, // Replace 'y' with the number of potential actions the bot can take
+
+      // OPTIONAL: Customize hyperparameters. following values would be used if not specified.
+      specifications: {
+        gamma: 0.75,  // Discount factor for future rewards
+        epsilon: 0.1,  // Exploration rate in epsilon-greedy strategy
+        alpha: 0.01,  // Learning rate
+        experience_add_every: 25,  // Frequency of adding experiences to the replay memory
+        experience_size: 5000,  // Size of the replay memory
+        learning_steps_per_iteration: 10,  // Number of learning steps per iteration
+        tderror_clamp: 1.0,  // Clamp to prevent large TD errors
+        num_hidden_units: 100,  // Number of neurons in the hidden layer
+      }
+
+      // OPTIONAL: Initialize with weights if you have pretrained weights or previous training data
+      weights: {
+        
+        // Serialized pretrained weights
+        modelWeights: "{\"nh\":100,\"ns\":11,\"na\":19,\"net\":{\"W1\":{\"n\":100,\"d\":11,\"w\":{\"0\":0.0013967478508977644,\"1\":-0.004024754355529853,\"2\":-0.005107000776689768,\"3\,....}}}}"
+        
+        iterations: previousIterationsCount, // Previous training iterations count
+        rewards: previousRewardValue, // Cumulative reward from previous sessions
+        startTime: previousStartTime, // Start time from previous training sessions
+      },
+
+      // OPTIONAL: Automatically stores model weights to local storage and load while initialization of bot
+      // Defaults to true, won't retrieve from local storage if weights are given
+      retrieveFromLocalStorage: true
+    }
+
+    // OPTIONAL: Enable training mode to visualize a graph of iteration/rewards.
+    trainingMode: true
+  },
+});
+```
+
+### 3. Try Your Bot in Playroom
+
+Once you have defined your bot, game host see a new `🤖 +` button to add bots to the game. Tap on the button to add a bot to the room. 
+
+<img src="/images/add-bot.png" style={{width: "100%", marginTop: '25px', borderRadius: '10px'}} />
+
+
+### 4. Integrating DQN Bot into the Game Loop
+
+After initialization, the player.isBot() method allows you to check if a player is a bot or a human player. You can use this information to integrate your bot's actions within the game loop, ensuring that it interacts with the game environment as intended.
+
+```js
+let players = [];
+let chosenAction = undefined
+ 
+onPlayerJoin(async (player) => {
+    // Custom logic for handling player join events.
+ 
+    // Appending player to players array in order to access it within gameloop
+    players.push(player);
+});
+ 
+function gameLoop() {
+    // Custom Logic
+ 
+    for (const player in players) {
+        // Custom Logic
+ 
+        // Bot usage
+        if (player.isBot()) {
+            const currentState = [/* array of x numbers or booleans representing the game state */];
+            chosenAction = player.bot.act(currentState); // Get the bot's chosen action based on the current state            
+        }
+
+        // Game Logic - Implement the chosen action in the game
+
+        if (player.isBot()) {
+            // If you're training the bot, provide a reward based on the outcome of the chosen action
+            const rewardValue = computeReward(chosenAction);
+            player.bot.learn(rewardValue);
+        }
+    }
+}
+```
+
+To train the bot, continuously provide rewards based on its actions to refine its decision-making abilities. If you want to use the bot without additional training, simply utilize the DQN bot's decisions without supplying reward feedback.
