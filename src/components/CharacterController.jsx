@@ -18,6 +18,7 @@ export const CharacterController = ({
   userPlayer,
   onKilled,
   onFire,
+  downgradedPerformance,
   ...props
 }) => {
   const group = useRef();
@@ -28,7 +29,6 @@ export const CharacterController = ({
   const lastShoot = useRef(0);
 
   const scene = useThree((state) => state.scene);
-
   const spawnRandomly = () => {
     const spawns = [];
     for (let i = 0; i < 1000; i++) {
@@ -52,6 +52,7 @@ export const CharacterController = ({
   useEffect(() => {
     if (state.state.dead) {
       const audio = new Audio("/audios/dead.mp3");
+      audio.volume = 0.5;
       audio.play();
     }
   }, [state.state.dead]);
@@ -59,6 +60,7 @@ export const CharacterController = ({
   useEffect(() => {
     if (state.state.health < 100) {
       const audio = new Audio("/audios/hurt.mp3");
+      audio.volume = 0.4;
       audio.play();
     }
   }, [state.state.health]);
@@ -133,6 +135,11 @@ export const CharacterController = ({
     }
   });
   const controls = useRef();
+  const directionalLight = useRef();
+
+  useEffect(() => {
+    directionalLight.current.target = character.current;
+  }, [character.current]);
 
   return (
     <group {...props} ref={group}>
@@ -170,26 +177,6 @@ export const CharacterController = ({
         }}
       >
         <PlayerInfo state={state.state} />
-        {/* {userPlayer && (
-          // Finally I moved the light to follow the player
-          // This way we won't need to calculate ALL the shadows but only the ones
-          // that are in the camera view
-          <directionalLight
-            position={[25, 18, -25]}
-            target={character.current}
-            intensity={0.3}
-            castShadow
-            shadow-camera-near={0}
-            shadow-camera-far={100}
-            shadow-camera-left={-20}
-            shadow-camera-right={20}
-            shadow-camera-top={20}
-            shadow-camera-bottom={-20}
-            shadow-mapSize-width={2048}
-            shadow-mapSize-height={2048}
-            shadow-bias={-0.0001}
-          />
-        )} */}
         <group ref={character}>
           <CharacterSoldier
             color={state.state.profile?.color}
@@ -202,6 +189,26 @@ export const CharacterController = ({
             />
           )}
         </group>
+        {userPlayer && (
+          // Finally I moved the light to follow the player
+          // This way we won't need to calculate ALL the shadows but only the ones
+          // that are in the camera view
+          <directionalLight
+            ref={directionalLight}
+            position={[25, 18, -25]}
+            intensity={0.3}
+            castShadow={!downgradedPerformance} // Disable shadows on low-end devices
+            shadow-camera-near={0}
+            shadow-camera-far={100}
+            shadow-camera-left={-20}
+            shadow-camera-right={20}
+            shadow-camera-top={20}
+            shadow-camera-bottom={-20}
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
+            shadow-bias={-0.0001}
+          />
+        )}
         <CapsuleCollider args={[0.7, 0.6]} position={[0, 1.28, 0]} />
       </RigidBody>
     </group>

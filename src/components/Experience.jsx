@@ -13,7 +13,7 @@ import { BulletHit } from "./BulletHit";
 import { CharacterController } from "./CharacterController";
 import { Map } from "./Map";
 
-export const Experience = () => {
+export const Experience = ({ downgradedPerformance = false }) => {
   const [players, setPlayers] = useState([]);
   const start = async () => {
     // Start the game
@@ -88,6 +88,7 @@ export const Experience = () => {
           joystick={joystick}
           onKilled={onKilled}
           onFire={onFire}
+          downgradedPerformance={downgradedPerformance}
         />
       ))}
       {(isHost() ? bullets : networkBullets).map((bullet) => (
