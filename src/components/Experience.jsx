@@ -100,7 +100,6 @@ export const Experience = () => {
           state={state}
           userPlayer={state.id === myPlayer()?.id}
           joystick={joystick}
-          position-x={index * 2}
           onKilled={onKilled}
           onFire={onFire}
         />

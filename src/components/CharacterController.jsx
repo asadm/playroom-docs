@@ -64,10 +64,10 @@ export const CharacterController = ({
   }, [state.state.health]);
 
   useFrame((_, delta) => {
-    const cameraDistanceY = window.innerWidth < 1024 ? 16 : 20;
-    const cameraDistanceZ = window.innerWidth < 1024 ? 12 : 16;
     // CAMERA FOLLOW
     if (controls.current) {
+      const cameraDistanceY = window.innerWidth < 1024 ? 16 : 20;
+      const cameraDistanceZ = window.innerWidth < 1024 ? 12 : 16;
       const playerWorldPos = vec3(rigidbody.current.translation());
       controls.current.setLookAt(
         playerWorldPos.x,
@@ -103,10 +103,12 @@ export const CharacterController = ({
       setAnimation("Idle");
     }
 
-    // Check if jump button is pressed
+    // Check if fire button is pressed
     if (joystick.isPressed("fire")) {
       // fire
-      setAnimation("Idle_Shoot");
+      setAnimation(
+        joystick.isJoystickPressed() && angle ? "Run_Shoot" : "Idle_Shoot"
+      );
       if (isHost()) {
         if (Date.now() - lastShoot.current > FIRE_RATE) {
           lastShoot.current = Date.now();
@@ -140,7 +142,6 @@ export const CharacterController = ({
         colliders={false}
         linearDamping={12}
         lockRotations
-        name={state.id}
         type={isHost() ? "dynamic" : "kinematicPosition"}
         onIntersectionEnter={({ other }) => {
           if (
@@ -169,7 +170,7 @@ export const CharacterController = ({
         }}
       >
         <PlayerInfo state={state.state} />
-        <group ref={character} name={`player_${state.id}`}>
+        <group ref={character}>
           <CharacterSoldier
             color={state.state.profile?.color}
             animation={animation}

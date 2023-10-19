@@ -7,7 +7,6 @@ import { Experience } from "./components/Experience";
 import { Leaderboard } from "./components/Leaderboard";
 
 function App() {
-  console.log("rerender");
   return (
     <>
       <Loader />

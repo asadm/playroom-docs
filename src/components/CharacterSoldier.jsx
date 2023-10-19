@@ -40,7 +40,6 @@ export function CharacterSoldier({
   // useGraph creates two flat object collections for nodes and materials
   const { nodes } = useGraph(clone);
   const { actions } = useAnimations(animations, group);
-
   if (actions["Death"]) {
     actions["Death"].loop = LoopOnce;
     actions["Death"].clampWhenFinished = true;
