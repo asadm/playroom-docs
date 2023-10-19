@@ -137,3 +137,5 @@ export function CharacterSoldier({
     </group>
   );
 }
+
+useGLTF.preload("/models/Character_Soldier.gltf");

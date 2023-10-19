@@ -7,7 +7,7 @@ import {
   onPlayerJoin,
   useMultiplayerState,
 } from "playroomkit";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Bullet } from "./Bullet";
 import { BulletHit } from "./BulletHit";
 import { CharacterController } from "./CharacterController";
@@ -76,17 +76,6 @@ export const Experience = () => {
     const killerState = players.find((p) => p.state.id === killer).state;
     killerState.setState("kills", killerState.state.kills + 1);
   };
-
-  const [mapLoaded, setMapLoaded] = useState(false);
-
-  useLayoutEffect(() => {
-    setMapLoaded(false);
-    const timeout = setTimeout(() => {
-      setMapLoaded(true);
-      console.log("set map loaded");
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, []);
 
   return (
     <>
