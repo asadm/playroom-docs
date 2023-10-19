@@ -174,7 +174,6 @@ export const CharacterController = ({
           // Finally I moved the light to follow the player
           // This way we won't need to calculate ALL the shadows but only the ones
           // that are in the camera view
-
           <directionalLight
             position={[25, 18, -25]}
             target={character.current}
