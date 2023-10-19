@@ -84,6 +84,9 @@ export function CharacterSoldier({
       if (child.isMesh && child.material.name === "Character_Main") {
         child.material = playerColorMaterial;
       }
+      if (child.isMesh) {
+        child.castShadow = true;
+      }
     });
   }, [nodes, clone]);
 
@@ -98,30 +101,35 @@ export function CharacterSoldier({
               geometry={nodes.Cube004.geometry}
               material={materials.Skin}
               skeleton={nodes.Cube004.skeleton}
+              castShadow
             />
             <skinnedMesh
               name="Cube004_1"
               geometry={nodes.Cube004_1.geometry}
               material={materials.DarkGrey}
               skeleton={nodes.Cube004_1.skeleton}
+              castShadow
             />
             <skinnedMesh
               name="Cube004_2"
               geometry={nodes.Cube004_2.geometry}
               material={materials.Pants}
               skeleton={nodes.Cube004_2.skeleton}
+              castShadow
             />
             <skinnedMesh
               name="Cube004_3"
               geometry={nodes.Cube004_3.geometry}
               material={playerColorMaterial}
               skeleton={nodes.Cube004_3.skeleton}
+              castShadow
             />
             <skinnedMesh
               name="Cube004_4"
               geometry={nodes.Cube004_4.geometry}
               material={materials.Black}
               skeleton={nodes.Cube004_4.skeleton}
+              castShadow
             />
           </group>
         </group>

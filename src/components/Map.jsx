@@ -1,10 +1,6 @@
-import {
-  AccumulativeShadows,
-  RandomizedLight,
-  useGLTF,
-} from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 export const Map = () => {
   const map = useGLTF("models/map.glb");
@@ -16,14 +12,18 @@ export const Map = () => {
       }
     });
   });
-  const shadows = useMemo(
-    () => (
-      <AccumulativeShadows
+  return (
+    <>
+      <RigidBody colliders="trimesh" type="fixed">
+        <primitive object={map.scene} />
+      </RigidBody>
+
+      {/* <AccumulativeShadows
         temporal
         frames={42}
         alphaTest={0.85}
         scale={40}
-        position={[0, 0.1, 0]}
+        position={[0, 0.02, 0]}
         color="white"
       >
         <RandomizedLight
@@ -42,15 +42,8 @@ export const Map = () => {
           position={[-20, 8, -20]}
           size={40}
         />
-      </AccumulativeShadows>
-    ),
-    [map]
-  );
-  return (
-    <RigidBody colliders="trimesh" type="fixed">
-      <primitive object={map.scene} />
-      {shadows}
-    </RigidBody>
+      </AccumulativeShadows> */}
+    </>
   );
 };
 useGLTF.preload("models/map.glb");

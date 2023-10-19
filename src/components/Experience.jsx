@@ -2,11 +2,12 @@ import { Environment } from "@react-three/drei";
 import {
   Joystick,
   insertCoin,
+  isHost,
   myPlayer,
   onPlayerJoin,
   useMultiplayerState,
 } from "playroomkit";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Bullet } from "./Bullet";
 import { BulletHit } from "./BulletHit";
 import { CharacterController } from "./CharacterController";
@@ -41,17 +42,35 @@ export const Experience = () => {
     start();
   }, []);
 
-  const [bullets, setBullets] = useMultiplayerState("bullets", []);
-  const [hits, setHits] = useMultiplayerState("hits", []);
+  const [bullets, setBullets] = useState([]);
+  const [hits, setHits] = useState([]);
+
+  const [networkBullets, setNetworkBullets] = useMultiplayerState(
+    "bullets",
+    []
+  );
+  const [networkHits, setNetworkHits] = useMultiplayerState("hits", []);
+
+  const onFire = (bullet) => {
+    setBullets((bullets) => [...bullets, bullet]);
+  };
 
   const onHit = (bulletId, position) => {
-    setBullets(bullets.filter((bullet) => bullet.id !== bulletId));
-    setHits([...hits, { id: bulletId, position }]);
+    setBullets((bullets) => bullets.filter((bullet) => bullet.id !== bulletId));
+    setHits((hits) => [...hits, { id: bulletId, position }]);
   };
 
   const onHitEnded = (hitId) => {
-    setHits(hits.filter((h) => h.id !== hitId));
+    setHits((hits) => hits.filter((h) => h.id !== hitId));
   };
+
+  useEffect(() => {
+    setNetworkBullets(bullets);
+  }, [bullets]);
+
+  useEffect(() => {
+    setNetworkHits(hits);
+  }, [hits]);
 
   const onKilled = (_victim, killer) => {
     const killerState = players.find((p) => p.state.id === killer).state;
@@ -59,46 +78,54 @@ export const Experience = () => {
   };
 
   const [mapLoaded, setMapLoaded] = useState(false);
-  console.log("hits", hits.length);
 
-  useEffect(() => {
-    setTimeout(() => {
+  useLayoutEffect(() => {
+    setMapLoaded(false);
+    const timeout = setTimeout(() => {
       setMapLoaded(true);
-    }, 1000);
+      console.log("set map loaded");
+    }, 500);
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
     <>
-      {/* <CameraControls ref={controls} /> */}
       <Map />
-      {mapLoaded && (
-        <>
-          {players.map(({ state, joystick }, index) => (
-            <CharacterController
-              key={state.id}
-              state={state}
-              userPlayer={state.id === myPlayer()?.id}
-              joystick={joystick}
-              position-x={index * 2}
-              onKilled={onKilled}
-            />
-          ))}
-          {bullets.map((bullet) => (
-            <Bullet
-              key={bullet.id}
-              {...bullet}
-              onHit={(position) => onHit(bullet.id, position)}
-            />
-          ))}
-          {hits.map((hit) => (
-            <BulletHit
-              key={hit.id}
-              {...hit}
-              onEnded={() => onHitEnded(hit.id)}
-            />
-          ))}
-        </>
-      )}
+      <directionalLight
+        position={[25, 18, -25]}
+        intensity={0.3}
+        castShadow
+        shadow-camera-near={0}
+        shadow-camera-far={80}
+        shadow-camera-left={-30}
+        shadow-camera-right={30}
+        shadow-camera-top={25}
+        shadow-camera-bottom={-25}
+        shadow-mapSize-width={4096}
+        shadow-mapSize-height={4096}
+        shadow-bias={-0.0001}
+      />
+      {players.map(({ state, joystick }, index) => (
+        <CharacterController
+          key={state.id}
+          state={state}
+          userPlayer={state.id === myPlayer()?.id}
+          joystick={joystick}
+          position-x={index * 2}
+          onKilled={onKilled}
+          onFire={onFire}
+        />
+      ))}
+      {(isHost() ? bullets : networkBullets).map((bullet) => (
+        <Bullet
+          key={bullet.id}
+          {...bullet}
+          onHit={(position) => onHit(bullet.id, position)}
+        />
+      ))}
+      {(isHost() ? hits : networkHits).map((hit) => (
+        <BulletHit key={hit.id} {...hit} onEnded={() => onHitEnded(hit.id)} />
+      ))}
       <Environment preset="sunset" />
     </>
   );

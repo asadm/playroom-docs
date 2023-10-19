@@ -17,6 +17,8 @@ export const Bullet = ({ player, angle, position, onHit }) => {
   const rigidbody = useRef();
 
   useEffect(() => {
+    const audio = new Audio("/audios/rifle.mp3");
+    audio.play();
     const velocity = {
       x: Math.sin(angle) * BULLET_SPEED,
       y: 0,
@@ -49,7 +51,7 @@ export const Bullet = ({ player, angle, position, onHit }) => {
             damage: 10,
           }}
         >
-          <mesh position-z={0.25} material={bulletMaterial}>
+          <mesh position-z={0.25} material={bulletMaterial} castShadow>
             <boxGeometry args={[0.05, 0.05, 0.5]} />
           </mesh>
         </RigidBody>
