@@ -170,7 +170,7 @@ export const CharacterController = ({
         }}
       >
         <PlayerInfo state={state.state} />
-        {/* {userPlayer && (
+        {userPlayer && (
           // Finally I moved the light to follow the player
           // This way we won't need to calculate ALL the shadows but only the ones
           // that are in the camera view
@@ -180,17 +180,17 @@ export const CharacterController = ({
             target={character.current}
             intensity={0.3}
             castShadow
-            // shadow-camera-near={0}
-            // shadow-camera-far={100}
-            // shadow-camera-left={-20}
-            // shadow-camera-right={20}
-            // shadow-camera-top={20}
-            // shadow-camera-bottom={-20}
-            // shadow-mapSize-width={2048}
-            // shadow-mapSize-height={2048}
-            // shadow-bias={-0.0001}
+            shadow-camera-near={0}
+            shadow-camera-far={100}
+            shadow-camera-left={-20}
+            shadow-camera-right={20}
+            shadow-camera-top={20}
+            shadow-camera-bottom={-20}
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
+            shadow-bias={-0.0001}
           />
-        )} */}
+        )}
         <group ref={character}>
           <CharacterSoldier
             color={state.state.profile?.color}

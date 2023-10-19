@@ -1,5 +1,6 @@
 import { Loader, SoftShadows, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { Physics } from "@react-three/rapier";
 import { Suspense } from "react";
 import { Experience } from "./components/Experience";
@@ -11,7 +12,11 @@ function App() {
       <Stats />
       <Loader />
       <Leaderboard />
-      <Canvas shadows camera={{ position: [0, 30, 0], fov: 30, near: 2 }}>
+      <Canvas
+        shadows
+        camera={{ position: [0, 30, 0], fov: 30, near: 2 }}
+        dpr={[1, 1.5]}
+      >
         <color attach="background" args={["#242424"]} />
         <SoftShadows size={42} />
         <Suspense>
@@ -19,9 +24,9 @@ function App() {
             <Experience />
           </Physics>
         </Suspense>
-        {/* <EffectComposer disableNormalPass>
+        <EffectComposer disableNormalPass>
           <Bloom luminanceThreshold={1} intensity={1.5} mipmapBlur />
-        </EffectComposer> */}
+        </EffectComposer>
       </Canvas>
     </>
   );
