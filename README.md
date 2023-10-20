@@ -1,10 +1,24 @@
-# r3f-vite-starter
-A boilerplate to build R3F projects
+![Video Thumbnail](https://img.youtube.com/vi/nQI8UNe6cfA/maxresdefault.jpg)
 
+[Video tutorial](https://youtu.be/nQI8UNe6cfA)
+
+
+Play the game here 👉 https://r3f-playroom-multiplayer-u4.vm.elestio.app/
+
+## Setup
+
+
+Install the dependencies and start the development server with
 ```
 yarn
 yarn dev
 ```
 
+To have it accessible from your mobile run
+```
+yarn dev --host
+```
+_It must be connected to the same network_
 
-![image](https://user-images.githubusercontent.com/6551176/221732091-23ee52cb-4150-42fa-b998-43628d7a6b0d.png)
+A huge thanks to Quaternius for his free assets!
+https://quaternius.com/packs/toonshootergamekit.html
