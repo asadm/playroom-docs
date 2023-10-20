@@ -13,7 +13,7 @@ export default {
     component: false
   },
   sidebar:{
-    defaultMenuCollapseLevel: 1,
+    defaultMenuCollapseLevel: 2,
     titleComponent({ title, type, route }) {
       if (type === 'separator') {
         return <span className="cursor-default">{title}</span>;
@@ -21,13 +21,18 @@ export default {
 
     if (brandNewPages.includes(route)){
       return <>{title} <span style={{
-        fontSize: "40%",
+        fontSize: "68%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         marginLeft: "0.5rem",
-        paddingTop: "0.25rem"
-      }}>🔴</span></>;
+        padding: "0.15rem 0.5rem",
+        background: "#E91E63",
+        color: "#000",
+        borderRadius: "1rem",
+        fontWeight: "bold",
+        textTransform: "uppercase"
+      }}>new</span></>;
     }
     return <>{title}</>;
     },
