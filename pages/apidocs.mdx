@@ -22,9 +22,10 @@ await insertCoin();
 | `baseUrl`    | string  | *Current Page URL*      | The base URL used for generating room link that host shares with other players. |
 | `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
 | `enableBots` | boolean | false | If 'true' , Playroom initializes a bot using the provided botOptions. |
-| `botOptions` | Object | undefined | An object containing parameters for bot instantiation and configuration. |
+| `botOptions` | [`BotOptions`](#botoptions) | undefined | An object containing parameters for bot instantiation and configuration. |
 | `roomCode` | string | undefined | Override the room to join. If this is not set, a random room code is assigned. Do note that if the URL has room `#r=` param, that is used instead of this.|
 | `skipLobby` | boolean | false | Skips the Playroom's lobby screen altogether. This is useful if you want to design your own multiplayer lobby. |
+| `reconnectGracePeriod` | number | 0 | If set, Playroom will wait for the given **number of milliseconds** for the player to reconnect to the room after a disconnect. <br/><br/>If the player reconnects within the grace period, the player's state is restored. If the player does not reconnect within the grace period, the player is removed from the room and `onQuit` fires for the player. |
 
 ## `getState(key: string): any`
 
@@ -79,6 +80,14 @@ if (isStreamScreen()) {
 ## `getRoomCode()`
 
 Returns a 4-letter room code of the current room.
+
+## `addBot()`
+
+Adds a bot to the room. This is equivalent to pressing the "Add Bot" button in the lobby. Returns a promise that resolves to an instance of the class you provided in `botOptions.botClass` parameter in `insertCoin`.
+
+```js
+const newBot = await addBot();
+```
 
 ## `myPlayer()` or `me()`
 
@@ -168,15 +177,23 @@ If `reliable` is `false`, the state is synced via WebRTC, which is faster but le
 player.setState('score', 10);
 ```
 
-### `onQuit(callback)`
+### `onQuit(callback): unsubscribeCallback`
 
 Register a callback that will be called when the player quits the room.
+Returns a function that can be called to unsubscribe the callback.
 
 ```js
-player.onQuit(() => {
+const unsubscribe = player.onQuit(() => {
   console.log(`${player.id} quit!`);
 });
+
+// ...
+unsubscribe();
 ```
+
+### `isBot(): boolean`
+
+Returns `true` if the player is a bot.
 
 ## Joystick Controller
 
@@ -260,6 +277,21 @@ Returns the direction of the joystick, as a string. The string can be one of the
 ### `destroy(): void`
 
 Destroy and remove the Joystick and its UI.
+
+## BotOptions
+
+The `BotOptions` object is used to specify configurations for bots in the game. It consists of the following properties:
+
+| Property      | Type                              | Description                                                                                                                                                   |
+|---------------|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `botClass`    | a class that extends [`Bot`](#bot)     | The class or constructor function used to instantiate a new bot. Should conform to the `Bot` interface.                                                      |
+| `botParams`   | `Object` (optional)               | An object of parameters passed to the `botClass` constructor when creating a new bot instance. Useful for customizing and configuring individual bot behaviors. |
+
+## Bot
+
+The `Bot` interface represents an automated player. The `Bot` and its derived classes will have methods and properties similar to a [`PlayerState`](#playerstate) object.
+
+**Note:** The behavior of a bot, particularly its decision-making and interactions, will heavily depend on its implementation and the given `botClass`. Ensure the bot's behaviors align with the game's requirements and player expectations.
 
 ## Hooks for React
 

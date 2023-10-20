@@ -4,6 +4,7 @@ An overview of what's new in each version of `playroomkit`:
 
 | Version   | Changes                                                                                                                              |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `v0.0.38` | - Added `addBot` method to add bot to lobby from JS.<br/> - Added `reconnectGracePeriod` API to let player rejoin in given `ms` if they were disconnected.<br/> - Fixed `player.onQuit()` method to now return method to unsubscribe.<br/> - Fixed a bug where custom avatars were not being applied to bots. <br/> - Fixed a bug where if a player reconnects, they were given a new `id` instead of the one they had before.|
 | `v0.0.37` | - Added option to auto-set name and photo of current player using URL params. |
 | `v0.0.36` | - Added `waitForPlayerState` method. <br/> - Fix `useIsHost` React hook. |
 | `v0.0.35` | - Fix missing types in TypeScript `d.ts` for Bot API.<br/> - Added `skipLobby` and `roomCode` options to `insertCoin`.|
