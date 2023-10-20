@@ -21,7 +21,7 @@ export default {
 
     if (brandNewPages.includes(route)){
       return <>{title} <span style={{
-        fontSize: "68%",
+        fontSize: "65%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
