@@ -2,6 +2,8 @@ import { useRouter } from 'next/router'
 import { useConfig } from 'nextra-theme-docs'
 import React, { useEffect } from 'react'
 import { track } from './components/analytics'
+
+const brandNewPages = ['/usage/pixijs', '/components/bots']
 export default {
   docsRepositoryBase: "https://github.com/asadm/playroom-docs/tree/main/",
   nextThemes: {
@@ -9,6 +11,26 @@ export default {
   },
   themeSwitch: {
     component: false
+  },
+  sidebar:{
+    defaultMenuCollapseLevel: 1,
+    titleComponent({ title, type, route }) {
+      if (type === 'separator') {
+        return <span className="cursor-default">{title}</span>;
+    }
+
+    if (brandNewPages.includes(route)){
+      return <>{title} <span style={{
+        fontSize: "40%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: "0.5rem",
+        paddingTop: "0.25rem"
+      }}>🔴</span></>;
+    }
+    return <>{title}</>;
+    },
   },
   head: () => {
     const { asPath, defaultLocale, locale } = useRouter()
