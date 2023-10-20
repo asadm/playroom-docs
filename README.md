@@ -5,6 +5,8 @@
 
 Play the game here 👉 https://r3f-playroom-multiplayer-u4.vm.elestio.app/
 
+Enable multiplayer to your game with [Playroom](https://joinplayroom.com/?=wawasensei)
+
 ## Setup
 
 
