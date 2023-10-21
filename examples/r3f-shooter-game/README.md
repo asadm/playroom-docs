@@ -3,7 +3,7 @@
 [Video tutorial](https://youtu.be/nQI8UNe6cfA)
 
 
-Play the game here 👉 https://r3f-playroom-multiplayer-u4.vm.elestio.app/
+Play the game here 👉 https://shooter.joinplayroom.com/
 
 Enable multiplayer to your game with [Playroom](https://joinplayroom.com/?=wawasensei)
 
