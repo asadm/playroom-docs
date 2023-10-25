@@ -62,7 +62,7 @@ await insertCoin({
         
         iterations: previousIterationsCount, // Previous training iterations count
         rewards: previousRewardValue, // Cumulative reward from previous sessions
-        startTime: previousStartTime, // Start time from previous training sessions
+        elapsedTime: previousElapsedime, // Elapsed Time time from previous training sessions
       },
 
       // OPTIONAL: Automatically stores model weights to local storage and load while initialization of bot
@@ -75,6 +75,8 @@ await insertCoin({
   },
 });
 ```
+
+You can find additional information about hyperparameters **[here:](#dqn-bot-hyperparameters)**.
 
 ### 3. Try Your Bot in Playroom
 
@@ -169,7 +171,7 @@ await insertCoin({
         
         iterations: previousIterationsCount, // Previous training iterations count
         rewards: previousRewardValue, // Cumulative reward from previous sessions
-        startTime: previousStartTime, // Start time from previous training sessions
+        elapsedTime: previousElapsedime, // Elapsed Time from previous training sessions
       },
 
       // OPTIONAL: Automatically stores model weights to local storage and load while initialization of bot
@@ -182,6 +184,8 @@ await insertCoin({
   },
 });
 ```
+
+You can find additional information about hyperparameters **[here:](#dqn-bot-hyperparameters)**.
 
 ### 3. Try Your Bot in Playroom
 
@@ -229,3 +233,22 @@ function gameLoop() {
 ```
 
 To train the bot, continuously provide rewards based on its actions to refine its decision-making abilities. If you want to use the bot without additional training, simply utilize the DQN bot's decisions without supplying reward feedback.
+
+## Additional Information
+### DQN Bot Hyperparameters
+
+1. **Gamma (Discount Factor):** A number between 0 and 1 (e.g., 0.75), it determines how much the agent cares about future rewards. A higher value (e.g., 0.9) makes the agent consider long-term rewards more.
+
+2. **Epsilon (Exploration Rate):** A value between 0 and 1 (e.g., 0.1) that controls the agent's exploration. A lower value (e.g., 0.05) makes the agent explore less and exploit known strategies more.
+
+3. **Alpha (Learning Rate):** A small value like 0.01 that influences how quickly the agent adapts to new information. Smaller values (e.g., 0.001) make learning more gradual.
+
+4. **Experience Replay:** It stores past experiences with a maximum size (e.g., 5000) and adds new experiences every few steps (e.g., every 25 steps). This helps the agent learn from its history.
+
+5. **Learning Steps per Iteration:** The number of learning steps the agent takes in one iteration (e.g., 10). A higher value (e.g., 20) can speed up learning but might be computationally expensive.
+
+6. **TD Error Clamp:** It's used to prevent large TD errors. TD errors measure the agent's prediction errors. The value (e.g., 1.0) determines the maximum allowed error.
+
+7. **Number of Hidden Units:** The number of neurons in the hidden layer of the agent's neural network (e.g., 100). More units may capture complex patterns but can require more computational resources.
+
+These values can be adjusted based on your specific game and training requirements.
