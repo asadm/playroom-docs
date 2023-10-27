@@ -4,6 +4,7 @@ An overview of what's new in each version of `playroomkit`:
 
 | Version   | Changes                                                                                                                              |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `v0.0.42` | - Fixed a bug where name and photo fields are not URL-decoded before setting to profile. |
 | `v0.0.41` | - Added `skipLobby` URL param which works just like `skipLobby` in `insertCoin`. <br/> - Fixed a bug where name and photo fields are not locked when they are provided from the URL params. |
 | `v0.0.40` | - Fixed a bug where calling `onPlayerJoin` or any other hooks before `insertCoin` ignores `InitOptions` completely. |
 | `v0.0.39` | - Fixed a bug where `onPlayerJoin` is not called at all for non-hosts. |
