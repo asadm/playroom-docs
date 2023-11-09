@@ -1,0 +1,37 @@
+# How is Playroom different?
+
+If you are shopping for a multiplayer stack, you might be wondering how Playroom is different from other services. Here is a quick comparison of Playroom with other popular multiplayer stacks.
+
+## Photon, Fishnet, Mirror, and other "Unity" stacks
+
+**✅ Great for:** Games that are made in Unity and require low-level custom networking.
+
+**❌ Not great for:** Games that are simple and don't require a complex multiplayer stack.
+
+**"Unity" stacks:** These are popular multiplayer stacks that has been around for a long time. A great choice for games that are complex and are made in Unity. Photon/Fishnet are a bit low-level than Playroom and still require you to write network code. You also need to manage rooms and lobbies yourself. 
+
+**Playroom:** A higher-level stack that is designed to be easy to use and requires no network code. It also includes a lobby UI that you can use out of the box. Playroom is also optimized for web games but also has support for Unity.
+
+## Hathora
+
+**✅ Great for:** Games that require an authoritative custom server.
+
+**❌ Not great for:** Games that don't need any server logic.
+
+**Hathora (and Hathora Cloud)** is a newer multiplayer stack that hosts your game server; running in a container, on a VM. Hathora only manages "hosting" your server. You still need to write your own server code, websocket code, and manage rooms and lobbies yourself.
+
+Hathora does offer BuildKits, that are pre-built game servers that you can use. But you still need to write server code. Hathora is a great choice for games that require an authoritative server. 
+
+**Playroom:** If you can use a client-authoritative / p2p model and can live without a server, Playroom is a better choice. Because there is no custom server code:
+1. You can get started quickly and drop-in Playroom into your game.
+2. We can scale your game to millions of players without your server code breaking or needing to be deployed in multiple regions.
+
+## Nakama and Heroic Cloud
+
+**✅ Great for:** Games that need to self-host their server and require an authoritative custom server.
+
+**❌ Not great for:** Games that don't need any server logic.
+
+**Nakama (and Heroic Cloud)** is a popular open-source multiplayer stack that you can self-host. It provides a lot of features and a dashboard for better visibility into your games. Nakama runs your server code in a distributed cluster and either you manage yourself or pay Heroic Cloud to manage it for you.
+
+**Playroom:** If you can use a client-authoritative / p2p model and can live without a server, Playroom is a better choice. Because there is no custom server code. **No clusters to manage**.
