@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #FFE4B6;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width">
+  <title>Plinko</title>
+</head>
+
+<body>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script>
+    const { onPlayerJoin, insertCoin, isHost, myPlayer } = Playroom;
+
+    // Plinko game code
+    async function sha256(source) {
+        const sourceBytes = new TextEncoder().encode(source);
+        const digest = await crypto.subtle.digest("SHA-256", sourceBytes);
+        const resultBytes = [...new Uint8Array(digest)];
+        return resultBytes.map(x => x.toString(16).padStart(2, '0')).join("");
+    }
+    class PlinkoGame extends Phaser.Scene {
+      constructor() {
+        super('PlinkoGame');
+        this.particles = [];
+        this.plinkos = [];
+        this.spinners = [];
+        this.bounds = [];
+        this.cols = 7;
+        this.rows = 5;
+        this.particleSize = 10;
+        this.plinkoSize = 16;
+        this.spacing = 0;
+      }
+
+      preload() {
+        this.load.image('ball', 'ph.png');
+        this.load.image('propeller', 'propeller.png');
+      }
+
+      create() {
+        // Set up Matter world
+        this.cameras.main.setBackgroundColor('#FFE4B6');
+        // this.matter.world.setBounds(0, 0, 600, 700);
+
+        // Calculate spacing based on scene width
+        const pegsTotalWidth = (this.sys.game.config.width * 0.7);
+        this.spacing = (pegsTotalWidth / this.cols);
+
+        // Create Plinkos
+        // Create Plinkos with white fill
+        // Create Plinkos
+        for (let j = 0; j < this.rows; j++) {
+          let pegsInRow = j + 3; // One less peg in each row as we go down
+          for (let i = 0; i < pegsInRow; i++) {
+            // Calculate x such that the pegs are centered for each row
+            let isSpinningOne = Math.random() < 0.05;
+            let offset = (this.cols - pegsInRow) * this.spacing / 2 + (this.sys.game.config.width - pegsTotalWidth) / 2;
+            let x = offset + i * this.spacing;
+
+            let y = this.spacing + j * this.spacing + 500;
+            const circle = this.add.circle(x, y, this.plinkoSize, 0x363639)
+            let plinko = this.matter.add.circle(x, y, this.plinkoSize, {
+              isStatic: true,
+              restitution: 1,
+              friction: 0,
+              density: 0.001
+            });
+
+            this.matter.add.gameObject(circle, plinko);
+            if (isSpinningOne) {
+              let rectangle = this.matter.add.rectangle(x, y, 100, this.plinkoSize * 1.5, {
+                isStatic: true
+              });
+              let sprite = this.add.sprite(x, y, 'propeller').setScale(0.8);
+              rectangle.spinDirection = 1; // 1 for clockwise, -1 for counter-clockwise
+              rectangle.maxSpinSpeed = 0.2; // Maximum speed
+              rectangle.spinDuration = 2000; // Duration in milliseconds for one full cycle (ease in and out)
+              rectangle.spinTimer = 0; // Timer to track spinning time
+              this.matter.add.gameObject(sprite, rectangle);
+              sprite.displayOriginX = 79;
+              sprite.displayOriginY = 17;
+              sprite.setDepth(1);
+              this.spinners.push(rectangle);
+            }
+            this.plinkos.push(plinko);
+          }
+        }
+
+        // Create Divider Pegs
+        const scores = [25, 15, 10, 5, 10, 15, 25];
+        for (let i = 0; i < this.cols + 1; i++) {
+          let x = i * this.spacing + 70;
+          let y = this.sys.game.config.height - 100;
+          let boundary = this.matter.add.rectangle(x, y, 10, 100, { isStatic: true });
+
+
+
+          if (i !== 0) {
+            let scoreText = this.add.text(x - this.spacing / 2, y, `${scores[i - 1]}`, { fontSize: '16px', fill: '#000' }).setOrigin(0.5);
+            // Convert text to a Matter object
+            let scoreLabel = this.matter.add.gameObject(scoreText, { isStatic: true });
+            scoreLabel.setSensor(true); // Make the score label a sensor
+            scoreLabel.label = 'score'; // Label to identify the score label in collisions
+            scoreLabel.scoreValue = scores[i - 1]; // Store the score value
+            // let scoreText = this.add.text(x - this.spacing / 2, y, `${scores[i - 1]}`, { fontSize: '16px', fill: '#000' }).setOrigin(0.5);
+          }
+
+          this.bounds.push(boundary);
+        }
+
+        // Event to drop a new particle every second
+        // this.time.addEvent({
+        //   delay: 1000,
+        //   callback: this.addBall,
+        //   callbackScope: this,
+        //   loop: true
+        // });
+
+        // Set up collision events
+        this.matter.world.on('collisionstart', (event) => {
+            event.pairs.forEach((pair) => {
+                const { bodyA, bodyB } = pair;
+
+                // Check if one of the bodies is a ball and the other is a score label
+                let ballId = null;
+                let scoreValue = null;
+                if (bodyA.gameObject?.label === 'ball' && bodyB.gameObject?.label === 'score') {
+                  ballId = bodyA.gameObject.ballID;
+                  scoreValue = bodyB.gameObject.scoreValue;
+                  console.log(`Ball ID: ${bodyA.gameObject.ballID}, Score: ${bodyB.gameObject.scoreValue}`);
+                } else if (bodyB.gameObject?.label === 'ball' && bodyA.gameObject?.label === 'score') {
+                  ballId = bodyB.gameObject.ballID;
+                  scoreValue = bodyA.gameObject.scoreValue;
+                  console.log(`Ball ID: ${bodyB.gameObject.ballID}, Score: ${bodyA.gameObject.scoreValue}`);
+                }
+            });
+        });
+      }
+
+      async loadImage(url){
+        const assetKey = await sha256(url);
+        return new Promise((resolve, reject) => {
+          // ask the LoaderPlugin to load the texture
+          this.load.image(assetKey, url)
+          this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+            // texture loaded so use instead of the placeholder
+            resolve(assetKey);
+          })
+          this.load.start();
+          
+        });
+      }
+
+      async addBall(imageUrl){
+        const assetKey = await this.loadImage(imageUrl);
+        let x = Phaser.Math.Between(this.spacing, this.sys.game.config.width - this.spacing);
+        let ballSprite = this.add.sprite(x, 50, assetKey).setScale(0.5);
+
+        // Create a Graphics object for the mask
+        let mask = this.make.graphics({ x: 0, y: 0, add: false });
+        mask.fillStyle(0xffffff).fillCircle(this.particleSize, this.particleSize, this.particleSize);
+
+        // Apply the mask to the sprite
+        ballSprite.setMask(mask.createGeometryMask());
+
+        // Add a Matter physics body to the sprite
+        let ball = this.matter.add.gameObject(ballSprite, {
+          shape: {
+            type: 'circle',
+            radius: this.particleSize
+          },
+          restitution: 0.1,
+          friction: 0.003
+        });
+
+        // Store the mask with the sprite for future reference
+        ballSprite.setDataEnabled();
+        ballSprite.data.set('mask', mask);
+        ball.ballID = Phaser.Utils.String.UUID(); // Assign a unique ID to each ball
+        ball.label = 'ball'; // Label to identify the ball in collisions
+
+        this.particles.push(ballSprite);
+      }
+
+
+      update() {
+        this.particles.forEach(particle => {
+          // Update the mask's position to follow the sprite
+          let mask = particle.data.get('mask');
+          mask.x = particle.x - this.particleSize;
+          mask.y = particle.y - this.particleSize;
+
+          // Check if the particle is off the screen and remove it
+          if (particle.y > this.sys.game.config.height + this.particleSize) {
+            // Destroy the mask when the particle is removed
+            mask.destroy();
+            this.matter.world.remove(particle);
+            this.particles = this.particles.filter(p => p !== particle);
+          }
+        });
+
+        // Update logic for spinners
+        let first = this.spinners[0];
+        this.spinners.forEach(spinner => {
+          // Update the spin timer
+          spinner.spinTimer += this.game.loop.delta;
+
+          // Normalize the progress of the spin cycle (0 to 1)
+          let progress = (spinner.spinTimer % spinner.spinDuration) / spinner.spinDuration;
+
+
+          // Calculate the current spin speed using an easeInOut function
+          let easeInOutSpeed = this.easeInOut(progress) * spinner.maxSpinSpeed;
+
+          // if (first === spinner) console.log(progress, easeInOutSpeed);
+
+          // Apply rotational force based on spinDirection and easeInOutSpeed
+          this.matter.body.rotate(spinner, spinner.spinDirection * easeInOutSpeed);
+
+          // Optionally reverse direction at the end of each cycle
+          if (spinner.spinTimer >= spinner.spinDuration) {
+            spinner.spinDirection *= -1; // Switch direction
+            spinner.spinTimer -= spinner.spinDuration; // Reset timer
+          }
+        });
+      }
+
+      // EaseInOut function (quadratic for example)
+      easeInOut(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      }
+
+    }
+
+    const config = {
+      type: Phaser.CANVAS,
+      width: 600,
+      height: 1066,
+      physics: {
+        default: 'matter',
+        matter: {
+          gravity: {
+            y: 1
+          },
+          debug: true
+        }
+      },
+      scene: PlinkoGame
+    };
+
+    const game = new Phaser.Game(config);
+
+    setInterval(() => {
+      const currentScene = game.scene.scenes[0];
+      currentScene.addBall("./ph.png");
+    }, 1000);
+
+  </script>
+</body>
+
+</html>
