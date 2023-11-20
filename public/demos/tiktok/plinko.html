@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #FFE4B6;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width">
+  <title>Plinko</title>
+</head>
+
+<body>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script>
+    const { onPlayerJoin, insertCoin, isHost, myPlayer, onTikTokLiveEvent } = Playroom;
+
+    // Plinko game code
+    async function sha256(source) {
+        const sourceBytes = new TextEncoder().encode(source);
+        const digest = await crypto.subtle.digest("SHA-256", sourceBytes);
+        const resultBytes = [...new Uint8Array(digest)];
+        return resultBytes.map(x => x.toString(16).padStart(2, '0')).join("");
+    }
+
+    class LeaderboardComponent {
+    constructor(scene) {
+        this.scene = scene;
+        this.leaderboardData = []; // Start with an empty array
+        this.entries = [];
+        this.createLeaderboard();
+    }
+
+    createLeaderboard() {
+        const startX = 20; // X position to start the leaderboard
+        const startY = 100; // Y position to start the leaderboard
+        const entryHeight = 64; // Height of each entry
+
+        // Initially create placeholders for top 3 entries
+        for (let i = 0; i < 3; i++) {
+            const rankColors = ['#d4af37', '#c0c0c0', '#cd7f32'];
+            let rankText = this.scene.add.text(startX + 70, startY - 15 + i * entryHeight, "", { font: '600 30px Arial', fill: rankColors[i] });
+            rankText.setOrigin(1, 0);
+            let avatar = this.scene.add.image(startX + 85, startY + i * entryHeight, 'defaultAvatar').setDisplaySize(50, 50).setVisible(false);
+            avatar.setOrigin(0, 0.5); // Set origin to center vertically
+            avatar.setScale(0.5);
+            let nameText = this.scene.add.text(startX + 150, startY + i * entryHeight, "", { font: '24px Arial', fill: '#000000' });
+            nameText.setOrigin(0, 0.5); // Set origin to center vertically
+
+            this.entries.push({ rankText, avatar, nameText });
+        }
+    }
+
+    addUserScore(username, score, avatarKey) {
+        // Add / update score for the user
+        let userIndex = this.leaderboardData.findIndex(user => user.name === username);
+        if (userIndex !== -1) {
+            // Update the score if the user already exists
+            this.leaderboardData[userIndex].score += score;
+        } else {
+            // Add the user to the leaderboard if they don't exist
+            this.leaderboardData.push({ name: username, score: score, avatarKey: avatarKey });
+        }
+        // this.leaderboardData.push({ name: username, score: score, avatarKey: 'defaultAvatar' });
+        
+        // Sort the leaderboard by score in descending order
+        this.leaderboardData.sort((a, b) => b.score - a.score);
+
+        // Update the leaderboard display
+        this.updateLeaderboardDisplay();
+    }
+
+    updateLeaderboardDisplay() {
+        // Display top 3 users or less if there aren't enough
+        let maxEntries = Math.min(this.leaderboardData.length, 3);
+        for (let i = 0; i < maxEntries; i++) {
+            const playerData = this.leaderboardData[i];
+            const entry = this.entries[i];
+            entry.rankText.setText((playerData.score).toString());
+            entry.nameText.setText(playerData.name);
+            entry.avatar.setTexture(playerData.avatarKey);
+            entry.avatar.setVisible(true); // Make sure the avatar is visible
+        }
+
+        // Hide unused entries if there are less than 3 users
+        for (let i = maxEntries; i < 3; i++) {
+            const entry = this.entries[i];
+            entry.rankText.setText("");
+            entry.nameText.setText("");
+            entry.avatar.setVisible(false);
+        }
+    }
+}
+
+
+//     class LeaderboardComponent {
+//     constructor(scene, leaderboardData) {
+//         this.scene = scene;
+//         this.leaderboardData = leaderboardData; // An array of objects with name, score, and avatar key
+//         this.entries = [];
+
+//         this.createLeaderboard();
+//     }
+
+//     createLeaderboard() {
+//         // Assuming leaderboardData is sorted by score in descending order
+//         const startX = 20; // X position to start the leaderboard
+//         const startY = 100; // Y position to start the leaderboard
+//         const entryHeight = 64; // Height of each entry
+
+//         this.leaderboardData.forEach((playerData, index) => {
+//             // Create rank text (1st, 2nd, 3rd)
+//             const rankColors = ['#d4af37', '#c0c0c0', '#cd7f32'];
+//             let rankText = this.scene.add.text(startX, startY - 20 + index * entryHeight, "123", { font: '40px Arial', fill: rankColors[index] });
+
+//             // Create player avatar as a circle with an image
+//             let avatar = this.scene.add.image(startX + 80, startY + index * entryHeight, playerData.avatarKey).setDisplaySize(50, 50);
+//             avatar.setOrigin(0, 0.5); // Set origin to center vertically
+
+//             // Create player name text
+//             let nameText = this.scene.add.text(startX + 150, startY + index * entryHeight, playerData.name, { font: '24px Arial', fill: '#000000' });
+//             nameText.setOrigin(0, 0.5); // Set origin to center vertically
+
+//             // Store the created elements in an array in case we want to update or remove them later
+//             this.entries.push({ rankText, avatar, nameText, scoreText: rankText });
+//         });
+//     }
+
+//     // Call this method to update the leaderboard with new data
+//     updateLeaderboard(newLeaderboardData) {
+//         // Update the leaderboard data
+//         this.leaderboardData = newLeaderboardData;
+
+//         // Update the text and images
+//         this.entries.forEach((entry, index) => {
+//             if (this.leaderboardData[index]) {
+//                 entry.rankText.setText((index + 1).toString());
+//                 entry.nameText.setText(this.leaderboardData[index].name);
+//                 entry.scoreText.setText(`Score: ${this.leaderboardData[index].score}`);
+//                 // Update the avatar image if it has changed
+//                 entry.avatar.setTexture(this.leaderboardData[index].avatarKey);
+//             }
+//         });
+//     }
+// }
+
+    class PlinkoGame extends Phaser.Scene {
+      constructor() {
+        super('PlinkoGame');
+        this.particles = [];
+        this.plinkos = [];
+        this.spinners = [];
+        this.bounds = [];
+        this.cols = 7;
+        this.rows = 5;
+        this.particleSize = 10;
+        this.plinkoSize = 16;
+        this.spacing = 0;
+        this.leaderboard = null;
+      }
+
+      preload() {
+        this.load.image('ball', 'ph.png');
+        this.load.image('propeller', 'propeller.png');
+      }
+
+      create() {
+        this.leaderboard = new LeaderboardComponent(this);
+        // Set up Matter world
+        this.cameras.main.setBackgroundColor('#FFE4B6');
+        // this.matter.world.setBounds(0, 0, 600, 700);
+
+        // Calculate spacing based on scene width
+        const pegsTotalWidth = (this.sys.game.config.width * 0.75);
+        this.spacing = (pegsTotalWidth / this.cols);
+
+        for (let j = 0; j < this.rows; j++) {
+          let pegsInRow = j + 3; // One less peg in each row as we go down
+          for (let i = 0; i < pegsInRow; i++) {
+            // Calculate x such that the pegs are centered for each row
+            let isSpinningOne = Math.random() < 0.1;
+            let offset = (this.cols - pegsInRow) * this.spacing / 2 + (this.sys.game.config.width - pegsTotalWidth) / 2;
+            let x = offset + i * this.spacing + 25;
+
+            let y = this.spacing + j * this.spacing + 500;
+            const circle = this.add.circle(x, y, this.plinkoSize, 0x363639)
+            let plinko = this.matter.add.circle(x, y, this.plinkoSize, {
+              isStatic: true,
+              restitution: 1,
+              friction: 0,
+              density: 0.001
+            });
+
+            this.matter.add.gameObject(circle, plinko);
+            if (isSpinningOne) {
+              let rectangle = this.matter.add.rectangle(x, y, 100, this.plinkoSize * 1.5, {
+                isStatic: true
+              });
+              let sprite = this.add.sprite(x, y, 'propeller').setScale(0.8);
+              const randomDirection = Math.random() < 0.5 ? -1 : 1;
+              rectangle.spinDirection = randomDirection; // 1 for clockwise, -1 for counter-clockwise
+              rectangle.maxSpinSpeed = 0.2; // Maximum speed
+              rectangle.spinDuration = 2000; // Duration in milliseconds for one full cycle (ease in and out)
+              rectangle.spinTimer = 0; // Timer to track spinning time
+              this.matter.add.gameObject(sprite, rectangle);
+              sprite.displayOriginX = 79;
+              sprite.displayOriginY = 17;
+              sprite.setDepth(1);
+              this.spinners.push(rectangle);
+            }
+            this.plinkos.push(plinko);
+          }
+        }
+
+        // Create Divider Pegs
+        const scores = [5, 10, 15, 25, 15, 10, 5];
+        for (let i = 0; i < this.cols + 1; i++) {
+          let x = i * this.spacing + 70;
+          let y = this.sys.game.config.height - 50;
+          let boundary = this.matter.add.rectangle(x, y, 10, 100, { isStatic: true });
+
+
+
+          if (i !== 0) {
+            let scoreText = this.add.text(x - this.spacing / 2, y, `${scores[i - 1]}`, { fontSize: '600 30px', fill: '#000' }).setOrigin(0.5);
+            // Convert text to a Matter object
+            let scoreLabel = this.matter.add.gameObject(scoreText, { isStatic: true });
+            scoreLabel.setSensor(true); // Make the score label a sensor
+            scoreLabel.label = 'score'; // Label to identify the score label in collisions
+            scoreLabel.scoreValue = scores[i - 1]; // Store the score value
+          }
+
+          this.bounds.push(boundary);
+        }
+
+        // Event to drop a new particle every second
+        // this.time.addEvent({
+        //   delay: 1000,
+        //   callback: this.addBall,
+        //   callbackScope: this,
+        //   loop: true
+        // });
+
+        // Set up collision events
+        this.matter.world.on('collisionstart', (event) => {
+            event.pairs.forEach((pair) => {
+                const { bodyA, bodyB } = pair;
+
+                // Check if one of the bodies is a ball and the other is a score label
+                let ballId = null;
+                let scoreValue = null;
+                let username = null;
+                let imageKey = null;
+                if (bodyA.gameObject?.label === 'ball' && bodyB.gameObject?.label === 'score') {
+                  ballId = bodyA.gameObject.ballID;
+                  scoreValue = bodyB.gameObject.scoreValue;
+                  username = bodyA.gameObject.username;
+                  imageKey = bodyA.gameObject.image;
+                  // console.log(`Ball ID: ${bodyA.gameObject.ballID}, Score: ${bodyB.gameObject.scoreValue}`);
+                } else if (bodyB.gameObject?.label === 'ball' && bodyA.gameObject?.label === 'score') {
+                  ballId = bodyB.gameObject.ballID;
+                  scoreValue = bodyA.gameObject.scoreValue;
+                  username = bodyB.gameObject.username;
+                  imageKey = bodyB.gameObject.image;
+                  // console.log(`Ball ID: ${bodyB.gameObject.ballID}, Score: ${bodyA.gameObject.scoreValue}`);
+                }
+
+                if (username){
+                  console.log("score", username, scoreValue);
+                  this.leaderboard.addUserScore(username, scoreValue, imageKey);
+                }
+            });
+        });
+      }
+
+      async loadImage(url){
+        const assetKey = await sha256(url);
+        return new Promise((resolve, reject) => {
+          // ask the LoaderPlugin to load the texture
+          this.load.image(assetKey, url)
+          this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+            // texture loaded so use instead of the placeholder
+            resolve(assetKey);
+          })
+          this.load.start();
+          
+        });
+      }
+
+      spawnAndAnimateText(textString, x, y) {
+          // Create the text object at the specified position
+          const randomColor = Phaser.Display.Color.RandomRGB(0, 100);
+          console.log(randomColor);
+          let text = this.add.text(x, y, textString, { font: '600 45px Arial', fill: randomColor.rgba });
+          text.setStroke('#FF5555', 16);
+          text.setShadow(2, 2, '#333333', 2, true, false);
+          text.setOrigin(0.5);
+          text.setAlpha(1);
+
+          // Create a tween for the text object
+          this.tweens.add({
+              targets: text,
+              y: y - 100,  // Move up by 50 pixels
+              alpha: 0,   // Fade to transparent
+              duration: 1000, // Duration of 1000 milliseconds (1 second)
+              ease: 'Linear', // Linear easing
+              onComplete: function () {
+                  text.destroy(); // Destroy the text object when the tween is complete
+              }
+          });
+      }
+
+
+      async addBall(imageUrl, username){
+        const assetKey = await this.loadImage(imageUrl);
+        let x = Phaser.Math.Between(this.spacing, this.sys.game.config.width - this.spacing);
+        let ballSprite = this.add.sprite(x, 50, assetKey).setScale(0.75);
+        this.spawnAndAnimateText(username, x, 100);
+
+        // Create a Graphics object for the mask
+        let mask = this.make.graphics({ x: 0, y: 0, add: false });
+        mask.fillStyle(0xffffff).fillCircle(this.particleSize, this.particleSize, this.particleSize*2.5);
+
+        // Apply the mask to the sprite
+        ballSprite.setMask(mask.createGeometryMask());
+
+        // Add a Matter physics body to the sprite
+        let ball = this.matter.add.gameObject(ballSprite, {
+          shape: {
+            type: 'circle',
+            radius: this.particleSize
+          },
+          restitution: 0.1,
+          friction: 0.003
+        });
+
+        // Store the mask with the sprite for future reference
+        ballSprite.setDataEnabled();
+        ballSprite.data.set('mask', mask);
+        ball.ballID = Phaser.Utils.String.UUID(); // Assign a unique ID to each ball
+        ballSprite.username = username;
+        ballSprite.image = assetKey;
+        ball.label = 'ball'; // Label to identify the ball in collisions
+
+        this.particles.push(ballSprite);
+      }
+
+
+      update() {
+        this.particles.forEach(particle => {
+          // Update the mask's position to follow the sprite
+          let mask = particle.data.get('mask');
+          mask.x = particle.x - this.particleSize;
+          mask.y = particle.y - this.particleSize;
+
+          // Check if the particle is off the screen and remove it
+          if (particle.y > this.sys.game.config.height + this.particleSize) {
+            // Destroy the mask when the particle is removed
+            mask.destroy();
+            this.matter.world.remove(particle);
+            this.particles = this.particles.filter(p => p !== particle);
+          }
+        });
+
+        // Update logic for spinners
+        let first = this.spinners[0];
+        this.spinners.forEach(spinner => {
+          // Update the spin timer
+          spinner.spinTimer += this.game.loop.delta;
+
+          // Normalize the progress of the spin cycle (0 to 1)
+          let progress = (spinner.spinTimer % spinner.spinDuration) / spinner.spinDuration;
+
+          // Calculate the current spin speed using an easeInOut function
+          let easeInOutSpeed = this.easeInOut(progress) * spinner.maxSpinSpeed;
+
+          // if (first === spinner) console.log(progress, easeInOutSpeed);
+
+          // Apply rotational force based on spinDirection and easeInOutSpeed
+          this.matter.body.rotate(spinner, spinner.spinDirection * easeInOutSpeed);
+
+          // Optionally reverse direction at the end of each cycle
+          if (spinner.spinTimer >= spinner.spinDuration) {
+            spinner.spinDirection *= -1; // Switch direction
+            spinner.spinTimer -= spinner.spinDuration; // Reset timer
+          }
+        });
+      }
+
+      // EaseInOut function (quadratic for example)
+      easeInOut(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      }
+
+    }
+
+    const config = {
+      type: Phaser.CANVAS,
+      width: 600,
+      height: 1066,
+      physics: {
+        default: 'matter',
+        matter: {
+          gravity: {
+            y: 1
+          },
+          debug: false
+        }
+      },
+      scene: PlinkoGame
+    };
+
+    const game = new Phaser.Game(config);
+
+    // insertCoin({ liveMode: "tiktok" }).then(()=>{
+    //   const currentScene = game.scene.scenes[0];
+    //   onTikTokLiveEvent((event) => {
+    //     console.log("tiktok live event", event);
+    //     if (event.type==="like"){
+    //       currentScene.addBall(event.data.userPhotoUrl, "@" + event.data.username);
+    //     }
+    //     else if (event.type==="gift"){
+    //       for (let i=0; i<10; i++)
+    //         currentScene.addBall(event.data.userPhotoUrl, "@" + event.data.username);
+    //     }
+    //   });
+    // });
+
+    setInterval(() => {
+      const currentScene = game.scene.scenes[0];
+      const dummyUsernames = ["ayseelmas", "nataliabrodacka", "neallaack"];
+      currentScene.addBall("./ph.png", "@"+dummyUsernames[Math.floor(Math.random() * dummyUsernames.length)]);
+    }, 1000);
+
+  </script>
+</body>
+
+</html>

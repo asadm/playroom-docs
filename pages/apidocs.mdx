@@ -18,6 +18,7 @@ await insertCoin();
 | option       | type    | default | explanation                                                                 |
 |--------------|---------|---------|-----------------------------------------------------------------------------|
 | `streamMode` | boolean | false   | If  `true` , Playroom will start in [ stream mode ]( /multiplayer/stream ). |
+| `liveMode`   | string | false   | If set to `tiktok` , Playroom will start in [TikTok Live mode]( /components/tiktok ). |
 | `allowGamepads` | boolean | false   | If  `true` , Playroom will let players play game using gamepads connected to the stream device itself. This requires `streamMode` to also be `true`.<br/><br/>The gamepads need to be connected to device where stream screen is running. No phones are required in this mode but are optionally allowed as an alternative controller if there aren't enough physical gamepads in the room. Players who join via phone in this mode see an on-screen [Joystick](/multiplayer/joystick). |
 | `baseUrl`    | string  | *Current Page URL*      | The base URL used for generating room link that host shares with other players. |
 | `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
@@ -292,6 +293,36 @@ The `BotOptions` object is used to specify configurations for bots in the game. 
 The `Bot` interface represents an automated player. The `Bot` and its derived classes will have methods and properties similar to a [`PlayerState`](#playerstate) object.
 
 **Note:** The behavior of a bot, particularly its decision-making and interactions, will heavily depend on its implementation and the given `botClass`. Ensure the bot's behaviors align with the game's requirements and player expectations.
+
+## `onTikTokLiveEvent: (event: TiktokLiveEvent) => unsubscribeCallback`
+
+Register a callback that will be called when a live event is received from TikTok. Returns a function that can be called to unsubscribe the callback.
+
+```js
+const unsubscribe = onTikTokLiveEvent((event) => {
+  console.log(`Received live event: ${event.type}`);
+});
+```
+
+### `TiktokLiveEvent`
+
+The `TiktokLiveEvent` interface represents a live event that is sent from Tiktok to the game. It has the following properties:
+
+| Field               | Type       | Description                                             |
+|---------------------|------------|---------------------------------------------------------|
+| `type`              | `"chat"` <br/> `"gift"` <br/> `"like"` | Type of the live event (chat, gift, or like) |
+| `data`              | `Object`   | The data associated with the event                      |
+| `data.t`            | `number`   | Timestamp of the event                                  |
+| `data.msgId`        | `string`   | Message ID                                              |
+| `data.userId`       | `string`   | User ID                                                 |
+| `data.name`         | `string`   | User name                                               |
+| `data.userPhotoUrl` | `string`   | URL of the user's photo                                 |
+| `data.comment`      | `string`   | Comment text, available only when `type` is `chat`      |
+| `data.giftName`     | `string`   | Name of the gift, available only when `type` is `gift`  |
+| `data.giftPhotoUrl` | `string`   | URL of the gift's photo, available only when `type` is `gift` |
+| `data.giftId`       | `string`   | Gift ID, available only when `type` is `gift`           |
+| `data.giftDiamondCount` | `number` | Diamond count of the gift, available only when `type` is `gift` |
+
 
 ## Hooks for React
 
