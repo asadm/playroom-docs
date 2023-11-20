@@ -1,0 +1,100 @@
+body {
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+.App{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.emoji-display{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+  position: absolute;
+}
+.emoji-display .card{
+  background: #000;
+  border: 2px solid #FFA6F1;
+  /* box-shadow: 0px 0.4rem 0px rgba(0, 0, 0, 0.25); */
+  border-radius: 1rem;
+  padding: 5rem 3.5rem;
+  /* opacity: 0; */
+  animation: slideUp 2s linear;
+}
+
+.emoji-display .card .comment-text{
+  font-size: 1rem;
+  color: #8D6BED;
+  position: absolute;
+  font-family: monospace;
+  bottom: 1.5rem;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0rem;
+}
+
+.emoji-display .card.gift{
+  border-color: #F6C544;
+}
+
+.emoji-display .card.chat{
+  border-color: #8D6BED;
+}
+
+.card .avatar{
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  display: flex;
+  font-size: 0.6rem;
+  font-family: monospace;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card .avatar img{
+  width: 2.5rem;
+  border-radius: 50%;
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 1;
+    margin-top: 200vh;
+    animation-timing-function: ease-out;
+  }
+  15% {
+    margin-top: -10vh;
+    animation-timing-function: ease-in;
+  }
+  18% {
+    margin-top: 5vh;
+    animation-timing-function: ease-out;
+  }
+  20% {
+    margin-top: 0px;
+    animation-timing-function: ease-in;
+  }
+  95% {
+    opacity: 1;
+    margin-top: 0px;
+    animation-timing-function: ease-in;
+  }
+  100% {
+    margin-top: 0px;
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+}

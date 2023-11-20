@@ -1,0 +1,63 @@
+<head>
+  <link rel="stylesheet" href="./react.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script type="text/babel">
+    const { useEffect, useState } = React;
+    const {
+      insertCoin, 
+      onTikTokLiveEvent
+    } = Playroom;
+    const randomNumBetween = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+    const randomRotations = Array(20).fill(0).map(()=> `rotate(${randomNumBetween(-5,5)}deg) translateX(${randomNumBetween(-10,10)}px)`);
+
+    const App = () => {
+      const [cards, setCards] = useState([]);
+
+      function addCard(type, username, photo, comment){
+        setCards(cards=>[...cards, {type, username, photo, comment}]);
+      };
+
+      useEffect(async ()=>{
+        await insertCoin({ liveMode: "tiktok" });
+        onTikTokLiveEvent((event) => {
+          console.log("tiktok live event", event);
+          addCard(event.type, "@" + event.data.username, event.data.userPhotoUrl, event.data.comment)
+        });
+      }, []);
+      
+      return (
+        <div className="App">
+          {cards.map((emojiData, i)=>{
+            return (
+            <div key={i} className="emoji-display">
+              <span 
+                style={{transform: randomRotations[i%randomRotations.length]}}
+                className={"card " + emojiData.type}>
+                <span className="avatar">
+                  <img src={emojiData.photo} />
+                  {emojiData.username}
+                </span>
+                {emojiData.type==="like" && <span className="like">❤️</span>}
+                {emojiData.type==="gift" && <span className="gift">🎁</span>}
+                {emojiData.type==="chat" && <span className="chat">💬</span>}
+                {emojiData.type==="chat" && <span className="comment-text">"{emojiData.comment}"</span>}
+              </span>
+            </div>
+          )})
+          }
+        </div>
+      );
+    };
+
+    const root = document.querySelector('#root');
+    ReactDOM.render(<App />, root);
+  </script>
+</body>
