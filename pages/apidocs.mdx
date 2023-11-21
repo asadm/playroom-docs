@@ -2,9 +2,9 @@
 
 import { Tabs, Tab, Callout } from 'nextra/components'
 
-## `insertCoin({ InitOptions })`
+## `insertCoin({ InitOptions }, [onLaunchCallback])`
 
-Tell Playroom to start! Playroom Kit will then handle room creation, players joining and also let players pick their names, colors and avatars. Once host taps "Launch", the promise resolves. At this point you can start your game.
+Tell Playroom to start! Playroom Kit will then handle room creation, players joining and also let players pick their names, colors and avatars. Once host taps "Launch", the promise resolves (and `onLaunchCallback` is called if provided). At this point you can start your game.
 
 ```js
 // Show Playroom UI, let it handle players joining etc and wait for host to tap "Launch"
@@ -99,11 +99,13 @@ const player = myPlayer();
 console.log(`Hello ${player.getProfile().name}!`);
 ```
 
-## waitForState(stateKey: string): Promise&lt;any&gt;
+## waitForState(stateKey: string, [onStateSetCallback]): Promise&lt;any&gt;
 
 Returns a promise that resolves to the state value only when the game state has the given key set, to any truthy value.
 
 In other words, it waits until a game state is set. This is useful for waiting for the host to set the winner, for example.
+
+Optionally, you can pass a callback that will be called when the state is set.
 
 ```js
 // Wait for the winner to be set
@@ -111,11 +113,13 @@ const winnerId = await waitForState('winner');
 // Do something with the winner
 ```
 
-## waitForPlayerState(player: [`PlayerState`](#playerstate), stateKey: string): Promise&lt;any&gt;
+## waitForPlayerState(player: [`PlayerState`](#playerstate), stateKey: string, [onStateSetCallback]): Promise&lt;any&gt;
 
 Returns a promise that resolves to the state value only when the player state has the given key set, to any truthy value.
 
 In other words, it waits until a player state is set. This is useful for waiting for a player to play their turn, for example.
+
+Optionally, you can pass a callback that will be called when the state is set.
 
 ```js
 // Wait for the the player to play their turn
