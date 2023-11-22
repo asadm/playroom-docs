@@ -5,6 +5,10 @@ import { Callout } from 'nextra-theme-docs'
 
 [Godot](https://godotengine.org/) is a free and open-source game engine. Godot has [JavaScriptBridge](https://docs.godotengine.org/en/stable/classes/class_javascriptbridge.html) support, which connects the engine with the browser's JavaScript. We can use this to use Playroom with Godot.
 
+<Callout emoji="👷🏼‍♀️">
+  Godot 4's web export is not production-grade yet. There are open bugs in [Chromium](https://bugs.chromium.org/p/chromium/issues/detail?id=1324296#c6) and in Godot itself[1](https://github.com/godotengine/godot/issues/83548) [2](https://github.com/godotengine/godot/issues/70691).
+</Callout>
+
 ## Setup
 
 - In your Godot project, you need to enable Web Export. You can do this by going to `Project > Export > Add` and clicking `Web`.
@@ -75,6 +79,16 @@ When the host starts the game, the `onInsertCoin` callback will be called. The `
 
 <Callout type="info" emoji="💡">
   You can use the `Run in browser` option in the `Remote Debug` menu to quickly build and open your game in the browser.
+</Callout>
+
+<Callout type="info" emoji="💡">
+  If you host the game on your own server, Godot requires the following headers to be present, add these in your `.htaccess` or however your server lets you:
+
+```
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Embedder-Policy: require-corp
+```
+
 </Callout>
 
 ## Simple Demo
