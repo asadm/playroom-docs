@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://ufg3rqr0j6xa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8upo8"]
+size = Vector2(34.5407, 36.8571)
+
+[node name="player" type="RigidBody2D"]
+position = Vector2(180, 110)
+
+[node name="rect" type="ColorRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(1, 0.207843, 1, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(20, 20)
+scale = Vector2(1.10256, 1.16667)
+shape = SubResource("RectangleShape2D_8upo8")
+debug_color = Color(0.921569, 0.2, 0.498039, 0.419608)

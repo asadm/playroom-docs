@@ -3,4 +3,28 @@ const withNextra = require('nextra')({
   themeConfig: './theme.config.tsx',
 })
 
-module.exports = withNextra()
+const godotHeaders = [
+  {
+    key: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin', // Matched parameters can be used in the value
+  },
+  {
+    key: 'Cross-Origin-Embedder-Policy', // Matched parameters can be used in the key
+    value: 'require-corp',
+  },
+]
+
+module.exports = withNextra({
+    async headers() {
+      return [
+        {
+          source: '/demos/godot1/:path',
+          headers: godotHeaders,
+        },
+        {
+          source: '/usage/godot',
+          headers: godotHeaders,
+        },
+      ]
+    },
+})

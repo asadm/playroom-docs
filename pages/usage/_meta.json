@@ -3,6 +3,7 @@
   "react":"Usage with React",
   "unity":"Usage with Unity",
   "playcanvas":"Usage with PlayCanvas",
+  "godot":"Usage with Godot",
   "phaser":"Usage with Phaser",
   "kaboom":"Usage with Kaboom",
   "pixijs":"Usage with PixiJS",

@@ -3,7 +3,7 @@ import useWindowDimensions from './useWindowDimensions'
 import { useEffect, useRef, useState } from 'react'
 import styles from './preview.module.css'
 
-export default function Preview({src, maxPlayers=4}) {
+export default function Preview({src, maxPlayers=4, godotMode}) {
   const { width, height } = useWindowDimensions();
   const iframeRef = useRef(null);
   const [joinedIframes, setJoinedIframes] = useState(0);
@@ -22,6 +22,7 @@ export default function Preview({src, maxPlayers=4}) {
         setJoinedIframes(Math.max(0, joinedIframes - 1));
       }}>
       <iframe 
+        allow={godotMode ? "autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated": undefined}
         ref={iframeRef} width="325" height="650" style={{
         // transform: `scale(${Math.min(1, width / 650)})`
         // borderRadius: "23px", 
