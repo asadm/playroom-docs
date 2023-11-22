@@ -5,6 +5,7 @@ title: "Introduction"
 import Link from 'next/link'
 import styles from './index.module.css'
 import {BlogLatestCard} from "../components/blogIndex"
+import SupportedEngines from "../components/SupportedEngines.mdx"
 
 <img src="/images/home.png" style={{width: "100%", marginTop: '20px;'}} />
 <BlogLatestCard />
@@ -70,53 +71,7 @@ import { Card, Cards } from 'nextra-theme-docs'
 
 Use Playroom Kit to make web-based games. We officially support the following engines:
 
-<Cards>
-  <Card
-    icon={<img src="/images/logos/threejs.svg" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="Three.js"
-    href="/usage/threejs"
-  />
-  <Card
-    icon={ <img src="/images/logos/react.svg" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="React"
-    href="/usage/react"
-  />
-  <Card
-    icon={ <img src="/images/logos/godot.svg" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="Godot"
-    href="/usage/godot"
-  />
-   <Card
-    icon={ <img src="/images/logos/phaser.png" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="Phaser"
-    href="/usage/phaser"
-  />
-  <Card
-    icon={ <img src="/images/logos/playcanvas.png" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="PlayCanvas"
-    href="/usage/playcanvas"
-  />
-  <Card
-    icon={ <img src="/images/logos/unity.svg" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="Unity"
-    href="/usage/unity"
-  />
-  <Card
-    icon={ <img src="/images/logos/kaboom.png" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="Kaboom"
-    href="/usage/kaboom"
-  />
-  <Card
-    icon={ <img src="/images/logos/spline.svg" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="Spline"
-    href="/usage/spline"
-  />
-  <Card
-    icon={ <img src="/images/logos/pixijs.png" style={{width: "32px", marginTop: '20px;'}}></img>}
-    title="PixiJS"
-    href="/usage/pixijs"
-  />
-</Cards>
+<SupportedEngines />
 
 ## What's the API like?
 
