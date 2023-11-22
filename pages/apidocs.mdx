@@ -185,11 +185,12 @@ player.setState('score', 10);
 ### `onQuit(callback): unsubscribeCallback`
 
 Register a callback that will be called when the player quits the room.
+The callback will be called with the player's [`PlayerState`](#playerstate) object.
 Returns a function that can be called to unsubscribe the callback.
 
 ```js
-const unsubscribe = player.onQuit(() => {
-  console.log(`${player.id} quit!`);
+const unsubscribe = player.onQuit((state) => {
+  console.log(`${state.id} quit!`);
 });
 
 // ...
