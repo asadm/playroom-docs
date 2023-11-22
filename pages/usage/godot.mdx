@@ -1,17 +1,23 @@
 import Preview from '../../components/preview'
 import { Callout } from 'nextra-theme-docs'
+import { Tabs, Tab } from 'nextra/components'
 
-# Using Playroom with Godot 4 (Web only)
 
-[Godot](https://godotengine.org/) is a free and open-source game engine. Godot has [JavaScriptBridge](https://docs.godotengine.org/en/stable/classes/class_javascriptbridge.html) support, which connects the engine with the browser's JavaScript. We can use this to use Playroom with Godot.
+# Using Playroom with Godot 3 & 4 (Web only)
+
+[Godot](https://godotengine.org/) is a free and open-source game engine. Godot has [JavaScriptBridge](https://docs.godotengine.org/en/stable/classes/class_javascriptbridge.html) support ([JavaScript](https://docs.godotengine.org/en/3.5/classes/class_javascript.html) in Godot 3), which connects the engine with the browser's JavaScript. We can use this to use Playroom with Godot.
 
 <Callout emoji="👷🏼‍♀️">
   Godot 4's web export is not production-grade yet. There are open bugs in [Chromium](https://bugs.chromium.org/p/chromium/issues/detail?id=1324296#c6) and in [Godot](https://github.com/godotengine/godot/issues/83548) [itself](https://github.com/godotengine/godot/issues/70691).
 </Callout>
 
+<Callout type="info" emoji="💡">
+	<b> Use Godot 3 for any production web games.</b>
+</Callout>
+
 ## Setup
 
-- In your Godot project, you need to enable Web Export. You can do this by going to `Project > Export > Add` and clicking `Web`.
+- In your Godot 3 or 4 project, you need to enable Web Export. You can do this by going to `Project > Export > Add` and clicking `Web`.
 
 - With `Web` selected, add Playroom to the `HTML > Head` section:
 
@@ -34,6 +40,48 @@ To initialize Playroom in your game ie. show the Playroom lobby, you need to cal
 
 Here is an example of how to initialize Playroom on a button press:
 
+<Tabs items={['Godot 3', 'Godot 4']}>
+  <Tab>
+		### Godot 3
+```gdscript
+extends Button
+
+var Playroom = JavaScript.get_interface("Playroom")
+
+# Keep a reference to the callback so it doesn't get garbage collected
+var jsBridgeReferences = []
+func bridgeToJS(cb):
+	var jsCallback = JavaScript.create_callback(cb)
+	jsBridgeReferences.push_back(jsCallback)
+	return jsCallback
+
+# Called when the "Play Multiplayer" button is pressed.
+func _on_pressed():
+	var initOptions = JavaScript.create_object("Object");
+	Playroom.insertCoin(initOptions, bridgeToJS("onInsertCoin"));
+
+# Called when the host has started the game
+func onInsertCoin(args):
+	print("Coin Inserted")
+	Playroom.onPlayerJoin(bridgeToJS("onPlayerJoin"))
+
+# Called when a new player joins the game
+func onPlayerJoin(args):
+	var state = args[0];
+	print("new player: ", state.id)
+	print(state.getProfile().name)
+	
+	# Listen to onQuit event
+	state.onQuit(bridgeToJS("onPlayerQuit"))
+
+func onPlayerQuit(args):
+	var state = args[0];
+	print("player quit: ", state.id)
+		```
+	</Tab>
+	<Tab>
+		### Godot 4
+		
 ```gdscript
 extends Button
 
@@ -68,6 +116,9 @@ func onPlayerJoin(args):
 	state.onQuit(bridgeToJS(onQuitCb))
 
 ```
+</Tab>
+</Tabs>
+
 
 The above code will show the familiar [Playroom lobby](components/lobby) when the button is pressed. Players can host and join rooms without any code on your side. 
 
@@ -82,7 +133,7 @@ When the host starts the game, the `onInsertCoin` callback will be called. The `
 </Callout>
 
 <Callout type="info" emoji="💡">
-  If you host the game on your own server, Godot requires the following headers to be present, add these in your `.htaccess` or however your server lets you:
+  If you host the game on your own server, Godot 4 requires the following headers to be present, add these in your `.htaccess` or however your server lets you:
 
 ```
 Cross-Origin-Opener-Policy: same-origin
@@ -93,9 +144,9 @@ Cross-Origin-Embedder-Policy: require-corp
 
 ## Simple Demo
 
-<Preview src="/demos/godot1/index.html" newWindow />
+<Preview src="/demos/godot3/index.html" />
 
-See the full [source code](https://github.com/asadm/playroom-docs/tree/main/examples/godot-hello-world) for this demo.
+See the full [source code](https://github.com/asadm/playroom-docs/tree/main/examples/godot3-hello-world) for this demo. Here is [source code](https://github.com/asadm/playroom-docs/tree/main/examples/godot-hello-world) for the Godot 4 version.
 
 
 ## Next Steps

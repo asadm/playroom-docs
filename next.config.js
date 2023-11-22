@@ -18,11 +18,7 @@ module.exports = withNextra({
     async headers() {
       return [
         {
-          source: '/demos/godot1/:path',
-          headers: godotHeaders,
-        },
-        {
-          source: '/usage/godot',
+          source: '/demos/godot4/:path',
           headers: godotHeaders,
         },
       ]
