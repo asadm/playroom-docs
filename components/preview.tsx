@@ -3,7 +3,7 @@ import useWindowDimensions from './useWindowDimensions'
 import { useEffect, useRef, useState } from 'react'
 import styles from './preview.module.css'
 
-export default function Preview({src, maxPlayers=4, godotMode}) {
+export default function Preview({src, maxPlayers=4, newWindow}) {
   const { width, height } = useWindowDimensions();
   const iframeRef = useRef(null);
   const [joinedIframes, setJoinedIframes] = useState(0);
@@ -21,13 +21,16 @@ export default function Preview({src, maxPlayers=4, godotMode}) {
       <FakeBrowser scale={scale} url={url} onClose={()=>{
         setJoinedIframes(Math.max(0, joinedIframes - 1));
       }}>
-      <iframe 
-        allow={godotMode ? "autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated": undefined}
+        {newWindow && 
+        <div className={styles.newWindowCTA}>
+          <a href={src} target='_blank'>Open in new window ↗</a>
+        </div>}
+      {!newWindow && <iframe 
         ref={iframeRef} width="325" height="650" style={{
         // transform: `scale(${Math.min(1, width / 650)})`
         // borderRadius: "23px", 
         // margin: "20px 0px",
-        }} src={src}></iframe>
+        }} src={src}></iframe>}
       </FakeBrowser>
         {new Array(joinedIframes).fill(0).map((_, i) => (
           <FakeBrowser scale={scale} url={url} onClose={()=>{
@@ -41,7 +44,7 @@ export default function Preview({src, maxPlayers=4, godotMode}) {
             }} src={url}></iframe>
           </FakeBrowser>
         ))}
-      {joinedIframes<maxPlayers &&
+      {!newWindow && joinedIframes<maxPlayers &&
       <a className={styles.btnNew}
       // style={{transform: `scale(${scale})`, transformOrigin: "top left"}}
       onClick={()=>{

@@ -88,3 +88,16 @@
   align-items: center;
   justify-content: center;
 }
+
+.newWindowCTA{
+  background: url(./previewlobby.png) no-repeat center center;
+  background-size: cover;
+}
+
+.newWindowCTA a{
+  padding: 310px 0px;
+  display: block;
+  backdrop-filter: blur(12px) brightness(0.3);
+  text-shadow: 1px 1px black;
+  font-weight: bold;
+}
