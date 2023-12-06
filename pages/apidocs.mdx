@@ -27,6 +27,34 @@ await insertCoin();
 | `roomCode` | string | undefined | Override the room to join. If this is not set, a random room code is assigned. Do note that if the URL has room `#r=` param, that is used instead of this.|
 | `skipLobby` | boolean | false | Skips the Playroom's lobby screen altogether. This is useful if you want to design your own multiplayer lobby. |
 | `reconnectGracePeriod` | number | 0 | If set, Playroom will wait for the given **number of milliseconds** for the player to reconnect to the room after a disconnect. <br/><br/>If the player reconnects within the grace period, the player's state is restored. If the player does not reconnect within the grace period, the player is removed from the room and `onQuit` fires for the player. |
+| `maxPlayersPerRoom` | number | undefined | If set, Playroom will set a maximum limit for the **number of players** per room. <br/><br/>If the room is full and a new player attempts to join, the Playroom will display a default modal with a message stating that the "room is full", and the `insertCoin` method will throw an error with a message code `ROOM_LIMIT_EXCEEDED`. <br/><br/>If the room is full, `skipLobby` is set to `true`, and a new player is attempting to join the room, Playroom will skip the default modal but will throw an error.  |
+
+## `maxPlayersPerRoom: number`
+
+Sets a maximum limit for the number of players per room.
+
+```js
+  try {
+    await insertCoin({
+      maxPlayersPerRoom: 2, // maximum limit for 2 players per room
+    });
+  } catch (error) {}
+```
+
+When `skipLobby` is set to `true`, Playroom will skip both the default lobby and the "room is full" modal.
+
+```js
+  try {
+    await insertCoin({
+      skipLobby: true,
+      maxPlayersPerRoom: 2,
+    });
+  } catch (error) {
+    if (error.message === "ROOM_LIMIT_EXCEEDED") {
+      // Here you can display a custom error
+    }
+  }
+```
 
 ## `getState(key: string): any`
 
