@@ -1,7 +1,6 @@
 import { Environment, OrbitControls, useCursor } from "@react-three/drei";
 import { findPath, map } from "../common/map";
 import { useThree } from "@react-three/fiber";
-import { useAtom } from "jotai";
 import { Suspense, useRef, useState } from "react";
 import { useGrid } from "../hooks/useGrid";
 import { Avatar } from "./Avatar";
@@ -10,7 +9,6 @@ import { myPlayer, usePlayersState } from "playroomkit";
 
 export const Experience = () => {
   const characters = usePlayersState("character");
-  // const [characters] = useAtom(charactersAtom);
   const [onFloor, setOnFloor] = useState(false);
   useCursor(onFloor);
   const { vector3ToGrid, gridToVector3 } = useGrid();
@@ -29,7 +27,6 @@ export const Experience = () => {
       return;
     }
 
-    // const newCharacter  = {...myPlayer().getState('character'), path, position: path};
     myPlayer().setState('path', path);
     myPlayer().setState('position', vector3ToGrid(character.position));
   };

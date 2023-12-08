@@ -1,10 +1,12 @@
-# r3f-vite-starter
-A boilerplate to build R3F projects
+# r3f-readyplayerme
+
+This is an example of how to use the [readyplayer.me](https://readyplayer.me/) avatar creator with Playroom.
+
+This code is almost fully based on [Wawa Sensei's Tutorial](https://www.youtube.com/watch?v=DUOrkfsLNow).
 
 ```
-yarn
-yarn dev
+npm install
+npm run dev
 ```
 
-
-![image](https://user-images.githubusercontent.com/6551176/221732091-23ee52cb-4150-42fa-b998-43628d7a6b0d.png)
+![image](./screenshot.png)

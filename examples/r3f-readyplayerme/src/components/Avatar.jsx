@@ -5,12 +5,10 @@ Command: npx gltfjsx@6.2.3 public/models/Animated Woman.glb -o src/components/An
 
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useGraph } from "@react-three/fiber";
-import { useAtom } from "jotai";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGrid } from "../hooks/useGrid";
 import { myPlayer, usePlayerState } from "playroomkit";
-// import { socket, userAtom } from "./SocketManager";
 
 const MOVEMENT_SPEED = 0.032;
 
@@ -72,12 +70,6 @@ export function Avatar({
         setIsDancing(true);
       }
     }
-    // socket.on("playerMove", onPlayerMove);
-    // socket.on("playerDance", onPlayerDance);
-    // return () => {
-    //   socket.off("playerDance", onPlayerDance);
-    //   socket.off("playerMove", onPlayerMove);
-    // };
   }, [id]);
 
 
@@ -140,7 +132,6 @@ export function Avatar({
   );
 }
 
-// useGLTF.preload("/models/Animated Woman.glb");
 useGLTF.preload("/animations/M_Walk_001.glb");
 useGLTF.preload("/animations/M_Standing_Idle_001.glb");
 useGLTF.preload("/animations/M_Dances_001.glb");
