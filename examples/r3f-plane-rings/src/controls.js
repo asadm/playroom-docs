@@ -17,15 +17,24 @@ let pitchVelocity = 0;
 let planeSpeed = 0.006;
 export let turbo = 0;
 
-export function updatePlaneAxis(x, y, z, planePosition, camera) {
+export function updatePlaneAxis(x, y, z, planePosition, camera, joystick) {
   jawVelocity *= 0.95;
   pitchVelocity *= 0.95;
+
+  const angle = joystick.angle(); // in radians
+  const yAxis = joystick.isJoystickPressed() ? Math.cos(angle): 0;
+  const xAxis = joystick.isJoystickPressed() ? Math.sin(angle) * -1: 0;
+  console.log(yAxis);
 
   if (Math.abs(jawVelocity) > maxVelocity) 
     jawVelocity = Math.sign(jawVelocity) * maxVelocity;
 
   if (Math.abs(pitchVelocity) > maxVelocity) 
     pitchVelocity = Math.sign(pitchVelocity) * maxVelocity;
+
+
+  jawVelocity += xAxis * 0.0015;
+  pitchVelocity += yAxis * 0.0005;
 
   if (controls["a"]) {
     jawVelocity += 0.0025;
@@ -43,7 +52,7 @@ export function updatePlaneAxis(x, y, z, planePosition, camera) {
     pitchVelocity += 0.0025;
   }
 
-  if (controls["r"]) {
+  if (controls["r"] || joystick.isPressed('reset')) {
     jawVelocity = 0;
     pitchVelocity = 0;
     turbo = 0;
@@ -65,7 +74,7 @@ export function updatePlaneAxis(x, y, z, planePosition, camera) {
 
 
   // plane position & velocity
-  if (controls.shift) {
+  if (controls.shift || joystick.isPressed('boost')) {
     turbo += 0.025;
   } else {
     turbo *= 0.95;

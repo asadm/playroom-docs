@@ -7,7 +7,7 @@ import { SphereEnv } from "./SphereEnv";
 import { Airplane } from "./Airplane";
 import { Targets } from "./Targets";
 import { MotionBlur } from "./MotionBlur";
-import { insertCoin, usePlayersList } from "playroomkit";
+import { Joystick, insertCoin, myPlayer, usePlayersList } from "playroomkit";
 
 function App() {
   const [coinInserted, setCoinInserted] = useState(false);
@@ -27,6 +27,19 @@ function App() {
 
 function Scene(){
   const players = usePlayersList();
+  const [joystick, setJoystick] = useState();
+
+  useEffect(() => {
+    if (!joystick){
+      setJoystick(new Joystick(myPlayer(), {
+        type: "angular",
+        buttons: [
+          {id: "boost", label: "Boost"},
+          {id: "reset", label: "Reset"}
+        ]
+      }));
+    }
+  }, [joystick]);
 
   return (
     <>
@@ -36,7 +49,9 @@ function Scene(){
       <PerspectiveCamera makeDefault position={[0, 10, 10]} />
 
       <Landscape />
-      {players.map((player) => <Airplane key={player.id} player={player} />)}
+      {players.map((player) => 
+        <Airplane key={player.id} player={player} joystick={player.id===myPlayer().id? joystick: undefined} />
+      )}
       <Targets />
 
       <directionalLight

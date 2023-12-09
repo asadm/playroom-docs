@@ -20,7 +20,7 @@ export const planePosition = new Vector3(0, 3, 7);
 const delayedRotMatrix = new Matrix4();
 const delayedQuaternion = new Quaternion();
 
-export function Airplane({ player, ...props }) {
+export function Airplane({ player, joystick, ...props }) {
   
   const [thisIsMyPlane, setThisIsMyPlane] = useState(false);
   const [myColorMaterial, setMyColorMaterial] = useState();
@@ -47,7 +47,7 @@ export function Airplane({ player, ...props }) {
 
     if (thisIsMyPlane) {
 
-    updatePlaneAxis(x, y, z, planePosition, camera);
+    updatePlaneAxis(x, y, z, planePosition, camera, joystick);
 
     const rotMatrix = new Matrix4().makeBasis(x, y, z);
 
@@ -83,7 +83,7 @@ export function Airplane({ player, ...props }) {
         .multiply(delayedRotMatrix)
         .multiply(new Matrix4().makeRotationX(-0.2))
         .multiply(
-          new Matrix4().makeTranslation(0, 0.015, 1.76)
+          new Matrix4().makeTranslation(0, 0.015, 0.76)
         );
 
       camera.matrixAutoUpdate = false;
