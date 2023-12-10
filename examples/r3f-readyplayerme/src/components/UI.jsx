@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AvatarCreator } from "@readyplayerme/react-avatar-creator";
-import { myPlayer } from "playroomkit";
+import { myPlayer, getRoomCode } from "playroomkit";
 
 export const UI = () => {
   const [avatarMode, setAvatarMode] = useState(false);
@@ -20,14 +20,16 @@ export const UI = () => {
           }}
         />
       )}
+      <div className="fixed top-0 left-0 z-10 w-screen h-16 text-black flex items-center justify-between px-4 font-bold text-xl">
+        Room Code<br/>{getRoomCode()}
+      </div>
       <div className="fixed inset-4 flex items-end justify-center pointer-events-none">
         <div className="flex items-center space-x-4 pointer-events-auto">
           {/* BACK */}
           {/* AVATAR */}
           <button
               className="p-4 rounded-full bg-slate-500 text-white drop-shadow-md cursor-pointer hover:bg-slate-800 transition-colors"
-              onClick={() => setAvatarMode(true)}
-            >
+              onClick={() => setAvatarMode(true)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
