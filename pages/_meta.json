@@ -15,8 +15,8 @@
   "setup": "🧩 | Setup",
       "components": "🤖 | Multiplayer Modules",
   "usage": "📙 | Usage",
-  "tutorials": "📺 | Tutorials",
   "templates": "🍱 | Templates",
+  "tutorials": "📺 | Tutorials",
   "apidocs": {
     "theme":{
       "collapsed": true
