@@ -22,14 +22,26 @@ Use this hook to get a list of all players in the game. The list will be updated
 
 If `triggerOnPlayerStateChange` is `true`, the hook will trigger a re-render when a player's state changes. This is useful for times when you want to display a list of players and their state values like scores.
 
+
+### usePlayerState(playerState: PlayerState, key: string, defaultValue: any)
+Use this hook to listen and update a value in a player's state.
+
+The return value is an array with two values:
+- `state`: `any`
+- `setState`: `(value: any, reliable?: boolean) => void`
+
+If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner.
+
+If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
+
 ```js
-import { usePlayersList } from 'playroomkit'
+import { usePlayerState } from 'playroomkit'
 ...
-const players = usePlayersList();
+const [count, setCount] = usePlayerState(player, 'count', 0);
 ```
 
 ### usePlayersState(key: string)
-This will give you a list of all players and their state values for a given key. The list will be updated as players state change. This is useful for times when you want to display a list of players and their state values like scores. 
+This will give you a list of all players and their state values for a given key. The list will be updated as players state change. This is useful for times when you want to display a list of players and their state values like scores.
 
 The return value is an array of objects with the following shape:
 
