@@ -110,6 +110,16 @@ if (isStreamScreen()) {
 
 Returns a 4-letter room code of the current room.
 
+## `onDisconnect(callback)`
+
+Register a callback that will be called when the current player disconnects from the room. The callback will also be called when current player is kicked from the room.
+
+```js
+onDisconnect((e) => {
+  console.log(`Disconnected!`, e.code, e.reason);
+});
+```
+
 ## `addBot()`
 
 Adds a bot to the room. This is equivalent to pressing the "Add Bot" button in the lobby. Returns a promise that resolves to an instance of the class you provided in `botOptions.botClass` parameter in `insertCoin`.
@@ -223,6 +233,15 @@ const unsubscribe = player.onQuit((state) => {
 
 // ...
 unsubscribe();
+```
+
+### `kick(): Promise<void>`
+Kicks the player from the room. This is equivalent to pressing the "Kick" button in the lobby.
+
+Only the host can kick players.
+
+```js
+await player.kick();
 ```
 
 ### `isBot(): boolean`
