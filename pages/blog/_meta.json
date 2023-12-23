@@ -1,4 +1,14 @@
 {
+  "highlights23": {
+    "title": "Playroom Highlights: Let's review last 6 months",
+    "date": "December 22 2023",
+    "image": "/images/blog/highlights23.png"
+  },
+  "december23": {
+    "title": "December Update: Death by AI, Twitch Insights and Godot",
+    "date": "December 06 2023",
+    "image": "/images/blog/dec232.png"
+  },
   "multiplayeredgecases": {
     "title": "Multiplayer Edge Cases",
     "date": "November 07 2023",
