@@ -2,7 +2,7 @@
   overflow-x: hidden;
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fill, 340px);
+  grid-template-columns: repeat(auto-fill, 350px);
   margin: 15px 0px;
 }
 .browser {
