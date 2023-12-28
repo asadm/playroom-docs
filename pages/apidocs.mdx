@@ -161,7 +161,7 @@ Optionally, you can pass a callback that will be called when the state is set.
 
 ```js
 // Wait for the the player to play their turn
-const chosenThing = await waitForState('playedTurn');
+const chosenThing = await waitForState(playerState, 'playedTurn');
 // Do something with the thing
 ```
 
