@@ -4,6 +4,7 @@ An overview of what's new in each version of `playroomkit`:
 
 | Version   | Changes                                                                                                                              |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `v0.0.54` | - Fixed link sharing for itch.io.<br/> - Fixed `waitForState` to not resolve on non-truthy values<br/> - Fixed `useMultiplayerState` react hook to not go into infinite re-rendering if value is set to null. |
 | `v0.0.53` | - Fixed UI text color issues when body of the page has some color set which broke UI color in lobby UI. |
 | `v0.0.52` | - Added `.kick()` method to `PlayerState` and a button to kick player/bot in the lobby UI.<br/> - Added `onDisconnect` method to handle disconnects due to network problems or due to being kicked by host.<br/> - Added primitive reconnect logic to attempt reconnecting to server a few times before giving up. |
 | `v0.0.51` | - Fixed UI scaling issues when `viewport` meta tag is not present.<br/> - Added `usePlayerState` hook to listen to a player's state changes. |
