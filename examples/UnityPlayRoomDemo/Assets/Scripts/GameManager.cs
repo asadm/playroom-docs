@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
 
     private static Dictionary<string, GameObject> PlayerDict = new();
 
-    [SerializeField] private int score = 0;
     [SerializeField] private static bool playerJoined;
 
 
@@ -29,8 +28,6 @@ public class GameManager : MonoBehaviour
         PlayroomKit.InsertCoin(() =>
         {
             PlayroomKit.OnPlayerJoin(AddPlayer);
-
-            PlayroomKit.SetState("score", score);
         }, options);
     }
 
