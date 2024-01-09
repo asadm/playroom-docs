@@ -74,6 +74,26 @@ If `reliable` is `false`, the state is synced via WebRTC, which is faster but le
 setState('winner', 'player1');
 ```
 
+## `resetStates(keysToExclude?: string[]): Promise<void>`
+
+Resets all game states to their default values. If `keysToExclude` is provided, those keys are not reset.
+
+```js
+await resetStates();
+// or
+await resetStates(['winner']);
+```
+
+## `resetPlayersStates(keysToExclude?: string[]): Promise<void>`
+
+Resets all players' states to their default values. If `keysToExclude` is provided, those keys are not reset.
+
+```js
+await resetPlayersStates();
+// or
+await resetPlayersStates(['score']);
+```
+
 ## `onPlayerJoin(callback)`
 
 Register a callback that will be called when a new player joins the room. The callback will be called with the player's [`PlayerState`](#playerstate) object.
