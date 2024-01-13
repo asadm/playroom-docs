@@ -4,6 +4,9 @@ An overview of what's new in each version of `playroomkit`:
 
 | Version   | Changes                                                                                                                              |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `v0.0.58` | - Fixed: Default value of hooks were ignored if non-truthy. |
+| `v0.0.57` | - Fixed: TypeScript type fixes for `onPlayerJoin`.<br/> - Added: `callbackOnError` optional argument for `insertCoin` method.<br/> - Added: `defaultStates` and `defaultPlayerStates` options for `insertCoin` method. |
+| `v0.0.56` | - Fixed: Internal cleanups only. |
 | `v0.0.55` | - Fixed: `maxPlayersPerRoom` now applies to bots and gamepads.<br/> - Improved networking code to have a better state sync between players. <br/> - Fixed: `insertCoin` with `skipLobby: true` will wait for connection before resolving.<br/> - Added `resetStates` and `resetPlayersStates` methods to reset multiplayer state. |
 | `v0.0.54` | - Fixed link sharing for itch.io.<br/> - Fixed `waitForState` to not resolve on non-truthy values<br/> - Fixed `useMultiplayerState` react hook to not go into infinite re-rendering if value is set to null. |
 | `v0.0.53` | - Fixed UI text color issues when body of the page has some color set which broke UI color in lobby UI. |
