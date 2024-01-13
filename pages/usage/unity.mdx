@@ -1,6 +1,7 @@
 # Using Unity with Playroom Kit
 
 import { Callout } from 'nextra/components'
+import Preview from '../../components/preview'
 
 <Callout type="info" emoji="🧪">
     The Unity SDK currently only supports **Unity Web.** This is an experimental technology.
@@ -11,6 +12,10 @@ Unity is the most popular game engine, it's also a great way to make web games t
 Playroom Kit complements Unity by simplifying the development of multiplayer games and interactive web-based applications.
 
 ## Getting started
+
+### Video Tutorial
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ### 1. Install the SDK
 The SDK is available as a Unity package. You can download the latest version from the [releases page](https://github.com/asadm/playroom-unity/releases) (download `playroomkit.unitypackage` file).
@@ -38,12 +43,28 @@ See the [API reference](/apidocs/unity) for more information.
 
 ### 4. Export to WebGL
 
-To export your game to WebGL, go to `File > Build Settings` and select `WebGL` as the platform. Then click `Build and Run` to export your game as a web page.
+- To export your game to WebGL, go to `File > Build Settings` and select `WebGL` as the platform. 
+- Click Player Settings and set the `Resolution and Presentation > Run In Background` option to `true`.
+- Change `WebGL Template` to `Minimal` or `PWA`.
+- Under `Publishing Settings`, set the `Compression Format` to `None`, this is to make sure the build works with most web servers including itch.io.
+- Close the Player Settings window and then click `Build` to export your game as a web page.
+- Once it has finished building, you can go into the output build folder and run `python -m http.server` to start a local web server. You can then open the game in your browser by going to `http://localhost:8000`.
+
 Do note that Playroom Kit only works with WebGL builds. 
 
 ## Mock mode
 Since the current SDK only supports Unity Web, we've introduced **Mock mode** - a way to test out your game's logic in Unity's Preview mode, without having to build for web every time.
 The mock mode doesn't connect to the Playroom server, instead it just mocks the API calls within Unity. This allows you to test out your game's logic without having to build for web every time.
+
+**The Mock mode only works in single player mode for now.**
+
+## Simple Example
+
+Use `WASD` or `Arrow keys` to move the player around. The player's position is synced with other players in real-time.
+
+Code for this example can be found [here]( https://github.com/asadm/playroom-docs/tree/main/examples/unity-hello-world).
+
+<Preview src="/demos/unity/index.html" newWindow />
 
 ## API Reference
 

@@ -23,6 +23,12 @@ PlayroomKit.InsertCoin(() =>
 | `streamMode` | boolean | false   | If  `true` , Playroom will start in [ stream mode ]( /multiplayer/stream ). |
 | `allowGamepads` | boolean | false   | If  `true` , Playroom will let players play game using gamepads connected to the stream device itself. This requires `streamMode` to also be `true`.<br/><br/>The gamepads need to be connected to device where stream screen is running. No phones are required in this mode but are optionally allowed as an alternative controller if there aren't enough physical gamepads in the room. Players who join via phone in this mode see an on-screen [Joystick](/multiplayer/joystick). |
 | `baseUrl`    | string  | *Current Page URL*      | The base URL used for generating room link that host shares with other players. |
+| `skipLobby` | boolean | false | Skips the Playroom's lobby screen altogether. This is useful if you want to design your own multiplayer lobby. |
+| `roomCode` | string | undefined | Override the room to join. If this is not set, a random room code is assigned. Do note that if the URL has room `#r=` param, that is used instead of this.|
+| `reconnectGracePeriod` | int | 0 | If set, Playroom will wait for the given **number of milliseconds** for the player to reconnect to the room after a disconnect. <br/><br/>If the player reconnects within the grace period, the player's state is restored. If the player does not reconnect within the grace period, the player is removed from the room and `onQuit` fires for the player. |
+| `maxPlayersPerRoom` | int | undefined | If set, Playroom will set a maximum limit for the **number of players** per room. <br/><br/>If the room is full and a new player attempts to join, the Playroom will display a default modal with a message stating that the "room is full", and the `insertCoin` method will throw an error with a message code `ROOM_LIMIT_EXCEEDED`. <br/><br/>If the room is full, `skipLobby` is set to `true`, and a new player is attempting to join the room, Playroom will skip the default modal but will throw an error.  |
+| `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
+
 
 ## `GetState<T>(string key): T`
 
@@ -64,6 +70,14 @@ PlayroomKit.OnPlayerJoin((player) => {
 });
 ```
 
+## `GetRoomCode()`
+
+Returns a 4-letter room code of the current room.
+
+## `OnDisconnect(callback)`
+
+Register a callback that will be called when the current player disconnects from the room. The callback will also be called when current player is kicked from the room.
+
 ## IsHost()
 
 Returns `true` if the current player is the host.
@@ -83,6 +97,12 @@ if (PlayroomKit.IsStreamScreen()) {
   // Do something only the stream screen should do, like showing a countdown
 }
 ```
+
+## WaitForState(stateKey: string, onStateSetCallback)
+
+Call the callback only when the game state has the given key set, to any truthy value.
+
+In other words, it waits until a game state is set. This is useful for waiting for the host to set the winner, for example.
 
 ## `MyPlayer()` or `Me()`
 
@@ -138,6 +158,17 @@ Sets the value of the given key in the player's state.
 ```cs
 player.SetState('score', 10);
 ```
+
+### WaitForState(stateKey: string, onStateSetCallback)
+
+Call the callback only when the player state has the given key set, to any truthy value.
+
+In other words, it waits until a game player is set.
+
+### `Kick()`
+Kicks the player from the room. This is equivalent to pressing the "Kick" button in the lobby.
+
+Only the host can kick players.
 
 ### `OnQuit(callback)`
 
