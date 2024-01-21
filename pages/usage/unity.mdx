@@ -69,3 +69,55 @@ Code for this example can be found [here]( https://github.com/asadm/playroom-doc
 ## API Reference
 
 See the [API reference](/apidocs/unity) for more information.
+
+## FAQs and Tips
+
+### How to display player's profile picture in Unity?
+PlayroomPlayer.GetProfile().photo is formatted as `data:image/svg+xml,{svg encoded for url}`. In order to display it in Unity:
+- Remove data:image/svg+xml from the string.
+- Decode the rest using HttpUtility.UrlDecode()
+- Display the result into an SVGImage component.
+
+**Warning: Requires Unity's Vector Graphics package from com.unity.vectorgraphics which is an experimental package**
+
+```csharp
+ private void LoadSVG(string svgBytes) {
+    // Split the string to escape the real data
+    svgBytes = svgBytes.Split(",".ToCharArray(), 2)[1];
+    // Decode from the URL encoding
+    svgBytes = HttpUtility.UrlDecode(svgBytes);
+    VectorUtils.TessellationOptions tesselationOptions = new VectorUtils.TessellationOptions();
+
+    using (StringReader reader = new StringReader(svgBytes))
+    {
+        SVGParser.SceneInfo sceneInfo = SVGParser.ImportSVG(reader);
+        tesselationOptions.MaxCordDeviation = float.MaxValue;
+        tesselationOptions.MaxTanAngleDeviation = float.MaxValue;
+        tesselationOptions.StepDistance = 1f;
+        tesselationOptions.SamplingStepSize = 0.1f;
+
+        List<VectorUtils.Geometry> geoms =
+        VectorUtils.TessellateScene(sceneInfo.Scene, tesselationOptions);
+
+        // Build a sprite with the tessellated geometry.
+        Sprite sprite = VectorUtils.BuildSprite(geoms, 100.0f, VectorUtils.Alignment.Center, Vector2.zero, 128, true);
+        sprite.name = "SVGimage";
+        profilePicture.sprite = sprite;
+    }
+}
+```
+
+Thanks to **Zy** from our Discord for this tip.
+
+### Aurea NetLayer: a higher level API for Unity
+
+**GuilhermeAlanJohann** from our Discord community has created a [higher level plugin](https://gitlab.com/PCista/com.aurea.packages.netlayer) for Unity that makes it easier to use Playroom with Unity.
+
+
+#### Features
+- Sync position and rotations of objects over the network (supports interpolation)
+- Different object authorities (Host and LocalPlayer)
+- Spawn/Unspawn objects over the network
+- Send Messages to others (including or excluding yourself)
+- RPC (...kind of). It uses Unity message system.
+
