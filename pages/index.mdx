@@ -81,11 +81,11 @@ Playroom Kit provides a simple API to set or get the state of the game room. The
 import { getState, setState } from 'playroomkit'
 
 // Set some game state, this will be synced to all players
-setState({ timeRemaining: 60 });
+setState("timeRemaining", 60);
 // ...
 
 // One some other device: Get the time remaining
-const state = getState("timeRemaining");
+const time = getState("timeRemaining");
 ```
 
 Playroom also takes care of player and room management. You just need to call `insertCoin()` somewhere in your game to show the lobby UI.
