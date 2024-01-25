@@ -187,6 +187,42 @@ const chosenThing = await waitForState(playerState, 'playedTurn');
 // Do something with the thing
 ```
 
+## `RPC.register(name: string, callback: (data: any, sender: PlayerState) => Promise<any>)`
+
+Register a callback that will be called when a remote procedure call (RPC) with the given name is received from a player. The callback will be called with the data sent by the other player and the [`PlayerState`](#playerstate) object of the caller.
+
+```js
+RPC.register('playTurn', (data, sender) => {
+  console.log(`${sender.id} played their turn!`);
+  return 'ok';
+});
+```
+
+## `RPC.call(name: string, data: any, mode?: RPC.MODE, callbackOnResponse?: (data: any) => void): Promise<any>`
+
+Call a remote procedure call (RPC) with the given name and data. The `mode` parameter can be used to specify the mode of the RPC call. The default mode is `RPC.Mode.ALL`.
+
+RPCs can be triggered in three different modes:
+
+- `RPC.Mode.HOST`: The RPC is triggered on the host only.
+- `RPC.Mode.ALL`: The RPC is triggered on all clients (including the host and the caller).
+- `RPC.Mode.OTHERS`: The RPC is triggered on all clients except the caller.
+
+The call returns a promise that resolves to the response from the RPC. Optionally, you can instead pass a callback that will be called when the response is received.
+
+```js
+
+// Trigger an RPC on the host only
+RPC.call('playTurn', { thing: 'rock' }, RPC.Mode.HOST);
+
+// Trigger an RPC on all clients (including the host and the caller)
+RPC.call('playTurn', { thing: 'rock' }, RPC.Mode.ALL);
+
+// Trigger an RPC on all clients except the caller
+RPC.call('playTurn', { thing: 'rock' }, RPC.Mode.OTHERS);
+```
+
+
 
 ## PlayerState
 

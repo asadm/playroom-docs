@@ -5,6 +5,7 @@
       "layout": "full"
     }
   },
+  "setup": "🧩 | Setup",
   "multiplayer": {
     "theme":{
       "collapsed": true
@@ -12,8 +13,8 @@
     "title": "🕹️ | Making Multiplayer"
 
   },
-  "setup": "🧩 | Setup",
-      "components": "🤖 | Multiplayer Modules",
+  
+  "components": "🤖 | Multiplayer Modules",
   "usage": "📙 | Usage",
   "templates": "🍱 | Templates",
   "tutorials": "📺 | Tutorials",

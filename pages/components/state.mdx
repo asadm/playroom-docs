@@ -1,0 +1,41 @@
+import { Callout } from 'nextra-theme-docs'
+
+# Synced State in Playroom
+
+Synced state is the core of Playroom. It's like sharing a global object between all your players. Playroom has two types of synced state:
+
+## Global state
+This is the state that is shared between all players. It's useful for things like the current level, time remaining, or physics objects. 
+
+```js
+// Set the global state
+setState("object1", { x: 20, y: 10 })
+
+// Read the global state on other players
+const object1 = getState("object1")
+```
+
+## Player state
+This is the state that is specific to each player. It's useful for things like the player's score, or their current position. 
+
+```js
+// Set the player state
+myPlayer().setState("score", 99);
+
+// Read the state of some other player
+const score = players[1].getState("score");
+```
+
+## How Playroom Synchonizes State
+
+Playroom automatically elects one player to be the "host". The host is acts as the authority on the state of the game. Any state change by other players is sent to the host, the host applies the change in the order it was received. In case of a conflict, the host's version of the state is used.
+
+## Reliable vs. Unreliable State Changes
+
+Playroom has two ways to propagate state changes: reliable and unreliable.
+
+**Reliable** state changes are guaranteed to be delivered to other players, but they are slower than unreliable changes. Playroom uses websocket backend to send reliable state changes. Playroom's websocket server is usually within the same region as the host, so the latency is usually low.
+
+**Unreliable (experimental)** state changes are faster, but they are not always guaranteed to be delivered. Playroom uses WebRTC data channel to send unreliable state changes. In case WebRTC is not available or cannot be used, Playroom will fall back to using websocket backend.
+
+The `setState` function accepts an optional `reliable` parameter to specify whether the state change should be reliable or unreliable. By default, `setState` uses reliable state changes for global state, and unreliable state changes for player state.

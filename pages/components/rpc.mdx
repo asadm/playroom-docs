@@ -1,0 +1,53 @@
+import { Callout } from 'nextra-theme-docs'
+
+# RPCs in Playroom
+
+Playroom supports RPCs (remote procedure calls) to allow players to call functions on other players' clients. RPCs are useful for implementing game actions such as shooting bullets, chat messages, taking damage, etc.
+
+## Registering RPC Handlers
+
+To register an RPC handler, use the `RPC.register()` function:
+
+```js
+import { RPC } from 'playroomkit';
+
+// Register an RPC handler for bullet shooting
+RPC.register('shoot', (data, caller) => {
+  console.log(`Player ${caller.id} shot ${data.victimId} with a bullet!`);
+  players[data.victimId].setState("dead", true);
+});
+
+// Trigger the RPC on the host only
+RPC.call('shoot', {victimId: 123}, RPC.Mode.HOST);
+```
+
+## Modes of RPCs
+
+RPCs can be triggered in three different modes:
+
+- `RPC.Mode.HOST`: The RPC is triggered on the host only.
+- `RPC.Mode.ALL`: The RPC is triggered on all clients (including the host and the caller).
+- `RPC.Mode.OTHERS`: The RPC is triggered on all clients except the caller.
+
+## RPC Response
+
+RPCs can return a value to the caller of the RPC as a response. To do so, return a value (or a promise that resolves to a value) from the RPC handler:
+
+```js
+
+// Register an RPC handler for bullet shooting
+RPC.register('shoot', (data, caller) => {
+  console.log(`Player ${caller.id} shot ${data.victimId} with a bullet!`);
+  players[data.victimId].setState("dead", true);
+  return "You shot a bullet!";
+});
+
+// Trigger the RPC on the host only
+const response = await RPC.call('shoot', {victimId: 123}, RPC.Mode.HOST);
+console.log(response); // "You shot a bullet!"
+```
+
+- If the RPC was triggered on multiple clients, the response will be the non-`undefined` value returned by the first client to respond.
+- If all RPC handlers return `undefined`, the `RPC.call` will not resolve.
+
+See the [API reference](/apidocs) for more details.

@@ -1,5 +1,7 @@
 {
   "lobby":"Lobby",
+  "state":"State",
+  "rpc": "RPC",
   "joystick":"Joystick",
   "gamepads":"Gamepads",
   "bots":"Bots",
