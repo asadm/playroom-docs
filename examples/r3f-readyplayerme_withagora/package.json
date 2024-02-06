@@ -1,0 +1,65 @@
+{
+  "name": "react-three-vite",
+  "version": "1.0.1",
+  "description": "A simple React Three Fiber + Vite + Typescript starter with an import-ready CodeSandbox config.",
+  "keywords": [
+    "r3f",
+    "react",
+    "three",
+    "vite",
+    "starter",
+    "react three fiber",
+    "sandbox",
+    "codesandbox",
+    "typescript"
+  ],
+  "author": "Cosmitar (https://github.com/cosmitar)",
+  "repository": "github:cosmitar/react-three-vite-typescript",
+  "license": "MIT",
+  "dependencies": {
+    "@react-three/drei": "^9",
+    "@react-three/fiber": "^8.13.3",
+    "@react-three/rapier": "^1",
+    "@readyplayerme/react-avatar-creator": "^0.3.0",
+    "@use-gesture/core": "10.2.24",
+    "agora-rtc-sdk-ng": "^4.20.0",
+    "agora-token": "^2.0.3",
+    "ecctrl": "1.0.49",
+    "playroomkit": "^0.0.51",
+    "react": ">=18",
+    "react-dom": "18.2.0",
+    "three": ">=0.133"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^3.5.1",
+    "@gltf-transform/extensions": "^3.5.1",
+    "@types/react": ">=18",
+    "@types/react-dom": "18.2.0",
+    "@types/three": ">=0.133",
+    "@vitejs/plugin-react": "^4.1.0",
+    "autoprefixer": "^10.4.16",
+    "buffer": "^6.0.3",
+    "leva": "0.9.34",
+    "postcss": "^8.4.32",
+    "r3f-perf": "^7.1.2",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.2.2",
+    "vite": "^4.3.9",
+    "vite-plugin-glsl": "^1.1.2",
+    "vite-plugin-gltf": "^3.1.0",
+    "vite-plugin-node-polyfills": "^0.18.0"
+  },
+  "scripts": {
+    "dev": "vite --host",
+    "sandbox": "APP_ENV=sandbox vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check_circular": "npx madge --circular ./src/App.tsx"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
