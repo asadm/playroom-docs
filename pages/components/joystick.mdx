@@ -62,3 +62,33 @@ Here are a few examples of the joystick UI:
 ### Angular with Button and Zone
 
 <Preview src="/demos/joystick/zones.html" maxPlayers={0} />
+
+
+### FAQs
+
+#### I want angular value as 0-360 degrees
+
+You can convert radians to degrees and then add 90 to get the value in degrees.
+
+```js
+function radToDeg(rad){
+  return rad * 180 / Math.PI + 90;
+}
+
+console.log(radToDeg(joystick.angle()));
+```
+
+#### I want to convert angular value to X, Y components that go between -1 and 1
+
+You can use `Math.cos` and `Math.sin` to get the X and Y components.
+
+```js
+function radToXY(rad){
+  return {
+    y: Math.cos(rad),
+    x: Math.sin(rad)
+  };
+}
+
+console.log(radToXY(joystick.angle()));
+```
