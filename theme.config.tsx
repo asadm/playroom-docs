@@ -3,7 +3,7 @@ import { useConfig } from 'nextra-theme-docs'
 import React, { useEffect } from 'react'
 import { track } from './components/analytics'
 
-const brandNewPages = ['/components/rpc', '/components/tiktok', '/usage/godot', '/templates']
+const brandNewPages = ['/components/rpc', '/components/matchmaking', '/usage/godot', '/templates']
 export default {
   docsRepositoryBase: "https://github.com/asadm/playroom-docs/tree/main/",
   nextThemes: {

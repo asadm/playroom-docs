@@ -13,7 +13,12 @@ export default function Preview({src, maxPlayers=4, newWindow}) {
 
   useEffect(() => {
     setTimeout(() => {
-      setUrl(iframeRef.current?.contentWindow.location.href || "");
+      try{
+        setUrl(iframeRef.current?.contentWindow.location.href || "");
+      }
+      catch(e){
+        setUrl(src); // if the iframe is cross-origin, we can't access the location
+      }
     }, 2000);
   }, []);
     return (

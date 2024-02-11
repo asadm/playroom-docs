@@ -1,0 +1,47 @@
+import { Callout } from 'nextra-theme-docs'
+import Preview from '../../components/preview'
+
+# Multiplayer Matchmaking
+
+Playroom Matchmaking is a casual matchmaking system that joins players into a game together. Matchmaking finds the first public room with an open slot and joins the player to it. If no public rooms are available, a new room is created and the player is joined to it.
+
+## Enabling Matchmaking
+
+You can enable matchmaking by just calling `insertCoin` with `matchmaking: true` in the options.
+
+```javascript
+await insertCoin({ matchmaking: true });
+// Player has joined a public room (or started a private room)
+```
+
+## How it works
+
+### With the Lobby UI
+
+If you are using Playroom's Lobby UI, you will now see a "Play Online" button to start matchmaking, players can still start a private room by clicking the "Start Private" button.
+
+### With Custom Lobby UI
+
+If you are using a custom lobby UI, calling `insertCoin` with `matchmaking: true` will join the player to a public room automatically in a few seconds.
+
+In either modes, when matchmaking is initiated, the following happens:
+
+1. Playroom will try to find a public room with an open slot that has lowest number of players in it.
+2. If no public room is found, Playroom will still wait for 5 seconds and keep trying to find an open public room. You can change this time by setting `waitBeforeCreatingNewRoom` in the [`Matchmaking Options`](/apidocs#matchmakingoptions).
+3. If no public room is available after the wait time, Playroom will create a new room and join the player to it.
+
+### Matchmaking When Developing Locally
+
+Playroom identifies that you are running the game locally using the URL (`localhost` or a local IP) and will only matchmake with other instances running on the same public IP as yours. This is to prevent your production players from joining your local game when you are developing an update. 
+
+In production, Playroom separates your game based on the URL and will matchmake players from same URL only.
+
+See the [API reference](/apidocs) for more details.
+
+## Joining a Public Room as a Team
+
+In Playroom Lobby UI, players can also first invite their friends to join their room and then proceed to start matchmaking. This way, the friends will be matched to the same public room.
+
+## Demo
+
+<Preview src="https://shooter-matchmaking.joinplayroom.com" maxPlayers={3} />

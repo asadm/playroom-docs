@@ -2,6 +2,7 @@
   "lobby":"Lobby",
   "state":"State",
   "rpc": "RPC",
+  "matchmaking":"Matchmaking",
   "joystick":"Joystick",
   "gamepads":"Gamepads",
   "bots":"Bots",
