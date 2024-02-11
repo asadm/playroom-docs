@@ -2,7 +2,9 @@
   "lobby":"Lobby",
   "state":"State",
   "rpc": "RPC",
-  "matchmaking":"Matchmaking",
+  "matchmaking":{
+    "display": "hidden"
+  },
   "joystick":"Joystick",
   "gamepads":"Gamepads",
   "bots":"Bots",
