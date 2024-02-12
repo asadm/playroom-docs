@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.landing-container {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Noto Sans", sans-serif;
+  background-color: black;
+}
+
+.landing-container h1,
+.landing-container li,
+.landing-container h2,
+.landing-container h3,
+.landing-container h6 {
+  color: white;
+}
+
+.landing-container h2 {
+  @apply text-[3rem] leading-[30px] font-medium lg:text-[4.8rem] lg:leading-[48px]
+}
+
+
+
+.landing-container p {
+  @apply text-[1.4rem] leading-[20px] font-normal text-textGrey md:text-[1.6rem] md:leading-[22px]
+}
+
+
+.landing-container h1 {
+  @apply text-[4.3rem] leading-[42px] tracking-[-1%] font-semibold lg:text-[6.4rem] lg:leading-[60px]
+}
+
+.landing-container .small-text {
+  @apply text-[1.2rem] leading-[13.5px] font-normal text-[#797B86]
+}
+
+.landing-container .gradientBtn {
+  background: linear-gradient(to bottom right, #C8A2FF, white);
+}
+
+
+
+.landing-container .featureMenu {
+  background-image: url(/src/assets/rectangleWithlightShadow.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.landing-container .featureMenu p {
+  font-size: 11px;
+  line-height: 14px !important;
+}
+
+.landing-container .heroWrraper {
+  background-image: url(/src/assets/mobileherobg.png);
+  background-size: contain;
+  /* background-position: center; */
+  /* background-repeat: no-repeat; */
+}
+
+
+
+.landing-container .resources {
+  /* background: url(/src/assets/shadow.png); */
+}
+
+
+/* GENERAL STYLES */
+
+.landing-container ul li {
+  list-style: none !important;
+}
+
+
+.landing-container nav li {
+  font-weight: 600;
+  font-size: 13px !important;
+  Line-height:
+    12.32px;
+  letter-spacing: -1%;
+}
+
+
+.landing-container img {
+  cursor: pointer;
+}
+
+
+
+
+.landing-container .custom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  /* Adjust the gap as needed */
+}

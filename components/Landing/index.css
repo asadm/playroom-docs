@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+html{
+  font-size: 62.5%;
+}
+
+body{
+  font-family: "Noto Sans", sans-serif;
+ background-color: black;
+}
+  h1,li,h2,h3,h6{
+    color: white;
+  }
+h2{
+  @apply text-[3rem] leading-[30px] font-medium lg:text-[4.8rem] lg:leading-[48px]
+}
+
+
+
+  p{
+    @apply text-[1.4rem] leading-[20px] font-normal text-textGrey md:text-[1.6rem] md:leading-[22px]
+  }
+  
+  
+  h1{
+    @apply text-[4.3rem] leading-[42px] tracking-[-1%] font-semibold lg:text-[6.4rem]  lg:leading-[60px]
+  }
+
+  .small-text{
+    @apply text-[1.2rem] leading-[13.5px] font-normal text-[#797B86]
+  }
+  
+  .gradientBtn {
+    background: linear-gradient(to bottom right, #C8A2FF, white);
+  }
+  
+  
+
+  .featureMenu{
+    background-image: url(/src/assets/rectangleWithlightShadow.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .featureMenu p {
+    font-size: 11px;
+    line-height: 14px !important;
+  }
+  
+  .heroWrraper{
+   background-image: url(/src/assets/mobileherobg.png);
+   background-size: contain;
+   /* background-position: center; */
+   /* background-repeat: no-repeat; */
+  }
+
+
+
+.resources{
+  /* background: url(/src/assets/shadow.png); */
+}
+
+
+/* GENERAL STYLES */
+
+ul li{
+  list-style: none !important;
+}
+
+
+nav li {
+  font-weight: 600;
+  font-size: 13px !important;
+  Line-height:
+12.32px;
+letter-spacing: -1%;
+}
+
+
+img{
+  cursor: pointer;
+}
+
+
+
+
+.custom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem; /* Adjust the gap as needed */
+}
