@@ -9,7 +9,7 @@ export default function Preview({src, maxPlayers=4, newWindow}) {
   const [joinedIframes, setJoinedIframes] = useState(0);
   const [url, setUrl] = useState("");
 
-  const scale = 1; //Math.min(1, width / (550+(width*0.28)));
+  const scale = 0.85; //Math.min(1, width / (550+(width*0.28)));
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,7 +31,7 @@ export default function Preview({src, maxPlayers=4, newWindow}) {
           <a href={src} target='_blank'>Open in new window ↗</a>
         </div>}
       {!newWindow && <iframe 
-        ref={iframeRef} width="340" height="650" style={{
+        ref={iframeRef} width="380" height="700" style={{
         // transform: `scale(${Math.min(1, width / 650)})`
         // borderRadius: "23px", 
         // margin: "20px 0px",
@@ -43,7 +43,7 @@ export default function Preview({src, maxPlayers=4, newWindow}) {
           }}>
             <iframe 
             key={i}
-            width="340" height="650" style={{
+            width="380" height="700" style={{
             // borderRadius: "23px",
             // margin: "20px 0px",
             }} src={url}></iframe>
