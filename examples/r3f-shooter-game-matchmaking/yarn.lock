@@ -1477,10 +1477,10 @@
   "resolved" "https://registry.npmjs.org/pirates/-/pirates-4.0.6.tgz"
   "version" "4.0.6"
 
-"playroomkit@^0.0.65":
-  "integrity" "sha512-lZGUBrSh9LwW/SDFbsfGh8koAIXLZLYd179Hmd4nv5mhUIHj57XxXWg0pE1rqghy/xQ37Lmt9mwnVUaox+Qe3g=="
-  "resolved" "https://registry.npmjs.org/playroomkit/-/playroomkit-0.0.65.tgz"
-  "version" "0.0.65"
+"playroomkit@^0.0.66":
+  "integrity" "sha512-lBYSLR/0AebQhWteMgkXiMXyMPxMqGz2uptA3QrBig4NCn5r3ViIXWIFmsdbLSG9spKrFPVTaYRClUq3fSCxDw=="
+  "resolved" "https://registry.npmjs.org/playroomkit/-/playroomkit-0.0.66.tgz"
+  "version" "0.0.66"
 
 "postcss-import@^15.1.0":
   "integrity" "sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew=="
