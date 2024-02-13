@@ -42,6 +42,17 @@ See the [API reference](/apidocs) for more details.
 
 In Playroom Lobby UI, players can also first invite their friends to join their room and then proceed to start matchmaking. This way, the friends will be matched to the same public room.
 
+In Custom Lobby, you can start without `matchmaking` set to `true` and then once all players are in the room, you can call `startMatchmaking` to start matchmaking.
+
+```javascript
+// Insert coin the regular way
+await insertCoin({skipLobby: true});
+...
+// Start matchmaking after all players are in the room
+await startMatchmaking();
+// Players have joined a public room
+```
+
 ## Demo
 
 <Preview src="https://shooter-matchmaking.joinplayroom.com" maxPlayers={3} />

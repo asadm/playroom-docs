@@ -133,6 +133,19 @@ if (isStreamScreen()) {
 
 Returns a 4-letter room code of the current room.
 
+## `startMatchmaking(): Promise<void>`
+
+If you didn't pass `matchmaking` option in `insertCoin`, you can start matchmaking manually using this method.
+
+```js
+// Insert coin the regular way
+await insertCoin({skipLobby: true});
+...
+// Start matchmaking after all players are in the room
+await startMatchmaking();
+// Players have joined a public room
+```
+
 ## `onDisconnect(callback)`
 
 Register a callback that will be called when the current player disconnects from the room. The callback will also be called when current player is kicked from the room.
