@@ -43,6 +43,8 @@ import { Callout } from 'nextra/components'
 
 ```cs
 string winnerId = PlayroomKit.GetState<string>('winner');
+
+var pos = players[i].GetState<Vector3>("position");
 ```
 
 ## `SetState(string key, T value, bool reliable = false): void`
@@ -52,11 +54,14 @@ Sets the value of the given key in the game state. If `reliable` is `true`, the 
 If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
 
 <Callout type="info" emoji="ℹ️">
-    Currently tested for the following types: `string`, `int`, `bool`, `float` and `Dictionary<string, T>`.
+    Currently tested for the following types: `string`, `int`, `bool`, `float`, `Dictionary<string, T>`, `Vector3`, `Vector2`.
 </Callout>
 
 ```cs
 PlayroomKit.SetState('winner', 'player1');
+
+// Support for built in data types such as Vectors
+PlayroomKit.SetState('position', gameObject.transform.position);
 ```
 
 ## `OnPlayerJoin(callback)`
@@ -204,22 +209,10 @@ player.OnQuit(() => {
   Debug.Log($"{player.id} quit!");
 });
 ```
-## `RpcRegister(string name, Action<string, string> rpcRegisterCallback, string onResponseReturn = null)`
-Register a callback that will be called when a remote procedure call (RPC) with the given name is received from a player.
-The callback will be called with the data sent by the other player and the player.ID of the caller.
-```cs
-PlayroomKit.RpcRegister("Shoot", CallBackFunction, "You shot a bullet!");
-
-void CallBackFunction(string data, string senderId) 
-{
-  var player = GetPlayer(senderId);
-  Debug.Log($"{player.GetProfile().name} shoots with following data: {data}");
-}
-```
 
 ## `RpcRegister(string name, Action<string, string> rpcRegisterCallback, string onResponseReturn = null)`
 Register a callback that will be called when a remote procedure call (RPC) with the given name is received from a player.
-The callback will be called with the data sent by the other player and the player.ID of the caller.
+The callback will be called with the data sent by the other player and the player.ID of the caller. 
 
 ```cs
 PlayroomKit.RpcRegister("Shoot", CallBackFunction, "You shot a bullet!");
@@ -237,9 +230,9 @@ Call a remote procedure call (RPC) with the given name and data. The mode parame
 
 RPCs can be triggered in three different modes:
 
-RpcMode.HOST: The RPC is triggered on the host only.
-RpcMode.ALL: The RPC is triggered on all clients (including the host and the caller).
-RpcMode.OTHERS: The RPC is triggered on all clients except the caller.
+- `RpcMode.HOST`: The RPC is triggered on the host only.
+- `RpcMode.ALL`: The RPC is triggered on all clients (including the host and the caller).
+- `RpcMode.OTHERS`: The RPC is triggered on all clients except the caller.
 You can pass a callback that will be called when the response is received.
 
 ```cs
@@ -255,5 +248,5 @@ RpcCall("Shoot", damage, () =>
 RpcCall("Shoot", damage, RpcMode.Host, SomeCallBack);
 
 // Also supports Unity specific data types such as vectors: 
-RpcCall("Scale", player.transform.scale, RpcMode.Others, SomeCallBack);
+RpcCall("Scale", player.transform.scale, RpcMode.OTHERS, SomeCallBack);
 ```
