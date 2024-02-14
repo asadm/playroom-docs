@@ -54,7 +54,7 @@ Sets the value of the given key in the game state. If `reliable` is `true`, the 
 If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
 
 <Callout type="info" emoji="ℹ️">
-    Currently tested for the following types: `string`, `int`, `bool`, `float`, `Dictionary<string, T>`, `Vector3`, `Vector2`.
+    Currently tested for the following types: `string`, `int`, `bool`, `float`, `Dictionary<string, T>`, `Vector2`, `Vector3` and `Quaternion`.
 </Callout>
 
 ```cs
@@ -124,7 +124,7 @@ PlayroomKit.Player player = PlayroomKit.MyPlayer();
 Debug.Log($"Hello {player.GetProfile().name}!");
 ```
 
-### `GetPlayer(id)`
+## `GetPlayer(id)`
 
 Returns a player's [`PlayroomKit.Player`](#playroomkitplayer) object by their ID.
 
@@ -133,7 +133,7 @@ PlayroomKit.Player player = PlayroomKit.GetPlayer("abcd1234");
 Debug.Log($"Hello {player.GetProfile().name}!");
 ```
 
-### `ResetStates(string[] keysToExclude = null, Action OnStatesReset = null)`
+## `ResetStates(string[] keysToExclude = null, Action OnStatesReset = null)`
 Resets all states to the defined default states inside InitOptions. Provides optional parameters for excluding some states and a callback.
 ```cs
 string[] statesToExclude = {"globalScores"};
@@ -149,7 +149,7 @@ A `PlayroomKit.Player` object represents a player in the room. In the Unity SDK,
 
 It has the following methods:
 
-### `GetProfile(): PlayroomKit.Player.Profile`
+## `GetProfile(): PlayroomKit.Player.Profile`
 
 Returns the player's profile, which has the following properties:
 
@@ -160,7 +160,7 @@ Returns the player's profile, which has the following properties:
 | `photo`  | string | The player's avatar. This is a `dataURL` to an image.                       |
 
 
-### `GetState<T>(string key): T`
+## `GetState<T>(string key): T`
 
 Returns the value of the given key in the player's state.
 
@@ -172,7 +172,7 @@ Returns the value of the given key in the player's state.
 int score = player.GetState<int>('score');
 ```
 
-### `SetState(string key, T value, bool reliable = false)`
+## `SetState(string key, T value, bool reliable = false)`
 
 Sets the value of the given key in the player's state.
 
@@ -180,7 +180,7 @@ Sets the value of the given key in the player's state.
 player.SetState('score', 10);
 ```
 
-### WaitForState(stateKey: string, onStateSetCallback)
+## WaitForState(stateKey: string, onStateSetCallback)
 
 Call the callback only when the player state has the given key set, to any truthy value.
 In other words, it waits until a game player is set.
@@ -191,7 +191,7 @@ player.WaitForState("winner", () => {
 ```
 
 
-### `Kick()`
+## `Kick()`
 Kicks the player from the room. This is equivalent to pressing the "Kick" button in the lobby.
 Only the host can kick players.
 ```cs
@@ -200,7 +200,7 @@ player.Kick(() => {
 }) 
 ```
 
-### `OnQuit(callback)`
+## `OnQuit(callback)`
 
 Register a callback that will be called when the player quits the room.
 
