@@ -7,6 +7,12 @@
   },
   "joystick":"Joystick",
   "gamepads":"Gamepads",
+  "persistence": {
+    "display": "hidden"
+  },
+  "turnbased": {
+    "display": "hidden"
+  },
   "bots":"Bots",
   "tiktok": "TikTok Live"
 }

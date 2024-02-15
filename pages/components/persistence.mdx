@@ -1,0 +1,46 @@
+import { Callout } from 'nextra-theme-docs'
+
+<Callout emoji="👷🏼‍♀️">
+  This API is currently experimental and is subject to change as we continue to work with select partners to improve the experience.
+</Callout>
+
+# Persistent Storage in Playroom
+
+Playroom [State](/components/state) is cleared when all players leave the room. For some types of games, you may want to persist some data in your room that can be retrieved later when the player comes back to the same room. 
+
+Playroom provides a simple persistent storage API. The data is stored in the room until it is explicitly deleted or the expiry time is reached.
+
+## Usage
+
+### Create room with persistent storage enabled
+
+```javascript
+await insertCoin({persistentMode: true});
+```
+
+### Store data in the room
+
+```javascript
+await setPersistentData('somekey', {foo: 'bar'});
+```
+
+### Retrieve data from the room
+
+```javascript
+const data = await getPersistentData('somekey'); // {foo: 'bar'}
+```
+
+### Delete data from the room
+
+```javascript
+await setPersistentData('somekey', undefined);
+```
+
+### Insert Data into an Array
+  
+  ```javascript
+  await insertPersistentData('somekey', 'value1');
+  await insertPersistentData('somekey', 'value2');
+  // getting the data
+  const data = await getPersistentData('somekey'); // ['value1', 'value2']
+  ```

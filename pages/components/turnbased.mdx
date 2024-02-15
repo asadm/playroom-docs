@@ -1,0 +1,78 @@
+import { Callout } from 'nextra-theme-docs'
+
+<Callout emoji="👷🏼‍♀️">
+  This API is currently experimental and is subject to change as we continue to work with select partners to improve the experience.
+</Callout>
+
+# Turn-based & Async. Games
+
+Alongside realtime games, Playroom is great for turn-based and asyncronous games. These games are non-realtime and usually one player initiates a challenge and then sends it to another player. The other player can then play the game at their own pace and send their move back to the first player.
+
+Turn-based API is built on top of the [Persistence API](/components/persistence).
+
+## Usage
+
+To enable turn-based games, you need to set the `turnBased` option to `true` when creating a new room. This will enable the turn-based API for the room and allow you to use the turn-based methods.
+
+```javascript
+await insertCoin({
+  turnBased: true
+});
+```
+
+The other players can attempt the same challenge by passing in the challenge ID to the `insertCoin` method.
+
+```javascript
+await insertCoin({
+  turnBased: {
+    challengeId: 'abc123'
+  }
+});
+```
+
+## Methods
+
+### `getChallengeId(): string`
+
+Returns the unique challenge ID that can be used to send this challenge to other players.
+
+### `saveMyTurnData(data: any): Promise<void>`
+
+Saves the current player's turn data. This data can be anything you want to save about the current turn. For example, in a chess game, you might want to save the current player's move and the board state.
+
+### `getAllTurnsData(): Promise<Array<any>>`
+
+Returns an array of all the turns data that have been saved for this room. This can be used to display the history of the game to the players or to display a leaderboard of all attempts at this challenge.
+### `getMyTurnData(): Promise<any>`
+
+Returns the current player's turn data if it exists. If there are multiple turns saved for the current player, this will return the most recent turn data.
+
+### `clearTurns(): Promise<void>`
+
+Clears all the turns data for this room. This can be used to reset the game or to start a new round.
+
+
+## Example Flows
+
+### TikTacToe Game
+
+- Player 1 creates a new game with `turnBased: true` and gets the challenge ID.
+- Player 1 makes the first move and saves the board state using `saveMyTurnData`.
+- Your service saves the challenge ID in your database and sends it to Player 2.
+- Player 2 receives the challenge ID and uses it to join the game.
+- Player 2 makes their move and saves the board state using `saveMyTurnData`.
+- Player 1 and Player 2 can continue to take turns and save the board state until the game is over.
+- Game can decide whos turn it is by checking the last element of the `getAllTurnsData` array.
+- Once the game is over, the game can be reset by calling `clearTurns`.
+
+### A Car Racing Game with Quickest Lap Time
+
+- Player 1 creates a new game with `turnBased: true` and gets the challenge ID.
+- Player 1 completes a lap and saves the lap time using `saveMyTurnData`, they can additionally also save the car's replay data to create a "ghost" car for other players to beat.
+- Your service saves the challenge ID in your database and sends it to Player 2 and 3.
+- Player 2 receives the challenge ID and uses it to join the game.
+- Player 2 completes a lap and saves the lap time using `saveMyTurnData`.
+- Player 3 receives the challenge ID and uses it to join the game.
+- Player 3 completes a lap and saves the lap time using `saveMyTurnData`.
+- Players who have completed the lap can view the leaderboard by calling `getAllTurnsData`.
+- Once the game is over, the game can call your service to determine the winner.
