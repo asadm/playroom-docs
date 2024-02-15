@@ -56,10 +56,10 @@ Clears all the turns data for this room. This can be used to reset the game or t
 
 ### TikTacToe Game
 
-- Player 1 creates a new game with `turnBased: true` and gets the challenge ID.
+- Player 1 creates a new game with `turnBased: true` and gets the challenge ID using `getChallengeId()`.
 - Player 1 makes the first move and saves the board state using `saveMyTurnData`.
 - Your service saves the challenge ID in your database and sends it to Player 2.
-- Player 2 receives the challenge ID and uses it to join the game.
+- Player 2 receives the challenge ID and uses it to join the game using `insertCoin({turnBased: {challengeId: 'abc123'}})`.
 - Player 2 makes their move and saves the board state using `saveMyTurnData`.
 - Player 1 and Player 2 can continue to take turns and save the board state until the game is over.
 - Game can decide whos turn it is by checking the last element of the `getAllTurnsData` array.
@@ -67,12 +67,12 @@ Clears all the turns data for this room. This can be used to reset the game or t
 
 ### A Car Racing Game with Quickest Lap Time
 
-- Player 1 creates a new game with `turnBased: true` and gets the challenge ID.
+- Player 1 creates a new game with `turnBased: true` and gets the challenge ID using `getChallengeId()`. 
 - Player 1 completes a lap and saves the lap time using `saveMyTurnData`, they can additionally also save the car's replay data to create a "ghost" car for other players to beat.
 - Your service saves the challenge ID in your database and sends it to Player 2 and 3.
-- Player 2 receives the challenge ID and uses it to join the game.
+- Player 2 receives the challenge ID and uses it to join the game using `insertCoin({turnBased: {challengeId: 'abc123'}})`.
 - Player 2 completes a lap and saves the lap time using `saveMyTurnData`.
-- Player 3 receives the challenge ID and uses it to join the game.
+- Player 3 receives the challenge ID and uses it to join the game using `insertCoin({turnBased: {challengeId: 'abc123'}})`.
 - Player 3 completes a lap and saves the lap time using `saveMyTurnData`.
 - Players who have completed the lap can view the leaderboard by calling `getAllTurnsData`.
 - Once the game is over, the game can call your service to determine the winner.
