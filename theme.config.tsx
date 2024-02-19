@@ -65,7 +65,7 @@ export default {
           />
           <meta
             property="og:image"
-            content={baseUrl + (frontMatter.image || "/images/ogimage.png")}
+            content={baseUrl + (frontMatter.image || ("/api/og?title=" + encodeURIComponent(frontMatter.title || title || 'Multiplayer in Minutes')))}
           />
 
           {/* <!-- Twitter Meta Tags --> */}
