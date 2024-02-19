@@ -39,7 +39,7 @@ export default async function handler(request) {
             fontFamily: 'RussoOne',
             fontSize: '60px',
             position: 'absolute',
-            left: '36px',
+            left: '53px',
             top: '410px',
             maxWidth: '460px',
             textAlign: 'left',
