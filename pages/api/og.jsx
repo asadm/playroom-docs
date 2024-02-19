@@ -18,6 +18,16 @@ export default async function handler(request) {
       new URL('./RussoOne-Regular.ttf', import.meta.url),
     ).then((res) => res.arrayBuffer());
 
+    let fontSize = "60px";
+
+    if (title.length <= 16) {
+      fontSize = "70px";
+    }
+
+    if (title.length >= 30) {
+      fontSize = "50px";
+    }
+
     return new ImageResponse(
       (
         <div
@@ -37,7 +47,7 @@ export default async function handler(request) {
           <img width="1200" height="630" src={imageData} />
           <span style={{
             fontFamily: 'RussoOne',
-            fontSize: '60px',
+            fontSize: fontSize,
             position: 'absolute',
             left: '53px',
             top: '410px',
