@@ -44,6 +44,8 @@ export default {
     const url =
       baseUrl +
       (defaultLocale === locale ? asPath : `/${locale}${asPath}`)
+
+    const ogImageUrl = baseUrl + (frontMatter.image || ("/api/og?title=" + encodeURIComponent(frontMatter.title || title || 'Multiplayer in Minutes')));
  
     return (
       <>
@@ -65,7 +67,7 @@ export default {
           />
           <meta
             property="og:image"
-            content={baseUrl + (frontMatter.image || ("/api/og?title=" + encodeURIComponent(frontMatter.title || title || 'Multiplayer in Minutes')))}
+            content={ogImageUrl}
           />
 
           {/* <!-- Twitter Meta Tags --> */}
@@ -79,7 +81,7 @@ export default {
           />
           <meta
             name="twitter:image"
-            content={baseUrl + (frontMatter.image || "/images/ogimage.png")}
+            content={ogImageUrl}
           />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet"></link>
