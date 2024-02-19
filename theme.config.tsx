@@ -95,7 +95,9 @@ export default {
       }
     },
     footer: {
-      text: '2023 © Playroom Inc.',
+      text: (
+        new Date().getFullYear() + ' © Playroom Inc.'
+      ),
     },
       primaryHue:309,
       logo: ()=>{
