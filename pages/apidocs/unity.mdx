@@ -2,16 +2,22 @@
 
 # Unity (C#) API
 
-## `InsertCoin(callback, InitOptions)`
+## `InsertCoin(InitOptions, callback)`
 
 Tell Playroom to start! Playroom Kit will then handle room creation, players joining and also let players pick their names, colors and avatars. Once host taps "Launch", the promise resolves. At this point you can start your game.
 
 ```cs
 // Show Playroom UI, let it handle players joining etc and wait for host to tap "Launch"
-PlayroomKit.InsertCoin(options, () =>
+PlayroomKit.InsertCoin(new PlayroomKit.InitOptions()
 {
-    Debug.Log("Insert Coin Callback Fired! Time to play.");
-}, );
+  maxPlayersPerRoom = 2,
+  defaultPlayerStates = new() {
+                  {"score", -500},
+              },
+}, () =>
+{
+  Debug.Log("Insert Coin Callback Fired! Time to play.");
+});
 
 // Start your game!
 ```

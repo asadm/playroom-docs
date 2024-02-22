@@ -30,7 +30,14 @@ using Playroom;
 // ...
 
 void Start() {
-    PlayroomKit.InsertCoin(() => {
+    PlayroomKit.InsertCoin(new PlayroomKit.InitOptions()
+    {
+    maxPlayersPerRoom = 2,
+    defaultPlayerStates = new() {
+                    {"score", -500},
+                },
+    }, () =>
+    {
         // The host has launched the game, you can start your game logic here.
     });
 }
