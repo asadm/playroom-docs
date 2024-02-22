@@ -8,10 +8,10 @@ Tell Playroom to start! Playroom Kit will then handle room creation, players joi
 
 ```cs
 // Show Playroom UI, let it handle players joining etc and wait for host to tap "Launch"
-PlayroomKit.InsertCoin(() =>
+PlayroomKit.InsertCoin(options, () =>
 {
     Debug.Log("Insert Coin Callback Fired! Time to play.");
-}, options);
+}, );
 
 // Start your game!
 ```
@@ -28,6 +28,8 @@ PlayroomKit.InsertCoin(() =>
 | `reconnectGracePeriod` | int | 0 | If set, Playroom will wait for the given **number of milliseconds** for the player to reconnect to the room after a disconnect. <br/><br/>If the player reconnects within the grace period, the player's state is restored. If the player does not reconnect within the grace period, the player is removed from the room and `onQuit` fires for the player. |
 | `maxPlayersPerRoom` | int | undefined | If set, Playroom will set a maximum limit for the **number of players** per room. <br/><br/>If the room is full and a new player attempts to join, the Playroom will display a default modal with a message stating that the "room is full", and the `insertCoin` method will throw an error with a message code `ROOM_LIMIT_EXCEEDED`. <br/><br/>If the room is full, `skipLobby` is set to `true`, and a new player is attempting to join the room, Playroom will skip the default modal but will throw an error.  |
 | `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
+| `defaultStates`    | Dictionary&lt;string, object&gt; | *null* | A dictionary containing default game states. These states are set when the room is created. |
+| `defaultPlayerStates`    | Dictionary&lt;string, object&gt; | *null* | A dictionary containing default player states. These states are set for all players when they join the room. |
 
 
 ## `GetState<T>(string key): T`
@@ -42,6 +44,8 @@ import { Callout } from 'nextra/components'
 
 ```cs
 string winnerId = PlayroomKit.GetState<string>('winner');
+
+var pos = players[i].GetState<Vector3>("position");
 ```
 
 ## `SetState(string key, T value, bool reliable = false): void`
@@ -51,11 +55,14 @@ Sets the value of the given key in the game state. If `reliable` is `true`, the 
 If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
 
 <Callout type="info" emoji="ℹ️">
-    Currently tested for the following types: `string`, `int`, `bool`, `float` and `Dictionary<string, T>`.
+    Currently tested for the following types: `string`, `int`, `bool`, `float`, `Dictionary<string, T>`, `Vector2`, `Vector3` and `Quaternion`.
 </Callout>
 
 ```cs
 PlayroomKit.SetState('winner', 'player1');
+
+// Support for built in data types such as Vectors
+PlayroomKit.SetState('position', gameObject.transform.position);
 ```
 
 ## `OnPlayerJoin(callback)`
@@ -98,11 +105,16 @@ if (PlayroomKit.IsStreamScreen()) {
 }
 ```
 
-## WaitForState(stateKey: string, onStateSetCallback)
-
+## `WaitForState(stateKey: string, onStateSetCallback)`
 Call the callback only when the game state has the given key set, to any truthy value.
-
 In other words, it waits until a game state is set. This is useful for waiting for the host to set the winner, for example.
+
+```cs
+WaitForState("winner", () => {
+  // Do something after waiting for the state.
+}) 
+
+```
 
 ## `MyPlayer()` or `Me()`
 
@@ -122,13 +134,23 @@ PlayroomKit.Player player = PlayroomKit.GetPlayer("abcd1234");
 Debug.Log($"Hello {player.GetProfile().name}!");
 ```
 
+## `ResetStates(string[] keysToExclude = null, Action OnStatesReset = null)`
+Resets all states to the defined default states inside InitOptions. Provides optional parameters for excluding some states and a callback.
+```cs
+string[] statesToExclude = {"globalScores"};
+PlayroomKit.ResetStates(statesToExclude, () =>
+{
+  // Do something after states are reset, liking starting a new round.
+});
+```
+
 ## PlayroomKit.Player
 
 A `PlayroomKit.Player` object represents a player in the room. In the Unity SDK, this is usually retrieved through `OnPlayerJoin`, `MyPlayer` or `GetPlayer`.
 
 It has the following methods:
 
-### `GetProfile(): PlayroomKit.Player.Profile`
+## `GetProfile(): PlayroomKit.Player.Profile`
 
 Returns the player's profile, which has the following properties:
 
@@ -139,7 +161,7 @@ Returns the player's profile, which has the following properties:
 | `photo`  | string | The player's avatar. This is a `dataURL` to an image.                       |
 
 
-### `GetState<T>(string key): T`
+## `GetState<T>(string key): T`
 
 Returns the value of the given key in the player's state.
 
@@ -151,7 +173,7 @@ Returns the value of the given key in the player's state.
 int score = player.GetState<int>('score');
 ```
 
-### `SetState(string key, T value, bool reliable = false)`
+## `SetState(string key, T value, bool reliable = false)`
 
 Sets the value of the given key in the player's state.
 
@@ -159,18 +181,27 @@ Sets the value of the given key in the player's state.
 player.SetState('score', 10);
 ```
 
-### WaitForState(stateKey: string, onStateSetCallback)
+## WaitForState(stateKey: string, onStateSetCallback)
 
 Call the callback only when the player state has the given key set, to any truthy value.
-
 In other words, it waits until a game player is set.
+```cs
+player.WaitForState("winner", () => {
+  // Do something after waiting for the state.
+}) 
+```
 
-### `Kick()`
+
+## `Kick()`
 Kicks the player from the room. This is equivalent to pressing the "Kick" button in the lobby.
-
 Only the host can kick players.
+```cs
+player.Kick(() => {
+  // Do something after kicking the player.
+}) 
+```
 
-### `OnQuit(callback)`
+## `OnQuit(callback)`
 
 Register a callback that will be called when the player quits the room.
 
@@ -178,4 +209,45 @@ Register a callback that will be called when the player quits the room.
 player.OnQuit(() => {
   Debug.Log($"{player.id} quit!");
 });
+```
+
+## `RpcRegister(string name, Action<string, string> rpcRegisterCallback, string onResponseReturn = null)`
+Register a callback that will be called when a remote procedure call (RPC) with the given name is received from a player.
+The callback will be called with the data sent by the other player and the player.ID of the caller. 
+
+```cs
+PlayroomKit.RpcRegister("Shoot", CallBackFunction, "You shot a bullet!");
+
+void CallBackFunction(string data, string senderId) 
+{
+  var player = GetPlayer(senderId);
+  Debug.Log($"{player.GetProfile().name} shoots with following damage: {data}");
+}
+```
+
+## `RpcCall(string name, object data, RpcMode mode, Action callbackOnResponse)`
+
+Call a remote procedure call (RPC) with the given name and data. The mode parameter can be used to specify the mode of the RPC call. The default mode is RpcMode.ALL.
+
+RPCs can be triggered in three different modes:
+
+- `RpcMode.HOST`: The RPC is triggered on the host only.
+- `RpcMode.ALL`: The RPC is triggered on all clients (including the host and the caller).
+- `RpcMode.OTHERS`: The RPC is triggered on all clients except the caller.
+You can pass a callback that will be called when the response is received.
+
+```cs
+// Using default RpcMode, which is RpcMode.ALL
+var damage = 50f;
+RpcCall("Shoot", damage, () =>
+{
+  // callback
+  Debug.Log("shooting!");
+});
+
+// Only on Host
+RpcCall("Shoot", damage, RpcMode.Host, SomeCallBack);
+
+// Also supports Unity specific data types such as vectors: 
+RpcCall("Scale", player.transform.scale, RpcMode.OTHERS, SomeCallBack);
 ```
