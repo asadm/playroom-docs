@@ -1,0 +1,58 @@
+# Making Your Web Game Into an Executable 
+
+
+import { Callout } from 'nextra-theme-docs'
+ 
+<Callout emoji="👷🏼‍♀️">
+  This feature relys on third-party software and may not be suited to paied games or non-host players*
+</Callout>
+<Callout emoji="💡">
+  This is best used for hosts of games using [steam mode](https://docs.joinplayroom.com/multiplayer/stream)* (see above)
+</Callout>
+
+## Using Nativefier
+<Callout emoji="💡">
+  Note: Nativefier is unmaintained, please see [#1577](https://github.com/nativefier/nativefier/issues/1577).
+</Callout>
+
+### Installation
+
+1. Install `Node.js` > https://nodejs.org/en/download
+
+2. Install Nativefier globally with `npm install -g nativefier`
+
+3. Make sure you have `C:\Users\username\AppData\Roaming\npm` set as an system env. variable. (See [Stack overflow: global npm package installed but command not found](https://stackoverflow.com/questions/29955217/global-npm-package-installed-but-command-not-found))
+
+That's it! 
+
+You may need to fix some vulnerablilites with npm. You can do this by using the `npm audit fix` command.
+
+### Usage
+
+1. Deploy your project to any domain name; for this example, we will use `game-test.playroom.gg`, but anything works. We reccomend using playroom's built in deployments or using [github sites](github.io)
+
+2. Run the `nativefier game-test.playroom.gg` command, replacing `game-test.playroom.gg` with whatever your domain is (can also be a subdirectory such as `game-test.playroom.gg/game.html`)
+
+3. That's it!
+
+### Limitations
+
+- Can only be used for hosting games because there is no way to use a room code*
+
+- May be prone to vulnerablilites (see [#1577](https://github.com/nativefier/nativefier/issues/1577))
+
+- Should **not** be used for paied games on platforms like steam (where you need to pay to get the game) as the website will be exposed (meaning people can play without paying)
+
+### Problems With `nativefier` Command
+
+- Make sure you have `C:\Users\username\AppData\Roaming\npm` set as an system env. variable. (See [Stack overflow: global npm package installed but command not found](https://stackoverflow.com/questions/29955217/global-npm-package-installed-but-command-not-found))
+
+- See the [Nativefier Catalog](https://github.com/nativefier/nativefier/blob/master/CATALOG.md)
+
+- Try downloading and setting up the latest version of [Node.js](https://nodejs.org/en/download). Then reinstall Nativefier
+
+### Notes
+
+*This is because there is no native way to input a code in playroom. With this method you can only go to a fixed url (not something like `game-test.playroom.gg/room=RXGDP`, just whatever you compiled the app with). This can be solved by having a custom code input method that redirects to the correct url (`game-test.playroom.gg/room=RXGDP`)
+
+Credit: Contributed by BigS [[hot]] from [our discord](https://discord.gg/jh5s4nWM5N)
