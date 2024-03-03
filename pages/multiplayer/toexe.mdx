@@ -1,17 +1,18 @@
+
 # Making Your Web Game Into an Executable 
 
 
 import { Callout } from 'nextra-theme-docs'
  
-<Callout emoji=":woman_construction_worker_tone2:">
+<Callout emoji="👷‍♀️">
   This feature relies on third-party software and may not be suited to paid games or non-host players*
 </Callout>
-<Callout emoji=":bulb:">
+<Callout emoji="💡">
   This is best used for hosts of games using [steam mode](https://docs.joinplayroom.com/multiplayer/stream)* (see above)
 </Callout>
 
 ## Using Nativefier
-<Callout emoji=":bulb:">
+<Callout emoji="💡">
   Note: Nativefier is unmaintained, please see [#1577](https://github.com/nativefier/nativefier/issues/1577).
 </Callout>
 
@@ -31,7 +32,7 @@ You may need to fix some vulnerabilities with npm. You can do this by using the 
 
 1. Deploy your project to any domain name; for this example, we will use `game-test.playroom.gg`, but anything works. We recommend using playroom's built-in deployments or using [github sites](github.io)
 
-2. Run the `nativefier game-test.playroom.gg --platform windows` command, replacing `game-test.playroom.gg` with whatever your domain is (can also be a subdirectory such as `game-test.playroom.gg/game.html`). Also, make sure to replace `--platform windows` with whatever platform you are building for like `windows`, `linux`, `mac`, `osx`, etc (see [this](https://github.com/nativefier/nativefier/blob/HEAD/API.md#platform) for more platforms)
+2. Run the `nativefier game-test.playroom.gg --platform windows` command, replacing `game-test.playroom.gg` with whatever your domain is (can also be a sub-directory such as `game-test.playroom.gg/game.html`). Also, make sure to replace `--platform windows` with whatever platform you are building for like `windows`, `linux`, `mac`, `osx`, etc (see [this](https://github.com/nativefier/nativefier/blob/HEAD/API.md#platform) for more platforms)**
 
 3. That's it!
 
@@ -39,7 +40,7 @@ You may need to fix some vulnerabilities with npm. You can do this by using the 
 
 - Can only be used for hosting games because there is no way to use a room code*
 
-- May be prone to vulnerablilites (see [#1577](https://github.com/nativefier/nativefier/issues/1577))
+- May be prone to vulnerabilities (see [#1577](https://github.com/nativefier/nativefier/issues/1577))
 
 - Should **not** be used for paid games on platforms like steam (where you need to pay to get the game) as the website will be exposed (meaning people can play without paying)
 
@@ -55,4 +56,6 @@ You may need to fix some vulnerabilities with npm. You can do this by using the 
 
 *This is because there is no native way to input a code in playroom. With this method, you can only go to a fixed url (not something like `game-test.playroom.gg/room=RXGDP`, just whatever you compiled the app with). This can be solved by having a custom code input method that redirects to the correct url (`game-test.playroom.gg/room=RXGDP`)
 
+**If you compile with an alternate operating system (aside from your own) you may have to use admin privileges to compress the files to a zip. On windows, even admin privileges will not work. Boot up the command line and use the `cd` command to get to your output directory. Then type `tar.exe -a -c -f output-zip-name.zip your-folder-name`
+ 
 Credit: Contributed by BigS [[hot]] from [our discord](https://discord.gg/jh5s4nWM5N)
