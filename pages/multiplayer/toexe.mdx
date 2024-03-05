@@ -16,8 +16,10 @@ import { Callout } from 'nextra-theme-docs'
 
 ## Why Compile To A Program?
 
-Compiling to a program may help you stand out, and is considered a staple if you want your games to get onto platforms like Steam, as they have no native web support. Playroom usually only works with web builds, as we use headers to fetch our [API](https://docs.joinplayroom.com/apidocs), which are only available for web builds. Using the following method, you can create fully-fledged programs with just one console command. 
+Compiling to a program may help you stand out, and is considered a staple if you want your games to get onto platforms like Steam, as they have no native web support. Playroom usually only works with web builds, as we use web headers to fetch our [API](https://docs.joinplayroom.com/apidocs). Using the following method, you can create fully-fledged programs for your games with just one console command. 
 Compiling to a program is great for games that use [Matchmaking](https://docs.joinplayroom.com/components/matchmaking), [TV Mode](https://docs.joinplayroom.com/multiplayer/tv), or [Stream Mode](https://docs.joinplayroom.com/multiplayer/stream).
+
+**This method will work regardless of engine or usage of the Playroom API.**
 
 There are a variety of different things that you can use to do this, but by far the easiest is by using [Nativefier](https://github.com/nativefier/nativefier).
 
@@ -41,9 +43,9 @@ You may need to fix some vulnerabilities with npm. You can do this by using the 
 
 ### Usage
 
-1. Deploy your project to any domain name; for this example, we will use `game-test.playroom.gg`, but anything works. We recommend using Playroom's built-in deployments or using [github sites](github.io)
+1. Deploy your project to any domain name; for this example, we will use `https://shooter-matchmaking.joinplayroom.com`, but anything works. We recommend using Playroom's built-in deployments or using [github sites](github.io)
 
-2. Run the `nativefier game-test.playroom.gg --platform windows` command, replacing `game-test.playroom.gg` with whatever your domain is (can also be a sub-directory such as `game-test.playroom.gg/game.html`). Also, make sure to replace `--platform windows` with whatever platform you are building for like `windows`, `linux`, `mac`, `osx`, etc (see [this](https://github.com/nativefier/nativefier/blob/HEAD/API.md#platform) for more platforms)**
+2. Run the `nativefier https://shooter-matchmaking.joinplayroom.com --platform windows` command, replacing `https://shooter-matchmaking.joinplayroom.com` with whatever your domain is (can also be a sub-directory such as `your-game.something/game.html`). Also, make sure to replace `--platform windows` with whatever platform you are building for like `windows`, `linux`, `mac`, `osx`, etc (see [this](https://github.com/nativefier/nativefier/blob/HEAD/API.md#platform) for more platforms and more platform info)**
 
 3. That's it!
 
@@ -68,7 +70,7 @@ You should also be able to cross-play with a web player. See the preview below.
 
 ### Problems With `nativefier` Command
 
-- Make sure you have `C:\Users\username\AppData\Roaming\npm` set as a system env. variable. (See [Stack overflow: global npm package installed but command not found](https://stackoverflow.com/questions/29955217/global-npm-package-installed-but-command-not-found))
+- Make sure you have `C:\Users\username\AppData\Roaming\npm` set as a system env variable. (See [Stack overflow: global npm package installed but command not found](https://stackoverflow.com/questions/29955217/global-npm-package-installed-but-command-not-found))
 
 - See the [Nativefier Catalog](https://github.com/nativefier/nativefier/blob/master/CATALOG.md)
 
