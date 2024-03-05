@@ -2,6 +2,10 @@
   "typesofgames": "Types of Games",
   "mobile":"Mobile Multiplayer",
   "stream":"Stream Mode",
-  "tv":"Tv Mode"
+  "tv":"Tv Mode",
+  "toexe":{
+    "display": "hidden"
+  }
+  
 }
 
