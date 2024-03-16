@@ -4,10 +4,14 @@ import React, { useEffect } from 'react'
 import { track } from './components/analytics'
 
 const brandNewPages = ['/components/rpc', '/components/matchmaking', '/usage/godot', '/templates']
+
+
 export default {
+
   docsRepositoryBase: "https://github.com/asadm/playroom-docs/tree/main/",
   nextThemes: {
     forcedTheme: "dark",
+
   },
   themeSwitch: {
     component: false
@@ -27,7 +31,7 @@ export default {
         alignItems: "center",
         marginLeft: "0.5rem",
         padding: "0.15rem 0.5rem",
-        background: "#E91E63",
+        background: "#fff",
         color: "#000",
         borderRadius: "1rem",
         fontWeight: "bold",

@@ -1,3 +1,8 @@
+
+body.dark {
+  color: #fff;
+  background: #363537;
+}
 a.cta {
   display: inline-block;
   /* background: linear-gradient(to bottom, #f5a0e7, #ffa6f1); */
