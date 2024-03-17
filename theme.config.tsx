@@ -3,7 +3,7 @@ import { useConfig } from 'nextra-theme-docs'
 import React, { useEffect } from 'react'
 import { track } from './components/analytics'
 
-const brandNewPages = ['/components/rpc', '/components/matchmaking', '/usage/godot', '/templates']
+const brandNewPages = ['/components/matchmaking', '/usage/godot', '/templates','/components/persistence','/components/turnbased']
 
 
 export default {
@@ -11,6 +11,7 @@ export default {
   docsRepositoryBase: "https://github.com/asadm/playroom-docs/tree/main/",
   nextThemes: {
     forcedTheme: "dark",
+    backgrounColor: "#000",
 
   },
   themeSwitch: {
@@ -54,8 +55,8 @@ export default {
     return (
       <>
       <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/images/apple-touch-icon.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/images/apple-touch-icon.png" />
       <meta
             name="description"
             content={frontMatter.description || title || 'Build multiplayer games in minutes.'}
