@@ -4,46 +4,42 @@ import { Callout } from 'nextra-theme-docs'
 
 # Types of Multiplayer Games
 
-Playroom supports a variety of game configurations for web based games. Players can be in the same room, long-distance, or a combination of both. When you start development, its essential to plan on which modes you want your game to support and which engine/library to use for what type of games. Playroom is web-based to essentially support all modes as a Universal Multiplayer Kit and help you deploy all following modes with ease.
+Playroom supports a variety of multiplayer game configurations. Players can be in the same room, long-distance, or a combination of both. When you start development, its essential to plan on which modes you want your game to support and which engine/library to use for what type of games. Playroom is built as a web-based library which supports all configurations as a Universal Multiplayer Kit and help you deploy all following modes with ease.
 
-## [Mobile Mode](https://docs.joinplayroom.com/multiplayer/mobile)
+## Mobile Games
 <div className={styles.halfhalf}>
-<div style={{ width: 'auto', maxHeight: "600px" }} >
+<div>
 
-"Mobile multiplayer mode is the default mode for Playroom. This means that you don't need to do anything special to enable it. Just follow the steps described [here](https://docs.joinplayroom.com/multiplayer#steps) to make a multiplayer game."
+Playroom is widely used to build casual mobile games. By default, many of our components are designed to be flexible and work across all devices. This means that you don't need to do anything special to enable it. Just follow the steps described [here](https://docs.joinplayroom.com/multiplayer#steps) and ship your game on Appstore or Playstore.
 
- Mobile to Mobile is the most common type of format created using Playroom. These games are designed to handle portrait casual multiplayer games on mobile devices where users invite other players by sharing a game link or QRcode.
+Here is an example game [Death by AI](https://apps.apple.com/us/app/death-by-ai-party-game/id6474457831?platform=iphone) that works on mobile and web.
 </div>
 <img src="/images/m1.png" width="400" height="400" />
 </div>
 
-## Web Mode
+
+## Web & Embeddable Games
 <div className={styles.halfhalf}>
 <div>
-<Callout>
-Web Mode is an extension of [Mobile Mode](https://docs.joinplayroom.com/multiplayer/typesofgames#mobile-mode); they are essentially the same, just instead of passing [joystick inputs](https://docs.joinplayroom.com/components/joystick), you pass keyboard inputs
-</Callout>
 
- Playroom is not just for mobile games. Since these are browser based games, they can be designed for PC as well. Nothing is stopping you from making a new casual game that uses mouse and keyboard. Just plug in your game engine's input method to your playroom logic and enjoy!
- 
- 💡 Tip: Make sure to still allow [joystick inputs](https://docs.joinplayroom.com/components/joystick) for mobile devices so people can join on phone, too!
+ As a web-based framework, Playroom works great for browser-based games and PCs. You can ship a game on any domain or easily launch your games on web platforms like Poki, Discord, YouTube, CrazyGames, and Itch.io. Just plug in your game engine's input method into your Playroom logic and enjoy!
+
+ Here is an example game that uses web controls [Ready Room](https://readyroom.dev)
 </div>
 <img src="/images/m5.png" width="400" height="400" />
 </div>
 
-## [Stream Mode with Players on Phone](https://docs.joinplayroom.com/multiplayer/stream)
-
+## Big Screen Games
 <div className={styles.halfhalf}>
 <div>
-  This is a variation of mobile-to-mobile mode. Players play the together on their mobile devices; however, a main instance of the game is streamed to a TV, PC, etc. which then acts as a central screen players can look at. (Think [Jackbox](https://www.jackboxgames.com/))
+  Playroom also supports multi-device multiplayer games where one screen acts as the host and all players join from their mobile devices. This feature can be enabled using Stream mode as described [here](https://docs.joinplayroom.com/components/stream). Once Stream mode is enabled, you can have the main screen of the game streamed to a browser or TV with a QR code or room code, which serves as the central screen for gameplay.
 
-  This lets you then make phones the controllers for the game. The central screen can also be used as an optional leader board or a spectator screen giving an overview of the game for non-players. 
-  This type of game is great for parties and events.
+  Here is an example game that uses Big Screen Stream Mode [Gogogo Party](https://gogogo.gg)
 </div>
 <img src="/images/m2.png" width="400" height="400" />
 </div>
 
-## [Stream Mode with Gamepads](https://docs.joinplayroom.com/multiplayer/stream#show-separate-screens-for-stream-and-controller)
+## Big Screen with Gamepads
 <div className={styles.halfhalf}>
 <div>
 Playroom also lets you make games that are played on a central screen with physical game controllers that are connected to PC via Bluetooth/USB.
@@ -53,7 +49,7 @@ If you run out of controllers, more players may also join the game on their mobi
 <img src="/images/m4.png" width="400" height="400" />
 </div>
 
-## [Live Mode with Tiktok (Chat) (and soon Twitch)](https://docs.joinplayroom.com/components/tiktok)
+## Live Mode with Tiktok (Chat) (and soon Twitch)
 <div className={styles.halfhalf}>
 <div>
 Playroom also lets you make games that are played on live streams and make people from the chat able to control and play the game. This is a great way to engage your community and let them play with you on live streams.

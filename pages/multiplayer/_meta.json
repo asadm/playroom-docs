@@ -1,8 +1,14 @@
 {
   "typesofgames": "Types of Games",
-  "mobile":"Mobile Multiplayer",
-  "stream":"Stream Mode",
-  "tv":"Tv Mode",
+  "mobile":{
+    "display": "hidden"
+  },
+  "stream":{
+    "display": "hidden"
+  },
+  "tv":{
+    "display": "hidden"
+  },
   "toexe":{
     "display": "hidden"
   }

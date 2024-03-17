@@ -3,6 +3,7 @@
   "matchmaking": "Matchmaking",
     "joystick":"Joystick",
   "gamepads":"Gamepads",
+  "stream": "Stream Mode",
   "state":"State",
   "rpc": "RPC",
   "persistence": "Persistence",
