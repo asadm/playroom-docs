@@ -24,8 +24,9 @@
     },
     "title": "🔖 | API Reference"
   },
-  "comparison": "📊 | Comparing Playroom",
-  "ai": "🧙🏻‍♀️ | Upcoming: Playroom AI",
+  "comparison": {
+    "display": "hidden"
+  },
   "billing": "🧾 | Billing FAQs",
   "changelog": "📜 | Changelog",
   "---": {

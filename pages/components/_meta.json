@@ -1,16 +1,12 @@
 {
   "lobby":"Lobby",
+  "matchmaking": "Matchmaking",
+    "joystick":"Joystick",
+  "gamepads":"Gamepads",
   "state":"State",
   "rpc": "RPC",
-  "matchmaking": "Matchmaking",
-  "joystick":"Joystick",
-  "gamepads":"Gamepads",
-  "persistence": {
-    "display": "hidden"
-  },
-  "turnbased": {
-    "display": "hidden"
-  },
+  "persistence": "Persistence",
+  "turnbased": "Turn Based",
   "bots":"Bots",
   "tiktok": "TikTok Live"
 }
