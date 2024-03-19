@@ -9,5 +9,8 @@
   "persistence": "Persistence",
   "turnbased": "Turn Based",
   "bots":"Bots",
-  "tiktok": "TikTok Live"
+  "tiktok": "TikTok Live",
+  "discord": {
+    "display": "hidden"
+  }
 }
