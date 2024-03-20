@@ -21,10 +21,15 @@ import { Tabs, Tab } from 'nextra/components'
 
 - With `Web` selected, add Playroom to the `HTML > Head` section:
 
-```html
+```html copy
 <script src="https://unpkg.com/react@18.2.0/umd/react.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/playroomkit/multiplayer.umd.js" crossorigin="anonymous"></script>
+```
+Or use the Community Playroom API Bundle (it has all of the same stuff, just it saves you some clutter) 
+```html copy
+<script type="module" src="https://acorn-studios.github.io/playroom/community-api
+/playroom-bundle.js" crossorigin="anonymous"></script>
 ```
 
 You can close the export window now.
