@@ -104,7 +104,7 @@ export default {
         new Date().getFullYear() + ' © Playroom Inc.'
       ),
     },
-      primaryHue:290,
+      primaryHue:274,
       logo: ()=>{
         useEffect(() => {
           track('Docs: Pageview', { path: window.location.pathname });
