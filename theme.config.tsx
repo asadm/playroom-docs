@@ -11,7 +11,7 @@ export default {
   docsRepositoryBase: "https://github.com/asadm/playroom-docs/tree/main/",
   nextThemes: {
     forcedTheme: "dark",
-    backgrounColor: "#000",
+    backgroundColor: "#000",
 
   },
   themeSwitch: {
