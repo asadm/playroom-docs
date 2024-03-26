@@ -36,6 +36,7 @@ PlayroomKit.InsertCoin(new PlayroomKit.InitOptions()
 | `avatars`    | Array&lt;string&gt; | *Default Avatars* | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
 | `defaultStates`    | Dictionary&lt;string, object&gt; | *null* | A dictionary containing default game states. These states are set when the room is created. |
 | `defaultPlayerStates`    | Dictionary&lt;string, object&gt; | *null* | A dictionary containing default player states. These states are set for all players when they join the room. |
+| `matchmaking` | [`MatchmakingOptions`](#matchmakingoptions) or `boolean` | false | An object containing matchmaking options or just `true` to enable with default options. |
 
 
 ## `GetState<T>(string key): T`
@@ -86,6 +87,10 @@ PlayroomKit.OnPlayerJoin((player) => {
 ## `GetRoomCode()`
 
 Returns a 4-letter room code of the current room.
+
+## `StartMatchmaking()`
+
+If you didn't pass `matchmaking` option in `insertCoin`, you can start matchmaking manually using this method.
 
 ## `OnDisconnect(callback)`
 
@@ -216,6 +221,14 @@ player.OnQuit(() => {
   Debug.Log($"{player.id} quit!");
 });
 ```
+
+## MatchmakingOptions
+
+The `MatchmakingOptions` object is used to specify configurations for matchmaking in the game. It consists of the following properties:
+
+| Property      | Type                              | Default | Description                                                                                                                                                   |
+|-------------|-----------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| waitBeforeCreatingNewRoom | `int` | 5000 | The time in milliseconds to wait for an existing room before creating a new room. |
 
 ## `RpcRegister(string name, Action<string, string> rpcRegisterCallback, string onResponseReturn = null)`
 Register a callback that will be called when a remote procedure call (RPC) with the given name is received from a player.
