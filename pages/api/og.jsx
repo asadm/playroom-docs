@@ -11,21 +11,21 @@ export default async function handler(request) {
     const title = hasTitle
       ? searchParams.get('title')?.slice(0, 100)
       : 'Multiplayer in Minutes';
-    const imageData = await fetch(new URL('./ogimageblank.png', import.meta.url)).then(
+    const imageData = await fetch(new URL('./og2.png', import.meta.url)).then(
       (res) => res.arrayBuffer(),
     );
     const fontData = await fetch(
-      new URL('./RussoOne-Regular.ttf', import.meta.url),
+      new URL('./NotoSans-Bold.ttf', import.meta.url),
     ).then((res) => res.arrayBuffer());
 
-    let fontSize = "60px";
+    let fontSize = "80px";
 
     if (title.length <= 16) {
-      fontSize = "70px";
+      fontSize = "80px";
     }
 
     if (title.length >= 30) {
-      fontSize = "50px";
+      fontSize = "60px";
     }
 
     return new ImageResponse(
@@ -46,11 +46,11 @@ export default async function handler(request) {
           }}>
           <img width="1200" height="630" src={imageData} />
           <span style={{
-            fontFamily: 'RussoOne',
+            fontFamily: 'NotoSans',
             fontSize: fontSize,
             position: 'absolute',
-            left: '53px',
-            top: '410px',
+            left: '50px',
+            top: '300px',
             maxWidth: '460px',
             textAlign: 'left',
             zIndex: 1,
