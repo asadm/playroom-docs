@@ -5,7 +5,7 @@ import { Callout } from 'nextra-theme-docs'
 
 # Make Multiplayer Games for Discord Activities
 <Callout emoji="👷🏼‍♀️">
-  This is a draft of Discord mode. Not currently available in Playroom stable.
+  Discord mode is in public preview. Please report any issues or feedback to us on our [Discord](https://discord.gg/bKZUax4uWz) server.
 </Callout>
 
 Discord has opened up activities for third-party developers. This means, you can make games that Discord users can play directly from Discord Activities. Discord SDK only helps with integrating with activities. You still need to host your own multiplayer game server. You also need an auth server to generate discord auth token for players.
@@ -14,20 +14,17 @@ Playroom provides deep integration to manage this for you and lets you use Playr
 
 **Why use Playroom instead of Discord SDK directly?**
 
-- ✅ Playroom is a multiplayer backend for your game, this is out of scope for Discord SDK
-- ✅ Room and player profile management, Discord SDK doesn't create or manage rooms for you
-- ✅ Includes authentication server, Discord SDK requires you to roll your own callback URL server to create auth-tokens
+- ✅ Playroom complements Discord SDK by providing a multiplayer server and state sync
+- ✅ Playroom handles Room and Player management for you
+- ✅ Playroom handles user authentication for you, you get user's Discord profile directly without doing OAuth dance
 
 
 ## Setting up
 
 For this integration to work, you need to connect your Playroom game to your Discord application.
 
-- If you haven't already, create a game on [Playroom Dev Portal](https://dev.joinplayroom.com) and click **+ Discord** button
-- Now create a new application on [Discord Developer Portal](https://discord.com/developers/applications)
-  - From **OAuth2 > Client Information**, copy over `CLIENT_ID` and `CLIENT_SECRET` from Discord to Playroom portal so Playroom can manage user authentication for you
-  - Add `https://discord.joinplayroom.com/auth` under **Redirects**
-- Finally in your game, add `gameId` and `discord` field to `insertCoin` call like this:
+- If you haven't already, create a game on [Playroom Dev Portal](https://dev.joinplayroom.com), click on **Discord** tab and follow the instructions to connect your Discord application.
+- In your game, add `gameId` and `discord` fields to your `insertCoin` call like this:
 ```js
 // Show popup and ask user permissions for their discord information
 await insertCoin({
@@ -50,21 +47,27 @@ onPlayerJoin((playerState)=>{
 // On some other player
 const topScore = getState("topScore")
 ```
-- Your game is now ready to be embedded into Discord. See [how to load my activity into Discord](#).
+
+- You can open your game in browser to test it out. Playroom will mock the Discord auth and user profile for you.
+- When ready, run your game inside Discord. See [how to load my activity into Discord](https://discord.com/developers/docs/activities/building-an-activity#step-4-running-your-app-locally-in-discord).
 
 <Callout type="info" emoji="💡">
 Check out the [Making a Multiplayer Game](/multiplayer) to learn how Playroom works or try enabling discord on any of the [Templates](/templates).
 </Callout>
 
 
-### Other Discord Commands
+### Inviting Other Players
+
+You can show Discord invite dialog from your game by calling `openDiscordInviteDialog()` method like this:
+
+```js
+import { openDiscordInviteDialog } from 'playroomkit'
+
+// ... after game started
+
+openDiscordInviteDialog()
+```
+
+### Calling Other Discord Commands
 
 You can get the Discord client by calling `getDiscordClient()` and then call any of the [SDK Commands](https://discord.com/developers/docs/developer-tools/embedded-app-sdk#sdk-commands) directly. 
-
-### Mock mode
-
-To speed up local development, you can open the game directly in your browser instead of Discord. This will automatically mock the Discord auth and user profile. 
-
-### Running your app locally in Discord
-
-You can just follow [the official steps for loading the game locally in Discord](https://discord.com/developers/docs/activities/building-an-activity#step-4-running-your-app-locally-in-discord).
