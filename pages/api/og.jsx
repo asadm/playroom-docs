@@ -51,7 +51,7 @@ export default async function handler(request) {
             position: 'absolute',
             left: '50px',
             top: '300px',
-            maxWidth: '460px',
+            maxWidth: '480px',
             textAlign: 'left',
             zIndex: 1,
             color: "#fff",
