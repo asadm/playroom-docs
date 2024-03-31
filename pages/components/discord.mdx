@@ -29,6 +29,7 @@ For this integration to work, you need to connect your Playroom game to your Dis
 - Click on **Discord** tab and follow the instructions to connect your Discord application.
 - In your game, add `gameId` and `discord` fields to your `insertCoin` call like this:
 ```js
+import { insertCoin, getState, setState, onPlayerJoin } from 'playroomkit'
 // Show popup and ask user permissions for their discord information
 await insertCoin({
   gameId: "<id from playroom portal>",
