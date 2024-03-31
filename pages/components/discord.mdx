@@ -14,20 +14,22 @@ While the Discord SDK facilitates the integration with Activities, developers ar
 
 Playroom provides deep integration to manage this for you and lets you use Playroom's state sync and other features for your games. You can also host your game on Playroom's Hosting; our ultra-fast CDN.
 
-**Why use Playroom instead of Discord SDK directly?**
+**Benefits of using Playroom with Discord SDK:**
 
-- ✅ Playroom complements Discord SDK by providing a multiplayer server and state sync
+- ✅ Playroom complements Discord SDK by providing a multiplayer backend and state sync for your game
 - ✅ Playroom handles Room and Player management for you
 - ✅ Playroom handles user authentication for you, you get user's Discord profile directly without doing OAuth dance
-
+- ✅ You also get all of Playroom's advanced features like persistence, RPCs, Bots and more
 
 ## Setting up
 
-For this integration to work, you need to connect your Playroom game to your Discord application.
+#### Create a Game on Playroom Dev Portal and Connect Discord
+Create a game project on [Playroom Dev Portal](https://dev.joinplayroom.com), click on **Discord Activity** tab and follow the instructions to connect your Discord application.
 
-- To start, create a game project on [Playroom Dev Portal](https://dev.joinplayroom.com)
-- Click on **Discord** tab and follow the instructions to connect your Discord application.
-- In your game, add `gameId` and `discord` fields to your `insertCoin` call like this:
+#### Enable Discord in your Game
+
+In your game, add `gameId` and `discord` fields to your `insertCoin` call like this:
+
 ```js
 import { insertCoin, getState, setState, onPlayerJoin } from 'playroomkit'
 // Show popup and ask user permissions for their discord information
