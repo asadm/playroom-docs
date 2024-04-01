@@ -58,8 +58,15 @@ onPlayerJoin((playerState)=>{
 const topScore = getState("topScore")
 ```
 
-- You can open your game in browser to test it out. Playroom will mock the Discord auth and user profile for you.
-- When ready, run your game inside Discord. See [how to load my activity into Discord](https://discord.com/developers/docs/activities/building-an-activity#step-4-running-your-app-locally-in-discord).
+## Running your Game
+### Testing Locally
+You can run your game locally and open it in browser to test. Playroom will mock the Discord auth and user profile for you.
+
+You can also load it in Discord app using a tunnel like `cloudflared`. See [how to load my activity into Discord](https://discord.com/developers/docs/activities/building-an-activity#step-4-running-your-app-locally-in-discord).
+
+### Hosting on Playroom
+
+You can host your game on Playroom's Hosting and paste the public URL in Discord's `URL Mapping` settings.
 
 <Callout type="info" emoji="💡">
 Check out the [Making a Multiplayer Game](/multiplayer) to learn how Playroom works or try enabling discord on any of the [Templates](/templates).

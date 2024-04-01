@@ -1,0 +1,76 @@
+body{
+  background-color: #7289da;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+h2{
+  margin-bottom: 0rem;
+  margin-top: 4rem;
+}
+.btn-container{
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.btn{
+  background-color: #fff;
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  padding: 2rem 3rem;
+  border: 3px solid transparent;
+}
+.btn.active{
+  border-color: #fff;
+}
+
+.btn-invite{
+  font-size: 1.5rem;
+  background-color: #7289da;
+  color: #fff;
+  border: 2px dashed #fff;
+  padding: 1rem 2rem;
+  cursor: pointer;
+}
+.players{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 2rem;
+}
+.player{
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.player > div{
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.player small{
+  font-size: 0.7rem;
+  font-style: italic;
+  color: #fff;
+}
+
+.player img{
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}
