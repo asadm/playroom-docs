@@ -20,12 +20,12 @@ export default async function handler(request) {
 
     let fontSize = "80px";
 
-    if (title.length <= 16) {
+    if (title.length <= 15) {
       fontSize = "80px";
     }
 
     if (title.length >= 30) {
-      fontSize = "60px";
+      fontSize = "54px";
     }
 
     return new ImageResponse(
@@ -51,7 +51,7 @@ export default async function handler(request) {
             position: 'absolute',
             left: '50px',
             top: '300px',
-            maxWidth: '480px',
+            maxWidth: '495px',
             textAlign: 'left',
             zIndex: 1,
             color: "#fff",
