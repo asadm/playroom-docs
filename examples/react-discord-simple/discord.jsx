@@ -17,8 +17,8 @@ const App = () => {
     <div className="container">
       <h1>Discord + Playroom</h1>
       <p><a href="https://docs.joinplayroom.com/components/discord" target="_blank">Documentation</a></p>
-      <h2>Shared State</h2>
-      <p>Playroom lets you easily sync state between players.<br />Try changing the color below and see it update for everyone!</p>
+      <div className='box'><h2>Shared State</h2>
+      <p>Playroom lets you easily sync state between players. Try changing background and it will update for everyone.</p>
       <div className="btn-container">
         {COLORS.map(color => (
           <button
@@ -30,11 +30,10 @@ const App = () => {
           </button>
         ))}
       </div>
-
-      <h2>Players</h2>
-      <p>Below is a list of all the players in the room. 
-        <br/><br/>- Playroom fetches their discord profiles.
-        <br/>- Each player can also have their own state that is shared with everyone else.
+      </div>
+<div className='box'>
+      <h2>Players in Activity</h2>
+      <p>Playroom fetches discord profiles of all players in the room. Each player can also have their own state that is shared with everyone else
       </p>
       <div className="players">
         {players.map((player) => {
@@ -61,6 +60,7 @@ const App = () => {
           + Invite Friends
         </button>
       </div>
+    </div>
     </div>
   );
 };
