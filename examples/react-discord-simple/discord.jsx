@@ -16,6 +16,7 @@ const App = () => {
   return (
     <div className="container">
       <h1>Discord + Playroom</h1>
+      <p>Multiplayer Activity Kit</p>
       <p className='btn3'><a href="https://docs.joinplayroom.com/components/discord" target="_blank">📕 Documentation</a></p>
       <div className='box'><h2>Shared State</h2>
       <p>Playroom lets you easily sync state between players. Try changing background and it will update for everyone.</p>
@@ -61,7 +62,10 @@ const App = () => {
         </button>
       </div>
     </div>
+    <p className='btn3'><a href="https://docs.joinplayroom.com/components/discord" target="_blank">👋🏼 Ask for help on Discord </a></p>
     </div>
+
+
   );
 };
 
