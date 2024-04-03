@@ -4,6 +4,7 @@ An overview of what's new in each version of `playroomkit`:
 
 | Version   | Changes                                                                                                                              |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `v0.0.71` | - Added `discord` option to `insertCoin` to allow Playroom games to be embedded in Discord Activities. |
 | `v0.0.70` | - Added: `gameId` field to `insertCoin` method to connect your game to developer portal. |
 | `v0.0.69` | - Fixed: `RPC.register()` before calling `insertCoin` now works as expected. |
 | `v0.0.68` | - Fixed: `resetPlayersStates()` method caused bot player's `.isBot()` to return `false`.<br/> - Fixed: `usePlayersList` hook and `onPlayerJoin` callback now attempt to return players in the order they joined.<br/>- Fixed: `startMatchmaking()` method now retains player profile and states when jumping into a public room.<br/> - Fixed: When `skipLobby: true`, the player's `.getProfile()` is now always populated with a random name and photo.<br/> - Fixed: Page reload will now clear player state of that player on all clients.<br/> - Fixed: An alternative deterministic approach at deciding players random name and photo.|
