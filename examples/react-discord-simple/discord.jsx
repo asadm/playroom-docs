@@ -62,7 +62,7 @@ const App = () => {
         </button>
       </div>
     </div>
-    <p className='btn3'><a href="https://docs.joinplayroom.com/components/discord" target="_blank">👋🏼 Ask for help on Discord </a></p>
+    <a className='btn3' href="https://discord.gg/SvrqzNFX8W" target="_blank">👋🏼 Ask for help on Discord </a>
     </div>
 
 

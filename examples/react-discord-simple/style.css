@@ -15,6 +15,9 @@ h2,h1,p,a{
   margin-bottom: 0rem;
   text-decoration: none;
 }
+a:hover {
+  cursor:pointer;
+ }
 .btn-container{
     display: flex;
     justify-content: space-evenly;
