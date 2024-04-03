@@ -28,7 +28,7 @@ h2,h1,p,a{
   background-color: #fff;
   border: none;
   display: inline-block;
-  border-radius: 4px;
+  border-radius: 15px;
   cursor: pointer;
   margin: 0 0.5rem;
   padding: 2rem 2rem;
@@ -68,7 +68,7 @@ box-shadow: 0px 0.818px 0px 0px rgba(255, 255, 255, 0.25) inset;
     cursor: pointer;
     border-radius: 20px;
     background: #B0B6C0;
-    padding: 20px;
+    padding: 10px;
     flex-wrap: nowrap;
 
 }
