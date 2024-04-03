@@ -71,7 +71,7 @@ const App = () => {
 
 const root = document.querySelector("#root");
 insertCoin({
-  gameId: "IK4y2SvLqkrdRVoyeMNq",
+  gameId: "hEr2oBjicndLADT63GqY",
   discord: true,
 }).then(() => {
   render(<App />, root);
