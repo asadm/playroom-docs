@@ -20,7 +20,18 @@ Playroom Kit complements Unity by simplifying the development of multiplayer gam
 ### 1. Install the SDK
 The SDK is available as a Unity package. You can download the latest version from the [releases page](https://github.com/asadm/playroom-unity/releases) (download `playroomkit.unitypackage` file).
 
-To install, simply drag the package into your Unity project and import all files.
+To install, drag the package into your Unity project and import all files.
+
+#### NPM Step
+
+Once you have imported the package, you will need to open terminal, `cd` into your project directory and run the following command:
+
+```bash
+cd Assets/PlayroomKit
+npm install
+```
+
+This will install the required dependencies for the SDK.
 
 ### 2. Initialize Playroom
 The SDK can be initialized by calling `PlayroomKit.InsertCoin` in your game's `Start` method. You'll need to pass in a callback function that will be called when the host launches the game.
@@ -52,7 +63,7 @@ See the [API reference](/apidocs/unity) for more information.
 
 - To export your game to WebGL, go to `File > Build Settings` and select `WebGL` as the platform. 
 - Click Player Settings and set the `Resolution and Presentation > Run In Background` option to `true`.
-- Change `WebGL Template` to `Minimal` or `PWA`.
+- Change `WebGL Template` to `PWA`.
 - Under `Publishing Settings`, set the `Compression Format` to `None`, this is to make sure the build works with most web servers including itch.io.
 - Close the Player Settings window and then click `Build` to export your game as a web page.
 - Once it has finished building, you can go into the output build folder and run `python -m http.server` to start a local web server. You can then open the game in your browser by going to `http://localhost:8000`.
