@@ -75,7 +75,7 @@ Check out the [Making a Multiplayer Game](/multiplayer) to learn how Playroom wo
 
 ### Inviting Other Players
 
-You can show Discord invite dialog from your game by calling `openDiscordInviteDialog()` method like this:
+When a player starts your game, you may want to encourage them to invite their other Discord friends. You can trigger Discord invite dialog from your game by calling `openDiscordInviteDialog()` method like this:
 
 ```js
 import { openDiscordInviteDialog } from 'playroomkit'
@@ -84,6 +84,61 @@ import { openDiscordInviteDialog } from 'playroomkit'
 
 openDiscordInviteDialog()
 ```
+
+This will show a dialog to the player to invite their friends to the activity, like this:
+
+<img src="/images/discordinvite.jpg" style={{maxHeight: "500px", marginTop: '20px;'}} />
+
+When the invited player joins, they will be in the same game room as the player who invited them.
+
+### Persistent Server Data
+
+Playroom lets you save any game data that you don't want cleared when the game is closed like top score, etc. The data is specific to that Discord server (also known as guild) and can be accessed, updated and deleted by any activity session in the same Discord server. Here is an example:
+
+```js
+import { insertCoin, getDiscordServerData, setDiscordServerData } from 'playroomkit'
+
+// Show popup and ask user permissions for their discord information
+await insertCoin({
+  gameId: "<id from playroom portal>",
+  discord: true,
+});
+
+// Save top score stats to the leaderboard, that is specific to this Discord server
+await setDiscordServerData("leaderboard", {topScore: 42, topPlayer: "Alice"})
+
+// Get leaderboard stats
+const leaderboard = await getDiscordServerData("leaderboard") // {topScore: 42, topPlayer: "Alice"}
+```
+
+#### API for Persistent Server Data
+
+##### Store data
+
+```javascript
+await setDiscordServerData('somekey', {foo: 'bar'});
+```
+
+##### Retrieve data for current server
+
+```javascript
+const data = await getDiscordServerData('somekey'); // {foo: 'bar'}
+```
+
+##### Delete data for current server
+
+```javascript
+await setDiscordServerData('somekey', undefined);
+```
+
+##### Insert data into an array
+  
+  ```javascript
+  await insertDiscordServerData('somekey', 'value1');
+  await insertDiscordServerData('somekey', 'value2');
+  // getting the data
+  const data = await getDiscordServerData('somekey'); // ['value1', 'value2']
+  ```
 
 ### Calling Other Discord Commands
 
