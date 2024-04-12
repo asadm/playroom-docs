@@ -10,7 +10,5 @@
   "turnbased": "Turn Based",
   "bots":"Bots",
   "tiktok": "TikTok Live",
-  "discord": {
-    "display": "hidden"
-  }
+  "discord": "Discord"
 }
