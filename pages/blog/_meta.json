@@ -1,4 +1,24 @@
 {
+  "cloudflare24": {
+    "title": "Playroom joins Cloudflare Launchpad",
+    "date": "April 05 2024",
+    "image": "/images/blog/cloudflare24/f690862acb79248bcf264d32c835e8d26399d36f.png"
+  },
+  "gdc24": {
+    "title": "Playroom GDC Announcement",
+    "date": "March 20 2024",
+    "image": "/images/blog/gdc24/header.png"
+  },
+  "feb24marketreport": {
+    "title": "Gaming Market Report",
+    "date": "February 02 2024",
+    "image": "/images/blog/feb24marketreport/d0a238d90467b727090388addf27d9fa1908f01b.png"
+  },
+  "feb24":{
+    "title": "New Multiplayer Modes, Tiktok & Stats",
+    "date": "February 01 2024",
+    "image": "/images/blog/feb24/650fc667404c1b8aec33a2d7d5ba3cd82a63933d.png"
+  },
   "highlights23": {
     "title": "Playroom Highlights: Let's review last 6 months",
     "date": "December 22 2023",
