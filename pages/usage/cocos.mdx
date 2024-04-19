@@ -1,0 +1,86 @@
+import Preview from '../../components/preview'
+import { Callout } from 'nextra-theme-docs'
+
+
+# Using Playroom with Cocos Creator
+
+[Cocos Creator](https://www.cocos.com/en/creator) is a 2D/3D game engine that supports JavaScript and TypeScript. You can use Playroom with Cocos Creator to build multiplayer games.
+
+## Setup
+
+Follow these steps to import Playroom into your project.
+
+- Create a new project in Cocos Creator.
+
+- In your project, create a new web template by clicking on `Project > Create Build Template > Web Mobile`:
+
+<img src="/images/cocos1.png" style={{maxHeight: "500px", marginTop: '40px;'}} />
+
+- This will create a `build-templates/web-mobile/index.ejs` file in your project. 
+
+- Open the `index.ejs` file and add the following script tag under the `<body>` tag to include Playroom.
+
+```html copy
+<script src="https://unpkg.com/playroomkit/multiplayer.full.umd.js" crossorigin="anonymous"></script>
+```
+
+Like this:
+
+```diff
+<body>
++  <script src="https://unpkg.com/playroomkit/multiplayer.full.umd.js" crossorigin="anonymous"></script>
+  <div id="GameDiv" cc_exact_fit_screen="true">
+      <div id="Cocos3dGameContainer">
+        <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
+      </div>
+    </div>
+  <%- include(cocosTemplate, {}) %>
+</body>
+```
+
+- Now you can start using Playroom in your Cocos Creator scripts like this:
+
+```js copy
+const Playroom = window.Playroom;
+
+export class MyScript extends Component {
+
+    async start() {       
+        await Playroom.insertCoin({
+            // any options here
+        });
+    }
+}
+```
+
+- You need to build using the template you added Playroom to. Click `Project > Build` and then click `New Build Task` and make sure to select the right template under `Platform` option:
+
+<img src="/images/cocos2.png" style={{maxHeight: "500px", marginTop: '40px;'}} />
+
+### TypeScript Support
+
+If you want Playroom types to be available in your TypeScript project, you can download the [`types.d.ts` file from Playroom package](https://unpkg.com/playroomkit/types.d.ts) into your project folder (like under `assets/scripts/playroom.d.ts`) and then use it in your TypeScript files like this:
+
+```ts copy
+import * as PlayroomType from './playroom.d.ts';
+
+const Playroom: typeof PlayroomType = window.Playroom;
+```
+
+### Using with Discord
+
+If you are using [Discord mode](/components/discord) in Playroom, be sure to copy the [multiplayer.full.umd.js](https://unpkg.com/playroomkit/multiplayer.full.umd.js) file to your local web template directory right alongside your `index.ejs` file and include it in your `index.ejs` file like this:
+
+```diff
+<body>
++  <script src="./multiplayer.full.umd.js" crossorigin="anonymous"></script>
+  <div id="GameDiv" cc_exact_fit_screen="true">
+      <div id="Cocos3dGameContainer">
+        <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
+      </div>
+    </div>
+  <%- include(cocosTemplate, {}) %>
+</body>
+```
+
+This is needed because Discord doesn't let you access third-party domains (like `unpkg.com`) from inside the Discord activity iframe.

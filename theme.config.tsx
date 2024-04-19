@@ -3,7 +3,7 @@ import { useConfig } from 'nextra-theme-docs'
 import React, { useEffect } from 'react'
 import { track } from './components/analytics'
 
-const brandNewPages = ['/components/matchmaking', '/usage/godot', '/templates','/components/persistence','/components/turnbased', '/components/discord']
+const brandNewPages = ['/components/matchmaking', '/usage/cocos', '/templates','/components/persistence','/components/turnbased', '/components/discord']
 
 
 export default {

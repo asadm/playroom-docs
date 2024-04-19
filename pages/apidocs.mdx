@@ -457,11 +457,14 @@ The `TiktokLiveEvent` interface represents a live event that is sent from Tiktok
 | `data.giftId`       | `string`   | Gift ID, available only when `type` is `gift`           |
 | `data.giftDiamondCount` | `number` | Diamond count of the gift, available only when `type` is `gift` |
 
-### `openDiscordInviteDialog(): Promise<void>`
+## `openDiscordInviteDialog(): Promise<void>`
 Opens a dialog to invite players to the current Discord activity. Not available outside of Discord.
 
-### `getDiscordClient(): DiscordClient`
+## `getDiscordClient(): DiscordClient`
 Returns a Discord client that is already authenticated and ready to use. See [Embedded SDK Docs](https://discord.com/developers/docs/developer-tools/embedded-app-sdk#sdk-methods) for available methods and commands. Not available outside of Discord. 
+
+## `getDiscordAccessToken(): string`
+Returns the access token of the current Discord user. Not available outside of Discord.
 
 ## Hooks for React
 

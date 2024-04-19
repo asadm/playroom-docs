@@ -5,6 +5,7 @@
   "unity":"Unity",
   "playcanvas":"PlayCanvas",
   "godot":"Godot",
+  "cocos": "Cocos Creator",
   "phaser":"Phaser",
   "kaboom":"Kaboom",
   "pixijs":"PixiJS",
