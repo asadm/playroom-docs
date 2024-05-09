@@ -109,6 +109,24 @@ PlayroomPlayer.GetProfile().photo is formatted as `data:image/svg+xml,{svg encod
 
 Thanks to **Zy** from our Discord for this tip.
 
+### How to maintain an array of Players in Unity?
+By maintaining an array of Players in your game, you can execute operations over multiple players all at once, and get the latest state of multiple players.
+Here's a small snippet demonstrating how you can use [OnPlayerJoin](https://docs.joinplayroom.com/apidocs/unity#onplayerjoincallback) and [Player.OnQuit](https://docs.joinplayroom.com/apidocs/unity#onquitcallback) to achieve this.
+
+```csharp
+object[] players = Array.Empty<object>();
+// ...
+PlayroomKit.OnPlayerJoin((player) => {
+  players.push(player)
+  player.OnQuit(() => {
+    Debug.Log($"{player.id} quit!");
+    players.Where(p => p != player).ToArray();
+  });
+})
+```
+
+This may be considered an equivalent to the PlayroomKit JavaScript SDK's [usePlayersList hook](https://docs.joinplayroom.com/apidocs/react#useplayerslisttriggeronplayerstatechange-boolean).
+
 ### Aurea NetLayer: a higher level API for Unity
 
 **GuilhermeAlanJohann** from our Discord community has created a [higher level plugin](https://gitlab.com/PCista/com.aurea.packages.netlayer) for Unity that makes it easier to use Playroom with Unity.
