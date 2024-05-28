@@ -39,9 +39,9 @@ To initialize Playroom in your game (show the Playroom lobby screen), you need t
 
 Here is an example of how to initialize Playroom when the game starts:
 
-<Tabs items={['Godot 3', 'Godot 4']}>
+<Tabs items={['Godot 4', 'Godot 3']}>
   <Tab>
-		### Godot 3
+		### Godot 4
 ```gdscript
 extends Node2D
 
@@ -85,7 +85,7 @@ func onPlayerQuit(args):
 		```
 	</Tab>
 	<Tab>
-		### Godot 4
+		### Godot 3
 		
 ```gdscript
 extends Node2D
@@ -145,7 +145,7 @@ When the host starts the game, the `onInsertCoin` callback will be called. The `
 </Callout>
 
 <Callout type="info" emoji="💡">
-  If you host the game on your own server, Godot 4 requires the following headers to be present, add these in your `.htaccess` or however your server lets you:
+  If you host the game on your own server, Godot 4 requires the following headers to be present, add these in your `.htaccess` or in whatever way your server lets you:
 
 ```
 Cross-Origin-Opener-Policy: same-origin
@@ -156,7 +156,7 @@ Cross-Origin-Embedder-Policy: require-corp
 ## Usage
 The use of the Playroom API is very similar to the [web API](https://docs.joinplayroom.com/apidocs) but it still has its differences. For example, to use `getState` you would type `yourVar = YourPlayroomReference.getState("your state")`. Using this in an actual project would look something like this: `var points = Playroom.getState("points")`.
 
-If you are competent with chrome dev tools or the inspect element menu, you can mess around with playroom in the console by doing things like `Playroom.me()`, etc. to figure out what the Godot equivalent commands are for things like the React or Unity APIs, if you are coming from one of those. 
+If you are competent with Chrome dev tools or the inspect element menu. In that case, you can mess around with Playroom in the console by doing things like `Playroom.me()`, etc. to figure out what the Godot equivalent commands are for things like the React or Unity APIs, if you are coming from one of those. 
 
 ## Simple Demo
 
@@ -190,9 +190,9 @@ func _parse_dataurl(data_url : String) -> Image:
 
 ### How do I display QR code for joining the game?
 
-You can use `JavaScriptBridge.eval(window.location.href)` to get current url (which includes room code) and then use any QRCode library like [this](https://godotengine.org/asset-library/asset/2090) to display QR code in Godot.
+You can use `JavaScriptBridge.eval(window.location.href)` to get the current URL (which includes room code) and then use any QRCode library like [this](https://godotengine.org/asset-library/asset/2090) to display QR code in Godot.
 
-### How do I get a list of player states which I can use to set the states of players?
+### How do I get a list of player states that I can use to set the states of players?
 When a player joins, you would have to add them to a list of players. 
 Use something similar to the below:
 ```gdscript
@@ -208,7 +208,7 @@ func onPlayerJoin(args):
 	state.onQuit(bridgeToJS(onPlayerQuit))
 ```
 If you want to instantiate player objects, you would add those to another list in a similar way. 
-To get both the player objects and its states and do something to them for each player you could do something similar to the following:
+To get both the player objects and their states and do something to them for each player you could do something similar to the following:
 ```gdscript
 #In process()...
 
@@ -279,7 +279,7 @@ Then we can spawn the objects like this:
 #This returns itself, so you can set some vars if you want 
 spawn(your_object_instance, its_x, its_y).a_var_to_set = "this is optional but you can do it"
 ```
-Modify the code to see what fits you game. You can do a lot more than just positions, but it can make your functions really long.
+Modify the code to see what fits your game. You can do a lot more than just positions, but it can make your functions really long.
 
 ## Credits
 Thanks to **BigS [[hot]]** and **Churrosaur** on our discord for tips, code snippets, etc.
