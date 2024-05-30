@@ -18,6 +18,9 @@ import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
 
 You can also directly include it via a script tag from a CDN like `unpkg.com` or our own `cdn.joinplayroom.com`, make sure to also include the peer dependencies also (react, react-dom):
 
+
+### Using `cdn.joinplayroom.com`
+
 ```html copy
 <body>
   <script src="https://cdn.joinplayroom.com/react@18.2.0/umd/react.development.js"></script>
@@ -29,7 +32,19 @@ You can also directly include it via a script tag from a CDN like `unpkg.com` or
 </body>
 ```
 
-This will make the `Playroom` object available on the global scope.
+### Using `unpkg.com`
+
+```html copy
+<body>
+  <script src="https://unpkg.com/playroomkit/multiplayer.full.umd.js" crossorigin="anonymous"></script>
+  <script>
+    #Do what you want
+    Playroom.doSomething()
+  </script>
+</body>
+```
+
+Both of these examples import the `Playroom` scope which can be used by your game.
 
 ## Next Steps
 
