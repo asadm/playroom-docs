@@ -1,14 +1,14 @@
 {
-  "bots": "Bots",
-  "discord": "Discord",
-  "gamepads": "Gamepads",
-  "joystick": "Joystick",
-  "lobby": "Lobby",
+  "lobby":"Lobby",
   "matchmaking": "Matchmaking",
-  "persistence": "Persistence",
-  "rpc": "RPC",
-  "state": "State",
+  "joystick":"Joystick",
+  "gamepads":"Gamepads",
   "stream": "Stream Mode",
+  "state":"State",
+  "rpc": "RPC",
+  "persistence": "Persistence",
+  "turnbased": "Turn Based",
+  "bots":"Bots",
   "tiktok": "TikTok Live",
-  "turnbased": "Turn Based"
+  "discord": "Discord"
 }
