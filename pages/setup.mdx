@@ -1,4 +1,11 @@
+import { Callout } from 'nextra-theme-docs'
+
 # Setting up Playroom Kit
+
+<Callout emoji="💡">
+  **Note:** These methods may not apply to all engines (such as [Godot](https://docs.joinplayroom.com/usage/godot) or [Unity](https://docs.joinplayroom.com/usage/unity)). Please refer to the respective page for engine setup for explicit use. 
+</Callout>
+
 ## Using NPM
 If you are using npm, install Playroom Kit and its peer dependencies:
 ```bash copy
@@ -11,17 +18,6 @@ import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
 ## Using a CDN
 
 You can also directly include it via a script tag from a CDN like `unpkg.com` or our own `cdn.joinplayroom.com`, make sure to also include the peer dependencies also (react, react-dom):
-```html
-<body>
-  <script src="https://cdn.joinplayroom.com/react@18.2.0/umd/react.development.js"></script>
-  <script>
-    #Do what you want
-    Playroom.doSomething()
-  </script>
-</body>
-```
-
-or
 
 ```html
 <body>
@@ -33,7 +29,7 @@ or
 </body>
 ```
 
-Both of these examples import the `Playroom` scope which can be used by your game.
+This example imports the `Playroom` scope which can be used by your game.
 
 ## Next Steps
 
