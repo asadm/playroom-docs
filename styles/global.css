@@ -1,3 +1,13 @@
 body{
   background-color: #000 !important;
 }
+
+:is(html[class~="dark"] .dark\:nx-bg-dark) {
+  --tw-bg-opacity: 1;
+  background-color: rgba(0,0,0,var(--tw-bg-opacity));
+}
+:is(html[class~="dark"] .dark\:nx-shadow-\[0_-12px_16px_\#111\]) {
+  --tw-shadow: 0 -12px 16px #000;
+  --tw-shadow-colored: 0 -12px 16px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow);
+}

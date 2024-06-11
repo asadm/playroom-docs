@@ -1,7 +1,7 @@
 {
   "lobby":"Lobby",
   "matchmaking": "Matchmaking",
-    "joystick":"Joystick",
+  "joystick":"Joystick",
   "gamepads":"Gamepads",
   "stream": "Stream Mode",
   "state":"State",
