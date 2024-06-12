@@ -525,7 +525,7 @@ function normalize(v,vmin,vmax,tmin, tmax){
 }
 
 async function init(event){
-  await insertCoin({skipLobby: true});
+  await insertCoin();
   // document.addEventListener('mousemove', handleMouseMove, false);
   createJoystick();
   createScene();
