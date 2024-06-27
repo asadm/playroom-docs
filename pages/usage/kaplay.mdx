@@ -1,15 +1,20 @@
-# Using Kaboom.js with Playroom Kit
+import { Callout } from 'nextra-theme-docs'
+# Using KAPLAY with Playroom Kit
 
-[Kaboom](https://kaboomjs.com/) is a Javascript game programming library that helps you make games fast and fun.
+[KAPLAY](https://kaplayjs.com/) is a Javascript game programming library that helps you make games fast and fun.
 
-## Making a Kaboom Game Multiplayer
+<Callout type="info" emoji="💡">
+	Looking for <b>Kaboom</b>? Kaboom is now deprecated - you may be interested in the community fork KAPLAY, which is used in this tutorial.
+</Callout>
 
-To make a Kaboom game multiplayer, you can pipe the game state to Playroom state methods and also pipe the player inputs to Playroom.
+## Making a KAPLAY Game Multiplayer
+
+To make a KAPLAY game multiplayer, you can pipe the game state to Playroom state methods and also pipe the player inputs to Playroom.
 
 Here is a simple example with relevant parts highlighted:
 
 ```js copy {4, 14-20, 32, 44, 57-60, 69, 73}
-import kaboom from "kaboom";
+import kaplay from "kaplay";
 import nipplejs from "nipplejs";
 // 0. Import Playroom SDK
 import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
@@ -18,8 +23,8 @@ const SPEED = 320;
 const PLAYERSIZE = 20;
 
 function start() {
-  kaboom({ width: 300, height: 480, background: [0, 0, 0]});
-  gravity(1600);
+  kaplay({ width: 300, height: 480, background: [0, 0, 0]});
+  setGravity(1600);
 
   // 1. Pass Joystick data to Playroom SDK
   const joystick = nipplejs.create();
@@ -36,7 +41,7 @@ function start() {
     color(0, 255, 0),
     pos(0, height() - 48),
     area(),
-    solid(),
+    body({ isStatic: true }),
   ]);
 
   // 2. When a new player joins, add a circle for them in the color they chose
