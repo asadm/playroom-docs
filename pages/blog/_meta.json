@@ -1,4 +1,24 @@
 {
+  "tim": {
+    "title": "Game Industry Veteran joins Playroom",
+    "date": "Aug 20, 2024",
+    "image": "/images/blog/450fc00bcc3df678cbbc2ee649cc4d174b5b204e.png"
+  },
+  "casestudy": {
+    "title": "Case Study: Building and Scaling a Multiplayer AI Game on Discord",
+    "date": "Aug 13, 2024",
+    "image": "/images/blog/00cb4e4e1e52eae57babb990d85292013ae891ad.png"
+  },
+  "discordplaybook": {
+    "title": "Discord Activity Playbook",
+    "date": "Jun 13, 2024",
+    "image": "/images/blog/00cb4e4e1e52eae57babb990d85292013ae891ad.png"
+  },
+  "5mil": {
+  "title": "5M+ Players on Discord Game",
+  "date": "Jun 03, 2024",
+  "image": "/images/blog/00cb4e4e1e52eae57babb990d85292013ae891ad.png"
+  },
   "cloudflare24": {
     "title": "Playroom joins Cloudflare Launchpad",
     "date": "April 05 2024",

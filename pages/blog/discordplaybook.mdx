@@ -1,0 +1,115 @@
+---
+title: "Discord Activity Playbook"
+image: "/images/blog/00cb4e4e1e52eae57babb990d85292013ae891ad.png"
+---
+
+import AuthorBio from "../../components/AuthorBio";
+
+# Discord Activity Playbook
+
+<AuthorBio author="tabish" date="Jun 13 2024" />
+
+If you're a game maker and haven't explored the recent [Discord Embedded SDK](https://discord.com/build/embedded-app-sdk) release, you're missing out on the next big social gaming platform after Facebook.
+
+We are the creators behind "Death by AI," a social survival party game driven by an AI game master. Since its launch, it has attracted massive attention, with 5 million users playing within the first week. While we’re still analyzing engagement metrics, this initial success underscores Discord's potential as a significant distribution channel for game developers.
+
+![](/images/blog/4bf1cbd8354cddd93b92412ab7144c752d5d176b.png)
+
+**Some quick stats to know what to expect on Discord:**
+
+*   At our peak, we've seen 50,000 users per hour.
+    
+
+*   At our peak, we've seen 700,000 users in a single day.
+    
+
+*   On average, we have 400,000 daily active players (Discord + Web).
+    
+
+*   Players generate nearly 1.2 billion text characters per day with AI.
+    
+
+*   Players generate nearly 20 million voice characters per day with AI.
+    
+
+*   More than 1.36 million hours of gameplay have been recorded in last 30 days.
+    
+
+*   In the last 30 days, the longest game session lasted 7.2 hours.
+    
+
+*   85% of games are played by 3 or more people in the session.
+    
+
+Currently, Discord has over 200 million users, reminiscent of Facebook's early days when Zynga's games were all the rage. While Discord's global activity is still tightly controlled, the team is working towards creating a more open platform. They want to give developers a space to showcase their creativity while ensuring that promoted or featured content provides an outstanding user experience. [This is also shared on the podcast here](https://podcasts.apple.com/ca/podcast/how-discord-became-a-developer-platform/id842818711?i=1000655158062) by Jason (Discord CEO).
+
+Having been a Discord user for many years and now a developer on the platform, We have gained some insights into how Discord operates. Let’s be honest, we are not experts in setting up servers, minimum understanding of Nitro, and are still figuring out how Discord Servers & Bot works. But working with the Activities team over the past 7-8 months has given us a decent grasp,  a simple playbook to build for Activities.
+
+
+![](/images/blog/9645aa8b622b827b5f0d5b7110415c2ee34beb0a.png)
+
+Once you have chosen your game engine that supports WebGL/WebGPU builds and are ready to develop your Discord game, it's crucial that the game is designed to work in various social settings:
+
+*   You: The game should be enjoyable as a single-player experience.
+    
+*   Friends: The game should expand to include more players.
+    
+*   Guilds: Games can leverage server social graphs to create big room gameplay.
+    
+
+Start with the basics. The user should enjoy the game solo, as initial exploration often happens individually for the first few days. The next growth stage involves friends playing together, aligning with Discord's primary use case of long hangouts and calls. To look in perspective, 85% of Death by AI games are played by more than 2 players after Day 3.
+
+But if the game requires multiple players to even start, like traditional It-Takes-Two style games, it may struggle with higher engagement as the game will always require more than one and max 2; unless of course you implement an AI bot in the game or 2v2v2v2 style clan games.
+
+The final critical growth aspect is Servers - aka Guilds. These set Discord apart from Facebook and similar platforms. _**This is Discord’s Real superpower**_! If incorporated right, they can unlock new game mechanics. Games can use [guild data](https://support.discord.com/hc/en-us/articles/23187611406999-Guilds-FAQ) or clan tags to provide unique game unlocks or have clan vs clan competitions to enhance virality across Discord servers. A social community tightly knit with games; this presents a massive opportunity to be explored.
+
+
+![](/images/blog/116cabbcaadc78b4d4a579d93572f5b850d97016.png)
+
+I strongly believe Discord Activities aren't ideal for hyper-casual or highly competitive MMORPG games. However, there's a sweet spot in between that encompasses mid-core and AA casual games. Users are on Discord to connect socially, often for extended periods, making it perfect for games that fit this social, mid-core niche.
+
+Developers can take cues from games like Overcooked, Fall Guys, Jackbox, Among Us, Boomerang Fu, Animal Crossing, and other simulation types that we believe fit nicely into Discord Activities. However, some innovation is still needed. Combining familiar game mechanics with Discord's unique features such as guilds, or AI, can keep the experience fresh with every session.
+
+Simply bringing existing titles with the same mechanics will make it hard for both developers and Discord to stand out, especially when players already have options like Steam, Game Pass, Roblox, Poki and Netflix. It's easy to fall into the trap of building a sandbox game for Discord, but why compete in a space where users might already be playing Roblox, Fortnite, or Minecraft? Instead, build games that align with Discord's social behavior—this is where true success lies
+
+![](/images/blog/5fc702383bda3e6995270c3a377ec1244f6bcefa.png)
+
+**Accessible from Day One**
+
+Accessibility means being easy to _play anytime_ and _for everyone_. Games should be no-pressure fun, allowing users to jump in whenever they’re available. _Asynchronous_ experiences, where players can catch up on what happened while they were offline, enhance retention. This approach is reminiscent of "Clash of Clans" where players could replay and respond to attacks when they returned.
+
+Global launch capabilities and cross-device compatibility are crucial. Games on Discord goes global instantly - through playtesting we found that localization was players’ #1 requested feature; "Death by AI" benefited significantly from supporting multiple languages at launch. This is something I always missed when playing Jackbox games.
+
+Ensure your game works across devices and languages to maximize its viral potential. Eventually you can also learn more about successful regions for your game and can launch unique game packs based on culture and region dynamics.
+
+![](/images/blog/af8903eee7e27549f1465cd18848f183eb60a5d0.png)
+
+Now going back to the first point I made: Build for Guilds - Discord is showing all the signs of new types of gameplay to emerge. 
+
+Progression motivates players to return daily for longer sessions. This can include in-game achievements, item unlocks, and levels, but also guild-based progression. Games can foster competition within guilds with server-based leaderboards and collective challenges. This also reminds one of "Helldivers" or raid-based games where collective user levels impact gameplay.
+
+So much can be explored with the Discord Activity API which makes all these things possible.
+
+![](/images/blog/4d8e12a1e76463292dcbaa2579b1aec230465171.png)
+
+**Rapid Growth & Live Service** 
+
+If there is a progression system, then there is live service. For a game to thrive, ongoing content updates and a robust infrastructure capable of scaling rapidly are crucial. Thankfully we already had a multiplayer infrastructure, "[Playroom Discord Kit](https://joinplayroom.com/discord)" which scaled smoothly with Discord’s player demands, and we managed it as a small team.
+
+For a successful game activity, developers must think beyond just launching a game. The content on Discord is limited, which not only brings more attention to your game but also attracts vocal users who demand new content. Your team needs to be proactive, thinking ahead with new game modes and content, and utilizing infrastructure that can handle sudden growth from 0 to millions of users. At Playroom, we assist with this, so feel free to connect with the team here on Discord.
+
+—
+
+**Opportunities for Discord**
+
+While Discord offers tremendous potential, it's important to recognize that the market is still in its early stages and has room to mature. It's not yet a perfect platform where you can launch and start earning significant revenue due to several core development areas that need refinement.
+
+Discord currently offers limited in-app purchase (IAP) methods and only a single subscription type. Running sales, localizing pricing, offering multiple subscriptions or other monetization strategies are not straightforward. However, this presents an opportunity to collaborate with Discord and help shape the development.
+
+Conducting playtests and transitioning builds from staging to production remains challenging. Developers must manage two separate apps and maintain distinct lists of playtesters.
+
+Re-engaging users with your app and its updates is not straightforward. There is no efficient way to notify users about new content unless they are part of your server. Additionally, creating a bot to spam users with updates would not be well-received by Discord. Making users re-engage is a significant challenge and a lot depends on Discord.
+
+When your game goes live on Discord, it’s live! It’s global! Regional launches or percentage-based rollouts are not currently possible, making it difficult to test new features at scale.
+
+We hope this helps all the game studios out there thinking of building on Discord. There are already many studios who reached out to us and have pushed me to write this. If you are looking for help, you can find me and [the Playroom team here on Discord](https://discord.gg/playroom).
