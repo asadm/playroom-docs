@@ -1,7 +1,15 @@
+<Image style={{
+    width: '100%',
+    height: 'auto',
+    objectFit: 'cover',
+}} src="/images/disc.png" alt="Hello" width={1000} height={500} />
+
 # Using Unity with Playroom Kit
 
 import { Callout } from 'nextra/components'
 import Preview from '../../components/preview'
+import Image from 'next/image'
+
 
 <Callout type="info" emoji="🧪">
     The Unity SDK currently only supports **Unity Web.** This is an experimental technology.
@@ -149,67 +157,97 @@ Code for this example can be found [here](https://github.com/asadm/playroom-docs
 
 See the [API reference](/apidocs/unity) for more information.
 
-## FAQs and Tips
+## FAQ
 
-### How to display player's profile picture in Unity?
-PlayroomPlayer.GetProfile().photo is formatted as `data:image/svg+xml,{svg encoded for url}`. In order to display it in Unity:
-- Remove data:image/svg+xml from the string.
-- Decode the rest using HttpUtility.UrlDecode()
-- Display the result into an SVGImage component.
+<details>
+  ### <summary>How to display player's profile picture in Unity?</summary>
 
-**Warning: Requires Unity's Vector Graphics package from com.unity.vectorgraphics which is an experimental package**
+  PlayroomPlayer.GetProfile().photo is formatted as `data:image/svg+xml,{svg encoded for url}`. In order to display it in Unity:
+  - Remove `data:image/svg+xml` from the string.
+  - Decode the rest using `HttpUtility.UrlDecode()`
+  - Display the result into an `SVGImage` component.
 
-```csharp
- private void LoadSVG(string svgBytes) {
-    // Split the string to escape the real data
-    svgBytes = svgBytes.Split(",".ToCharArray(), 2)[1];
-    // Decode from the URL encoding
-    svgBytes = HttpUtility.UrlDecode(svgBytes);
-    VectorUtils.TessellationOptions tesselationOptions = new VectorUtils.TessellationOptions();
+  **Warning:** Requires Unity's Vector Graphics package from `com.unity.vectorgraphics`, which is an experimental package.
 
-    using (StringReader reader = new StringReader(svgBytes))
-    {
-        SVGParser.SceneInfo sceneInfo = SVGParser.ImportSVG(reader);
-        tesselationOptions.MaxCordDeviation = float.MaxValue;
-        tesselationOptions.MaxTanAngleDeviation = float.MaxValue;
-        tesselationOptions.StepDistance = 1f;
-        tesselationOptions.SamplingStepSize = 0.1f;
+  ```csharp
+   private void LoadSVG(string svgBytes) {
+      // Split the string to escape the real data
+      svgBytes = svgBytes.Split(",".ToCharArray(), 2)[1];
+      // Decode from the URL encoding
+      svgBytes = HttpUtility.UrlDecode(svgBytes);
+      VectorUtils.TessellationOptions tesselationOptions = new VectorUtils.TessellationOptions();
 
-        List<VectorUtils.Geometry> geoms =
-        VectorUtils.TessellateScene(sceneInfo.Scene, tesselationOptions);
+      using (StringReader reader = new StringReader(svgBytes))
+      {
+          SVGParser.SceneInfo sceneInfo = SVGParser.ImportSVG(reader);
+          tesselationOptions.MaxCordDeviation = float.MaxValue;
+          tesselationOptions.MaxTanAngleDeviation = float.MaxValue;
+          tesselationOptions.StepDistance = 1f;
+          tesselationOptions.SamplingStepSize = 0.1f;
 
-        // Build a sprite with the tessellated geometry.
-        Sprite sprite = VectorUtils.BuildSprite(geoms, 100.0f, VectorUtils.Alignment.Center, Vector2.zero, 128, true);
-        sprite.name = "SVGimage";
-        profilePicture.sprite = sprite;
-    }
-}
-```
+          List<VectorUtils.Geometry> geoms =
+          VectorUtils.TessellateScene(sceneInfo.Scene, tesselationOptions);
 
-Thanks to **Zy** from our Discord for this tip.
+          // Build a sprite with the tessellated geometry.
+          Sprite sprite = VectorUtils.BuildSprite(geoms, 100.0f, VectorUtils.Alignment.Center, Vector2.zero, 128, true);
+          sprite.name = "SVGimage";
+          profilePicture.sprite = sprite;
+      }
+  }
+  ```
 
-### How to maintain an array of Players in Unity?
-By maintaining an array of Players in your game, you can execute operations over multiple players all at once, and get the latest state of multiple players.
-Here's a small snippet demonstrating how you can use [OnPlayerJoin](https://docs.joinplayroom.com/apidocs/unity#onplayerjoincallback) and [Player.OnQuit](https://docs.joinplayroom.com/apidocs/unity#onquitcallback) to achieve this.
+  Thanks to **Zy** from our Discord for this tip.
 
-```csharp
-object[] players = Array.Empty<object>();
-// ...
-PlayroomKit.OnPlayerJoin((player) => {
-  players.push(player)
-  player.OnQuit(() => {
-    Debug.Log($"{player.id} quit!");
-    players.Where(p => p != player).ToArray();
+</details>
+
+<details>
+  ### <summary>How to maintain an array of Players in Unity?</summary>
+
+  You can manage a list of players in Unity to track their state and perform actions on them simultaneously. Here’s how to use [OnPlayerJoin](https://docs.joinplayroom.com/apidocs/unity#onplayerjoincallback) and [Player.OnQuit](https://docs.joinplayroom.com/apidocs/unity#onquitcallback):
+
+  ```csharp
+  object[] players = Array.Empty<object>();
+
+  PlayroomKit.OnPlayerJoin((player) => {
+    players.push(player);
+    player.OnQuit(() => {
+      Debug.Log($"{player.id} quit!");
+      players = players.Where(p => p != player).ToArray();
+    });
   });
-})
-```
+  ```
 
-This may be considered an equivalent to the PlayroomKit JavaScript SDK's [usePlayersList hook](https://docs.joinplayroom.com/apidocs/react#useplayerslisttriggeronplayerstatechange-boolean).
+  This is similar to the PlayroomKit JavaScript SDK's [usePlayersList hook](https://docs.joinplayroom.com/apidocs/react#useplayerslisttriggeronplayerstatechange-boolean).
 
-### Aurea NetLayer: a higher level API for Unity
+</details>
+
+<details>
+
+  ### <summary>How to do physics over the network?</summary>
+
+#### 1. Is it possible to achieve deterministic physics in Unity for networking?
+
+Deterministic physics in Unity can be quite challenging to achieve due to the nature of the physics engines it uses. Unity uses **PhysX** for 3D physics and **Box2D** for 2D physics, both of which are deterministic by themselves. However, achieving determinism in a game involves more than just the physics engine being deterministic. For example, using the **Rigidbody** component in Unity has a property called **Interpolate** that affects how visuals are interpolated, which can cause differences between `transform.position` and `rigidbody.position`. This can lead to non-deterministic outcomes. For more details, you can check Unity's documentation on [Rigidbody interpolation](https://docs.unity3d.com/Manual/rigidbody-interpolation.html).
+
+#### 2. What are the conditions required for deterministic physics?
+
+To achieve deterministic physics, all inputs (forces, impulses) must be applied to the same objects at the same time across all clients. Any delay in applying these inputs, even by one timestep, can lead to different results. This means that automatic updates of the physics engine in Unity should be disabled, and you should control these updates manually to ensure consistency. You can learn more about this in Unity's documentation on [Physics.Simulate](https://docs.unity3d.com/ScriptReference/Physics.Simulate.html) and the article on [Fix Your Timestep](https://gafferongames.com/post/fix_your_timestep/) by Gaffer On Games.
+
+#### 3. What is floating-point determinism, and why is it important?
+
+Even if you manage to achieve deterministic physics in Unity, floating-point determinism is another hurdle. Different machines with different architectures may calculate floating-point numbers slightly differently, which can cause variations in physics simulations when networking. This can lead to desynchronization across clients. For more information, see the article on [Floating Point Determinism](https://gafferongames.com/post/floating_point_determinism/) by Gaffer On Games.
+
+#### 4. What approach did the developers of Soccer Party use for networking physics?
+
+Given the complexities of achieving deterministic physics, the developers of [Soccer Party](https://soccerparty.playroom.gg/#r=R) decided not to rely on it. Instead, they opted to frequently send position and velocity updates for rigid bodies, and even rotation data in some cases. Their focus shifted to optimizing the size and frequency of these messages rather than ensuring deterministic physics. This approach also requires solutions for handling synchronization issues, such as what to do when objects get out of sync, how to avoid these issues, and how to prevent players from noticing them.
+
+These excerpts come from conversations with an active Discord member, **GuilhermeAlanJohann**.
+
+</details>
+
+## Aurea NetLayer: a higher level API for Unity
 
 **GuilhermeAlanJohann** from our Discord community has created a [higher level plugin](https://gitlab.com/PCista/com.aurea.packages.netlayer) for Unity that makes it easier to use Playroom with Unity.
-
 
 #### Features
 - Sync position and rotations of objects over the network (supports interpolation)
@@ -217,4 +255,3 @@ This may be considered an equivalent to the PlayroomKit JavaScript SDK's [usePla
 - Spawn/Unspawn objects over the network
 - Send Messages to others (including or excluding yourself)
 - RPC (...kind of). It uses Unity message system.
-
