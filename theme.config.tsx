@@ -2,9 +2,9 @@ import { useRouter } from 'next/router'
 import { useConfig } from 'nextra-theme-docs'
 import React, { useEffect } from 'react'
 import { track } from './components/analytics'
+import Badge from './components/badge'
 
 const brandNewPages = ['/components/matchmaking', '/usage/cocos', '/templates','/components/persistence','/components/turnbased', '/components/discord']
-
 
 export default {
 
@@ -25,19 +25,7 @@ export default {
     }
 
     if (brandNewPages.includes(route)){
-      return <>{title} <span style={{
-        fontSize: "65%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: "0.5rem",
-        padding: "0.15rem 0.5rem",
-        background: "#fff",
-        color: "#000",
-        borderRadius: "1rem",
-        fontWeight: "bold",
-        textTransform: "uppercase"
-      }}>new</span></>;
+      return <>{title} <Badge>new</Badge></>;
     }
     return <>{title}</>;
     },
