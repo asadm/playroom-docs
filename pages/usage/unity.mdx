@@ -45,7 +45,7 @@ This will install the required dependencies for the SDK.
 
 ### 2. Initialize Playroom
 
-In your game's `Start` method, call `PlayroomKit.InsertCoin`:
+In your game's `Start` method, call [`PlayroomKit.InsertCoin`](/apidocs/unity#insertcoininitoptions-callback):
 
 ```csharp
 using Playroom;
@@ -64,25 +64,30 @@ void Start() {
 }
 ```
 
+Now you can use Playroom throughout your game!
+
 ### 3. Manage game state
 
-Use `PlayroomKit.SetState` and `PlayroomKit.GetState` to handle game state. These automatically sync with other players.
+Use [`PlayroomKit.SetState`](/apidocs/unity#setstatestring-key-t-value-bool-reliable--false-void) and [`PlayroomKit.GetState`](/apidocs/unity#getstatetstring-key-t) to handle game state. These automatically sync with other players.
 
 See the [API reference](/apidocs/unity) for more information.
 
-### 4. Export to WebGL
+### 4. Exporting to WebGL
+
+To bring your game to the world, you must build! Configure your Build settings to our optimal settings.
 
 1. Go to `File > Build Settings` and select `WebGL` as the platform.
 2. In Player Settings:
    - Set `Resolution and Presentation > Run In Background` to `true`.
-   - Change `WebGL Template` to `PWA` (or to Discord, if you want to publish to Discord Activities).
+   - Change `WebGL Template` to `PWA` (or to **DiscordTemplate**, if you want to publish to Discord Activities).
    - Set `Compression Format` to `None` under `Publishing Settings` (this is to make sure the build works with most web servers including [itch.io](itch.io)).
 3. Build your game.
-4. Test locally using `python -m http.server` in the build folder.
+4. To test the build locally in your browser, run `python -m http.server` in the resultant build folder. We also recommend using [Servez](https://greggman.github.io/servez/), a simple web server solution with a nice interface. 
 
-{/* <!-- Image: A screenshot showing the Unity build settings window with the correct options highlighted --> */}
+<br />
+<Image src="/images/playroomkit-for-unity-unity-settings.png" width={800} height={700} />
 
-Do note that **PlayroomKit for Unity** only works with WebGL builds. 
+Do note that **PlayroomKit for Unity** only works with WebGL builds.
 
 ## Updating from a previous version
 
@@ -113,13 +118,27 @@ The "Local" mock mode doesn't connect to the actual Playroom server. Instead, it
 #### 2. Browser Bridge (live)
 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start', gap: '0.3rem'}}>Status: <Badge style={{background: 'blue', color: 'white', width: 'fit-content', margin: '1rem 0'}}>Beta</Badge></div>
 
-This mode connects to a live, multiplayer Playroom server. It will make real network calls, but to do so, it will launch a controlled browser (to run the underlying network calls).
+This mode connects to a live, multiplayer Playroom server **in the cloud**. It will make real network calls, but to do so, it will launch a controlled browser (to run the underlying network calls).
 
 | **✅ Pros**                                                                 | **👎 Cons**                                             |
 |--------------------------------------------------------------------------|------------------------------------------------------|
 | Live on Playroom servers, testers can join in from live games                        | Takes time to set up                               |
 | Completely accurate according to production                           | Network dependent (can't develop offline)          |
-|                                                                          | It will eat up your Playroom bill                  |
+|                                                                          | It may eat up your Playroom bill                  |
+
+
+##### Setting up the Browser Bridge mock mode
+
+The Browser Bridge mock mode requires some configuration and installation in order to run correctly, as of yet.
+
+Since the Browser Bridge mock mode on runs a Chrome browser in parallel to the Unity Editor, it requires you to [download the browser driver version](https://googlechromelabs.github.io/chrome-for-testing/#stable) corresponding to your browser version.
+Both **need** to be in same version range in order to work correctly. To check and compare versions, check out [this page](https://developer.chrome.com/docs/chromedriver/downloads).
+
+Once downloaded, update the path in the "Unity Browser Bridge (Script)" panel, as shown below.
+
+<br />
+<Image src="/images/playroomkit-for-unity-chromedriver.png" width={800} height={700} />
+
 
 #### Which one should I use?
 
@@ -137,7 +156,6 @@ This mode connects to a live, multiplayer Playroom server. It will make real net
     Remember that both mock modes in the Unity Editor approximate the final WebGL build. Some differences may occur due to the underlying C++ and JS compilation in the web environment.
 </Callout>
 
-
 ### Multiple Player testing 
 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start', gap: '0.3rem'}}>Status: <Badge style={{background: 'blue', color: 'white', width: 'fit-content', margin: '1rem 0'}}>Beta</Badge></div>
 
@@ -147,7 +165,7 @@ The PlayroomKit for Unity plugin includes a "Playroom Dev Manager" panel for mul
 
 To test with multiple players:
 
-1. Ensure the latest version of the [PlayroomKit plugin](http://localhost:3000/usage/unity#1-install-the-sdk) is installed.
+1. Ensure the latest version of the [PlayroomKit plugin](/usage/unity#1-install-the-sdk) is installed.
 2. Open the **Playroom Dev Manager** panel in Unity.
 3. Click "Launch player" to create a new Unity Editor instance.
 4. Repeat step 3 for additional player instances (limited by your computer's resources).
