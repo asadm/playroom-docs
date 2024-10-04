@@ -98,12 +98,22 @@ Update PlayroomKit for Unity to get the latest features and fixes. We recommend 
 
 ## Testing your games
 
+PlayroomKit for Unity ships with some helpful features to make multiplayer game dev easier.
+
+### Playroom Dev Manager
+
+The PlayroomKit for Unity plugin includes a "Playroom Dev Manager" panel for multi-instance testing and ease-of-use, which controls two features:
+1. [Mock Mode](#mock-mode)
+2. [Multiple player testing](#multiple-player-testing)
+
+![Playroom Dev Manager](/images/playroom-dev-manager.png)
+
 ### Mock Mode
 
 Since the current SDK only supports Unity Web, we've introduced **Mock mode** - a way to test out your game's logic in Unity's Preview mode, without having to build for web every single time.
 
 #### 1. Local (simulated)
-The "Local" mock mode doesn't connect to the actual Playroom server. Instead, it just mocks the API calls within Unity, and maintains a local state.
+The "Local" mock mode doesn't connect to the actual Playroom servers. Instead, it just mocks the API calls within Unity, and maintains a local state.
 
 **The "Local" Mock mode only works in single player mode for now.** We aim to make it multiplayer by Q4.
 
@@ -129,7 +139,9 @@ This mode connects to a live, multiplayer Playroom server **in the cloud**. It w
 
 ##### Setting up the Browser Bridge mock mode
 
-The Browser Bridge mock mode requires some configuration and installation in order to run correctly, as of yet.
+By default, PlayroomKit for Unity runs **local mock mode**. To switch over to Browser mock mode, select the **"Browser Bridge (live)"** option from the "Mock mode" dropdown in the [Playroom Dev Manager](#playroom-dev-manager).
+
+The Browser Bridge mock mode requires some configuration and installation in order to run correctly.
 
 Since the Browser Bridge mock mode on runs a Chrome browser in parallel to the Unity Editor, it requires you to [download the browser driver version](https://googlechromelabs.github.io/chrome-for-testing/#stable) corresponding to your browser version.
 Both **need** to be in same version range in order to work correctly. To check and compare versions, check out [this page](https://developer.chrome.com/docs/chromedriver/downloads).
@@ -139,34 +151,17 @@ Once downloaded, update the path in the "Unity Browser Bridge (Script)" panel, a
 <br />
 <Image src="/images/playroomkit-for-unity-chromedriver.png" width={800} height={700} />
 
+---
 
-#### Which one should I use?
-
-1. Start with **Local mock mode** for:
-- Initial project setup
-- Testing new features/algorithms
-- Rapid iterations
-
-2. Progress to **Browser Bridge mock mode** for:
-- Realistic testing scenarios
-- Multiplayer functionality
-- Network performance evaluation
-
-<Callout type="info" emoji="ℹ️">
-    Remember that both mock modes in the Unity Editor approximate the final WebGL build. Some differences may occur due to the underlying C++ and JS compilation in the web environment.
-</Callout>
+Still thinking about which mock mode to use? Check out [this FAQ answer]() covering different scenarios and which mock mode goes best for it.
 
 ### Multiple Player testing 
 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start', gap: '0.3rem'}}>Status: <Badge style={{background: 'blue', color: 'white', width: 'fit-content', margin: '1rem 0'}}>Beta</Badge></div>
 
-The PlayroomKit for Unity plugin includes a "Playroom Dev Manager" panel for multi-instance testing and ease-of-use:
-
-![Playroom Dev Manager](/images/playroom-dev-manager.png)
-
 To test with multiple players:
 
 1. Ensure the latest version of the [PlayroomKit plugin](/usage/unity#1-install-the-sdk) is installed.
-2. Open the **Playroom Dev Manager** panel in Unity.
+2. Open the [Playroom Dev Manager](#playroom-dev-manager) panel in Unity.
 3. Click "Launch player" to create a new Unity Editor instance.
 4. Repeat step 3 for additional player instances (limited by your computer's resources).
 
@@ -296,6 +291,27 @@ Even if you manage to achieve deterministic physics in Unity, floating-point det
 Given the complexities of achieving deterministic physics, the developers of [Soccer Party](https://soccerparty.playroom.gg/#r=R) decided not to rely on it. Instead, they opted to frequently send position and velocity updates for rigid bodies, and even rotation data in some cases. Their focus shifted to optimizing the size and frequency of these messages rather than ensuring deterministic physics. This approach also requires solutions for handling synchronization issues, such as what to do when objects get out of sync, how to avoid these issues, and how to prevent players from noticing them.
 
 These excerpts come from conversations with an active Discord member, **GuilhermeAlanJohann**.
+
+
+</details>
+
+<details>
+
+  ### <summary>Which mock mode should I use?</summary>
+
+1. Start with **Local mock mode** for:
+- Initial project setup
+- Testing new features/algorithms
+- Rapid iterations
+
+2. Progress to **Browser Bridge mock mode** for:
+- Realistic testing scenarios
+- Multiplayer functionality
+- Network performance evaluation
+
+<Callout type="info" emoji="ℹ️">
+    Remember that both mock modes in the Unity Editor approximate the final WebGL build. Some differences may occur due to the underlying C++ and JS compilation in the web environment.
+</Callout>
 
 </details>
 
