@@ -14,7 +14,7 @@ import { Callout } from 'nextra/components'
 import Preview from '../../components/preview'
 import Badge from '../../components/badge'
 import Image from 'next/image'
-
+import { Tabs, Tab } from 'nextra/components'
 
 <Callout type="info" emoji="🧪">
     The Unity SDK currently only supports **Unity Web.** This is an experimental technology.
@@ -28,7 +28,7 @@ Playroom Kit complements Unity by simplifying the development of multiplayer gam
 
 ### Video Tutorial
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe style={{width: '100%', maxWidth: '80vw'}} width="560" height="315" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ### 1. Install the SDK
 
@@ -44,6 +44,11 @@ npm install
 This will install the required dependencies for the SDK.
 
 ### 2. Initialize Playroom
+
+
+<Tabs items={['>= v1.0.0 (latest)', 'Below 1.0.0']}>
+
+  <Tab>
 
 Initialize a PlayroomKit instance. We recommend initializing it in a Singleton and reusing it across your game.
 
@@ -69,6 +74,30 @@ void Start() {
 }
 
 ```
+  </Tab>
+  <Tab>
+  
+In your game's `Start` method, call [`PlayroomKit.InsertCoin`](/apidocs/unity#insertcoininitoptions-callback):
+
+```csharp
+using Playroom;
+
+void Start() {
+    PlayroomKit.InsertCoin(new PlayroomKit.InitOptions()
+    {
+        maxPlayersPerRoom = 2,
+        defaultPlayerStates = new() {
+            {"score", -500},
+        },
+    }, () =>
+    {
+        // Game launch logic here
+    });
+}
+```
+  </Tab>
+</Tabs>
+
 
 Now you can use Playroom throughout your game!
 
@@ -116,7 +145,7 @@ The PlayroomKit for Unity plugin includes a "Playroom Dev Manager" panel for mul
 
 #### Video Tutorial
 <br />
-<iframe style={{width: '100%'}} height="400" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted" allowfullscreen autoPlay muted></iframe>
+<iframe style={{width: '100%', maxWidth: '80vw'}} height="400" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted" allowfullscreen autoPlay muted></iframe>
 
 
 #### Getting started with the Playroom Dev Manager
@@ -170,41 +199,49 @@ This mode connects to a live, multiplayer Playroom server **in the cloud**. It w
 
 ##### Setting up the Browser Bridge mock mode
 
-To switch over to Browser mock mode, select the **"Browser Bridge (live)"** option from the "Mock mode" dropdown in the [Playroom Dev Manager](#playroom-dev-manager).
+Follow these steps to set up **Browser Bridge mock mode** for your project. 
 
-The Browser Bridge mock mode requires some configuration and installation in order to run correctly.
+###### Step 1: Enable Browser Bridge Mock Mode  
+1. In the **Playroom Dev Manager**, locate the "Mock mode" dropdown.
+2. Select **"Browser Bridge (live)"** from the available options.
 
-Since the Browser Bridge mock mode on runs a Chrome browser in parallel to the Unity Editor, it requires you to [download the browser driver version](https://googlechromelabs.github.io/chrome-for-testing/#stable) corresponding to your browser version.
-Both **need** to be in same version range in order to work correctly. To check and compare versions, check out [this page](https://developer.chrome.com/docs/chromedriver/downloads).
+###### Step 2: Download and Set Up the Chrome Driver  
+Browser Bridge mock mode requires a Chrome browser to run alongside the Unity Editor. You must install the appropriate ChromeDriver version matching your browser.
 
-Once downloaded, place the chromedriver somewhere accessible. If working in teams, we **don't recommend** pushing the chromedriver to version control, as different developers in your team may have different versions of browsers. It's better if everyone downloads a version of their own.
+1. Identify your Chrome version.  
+   - You can check this in your browser settings. Refer to [this guide](https://developer.chrome.com/docs/chromedriver/downloads) for help.  
+2. Download the corresponding ChromeDriver version from [Google's Chrome for Testing page](https://googlechromelabs.github.io/chrome-for-testing/#stable).  
+3. Place the ChromeDriver in an accessible location on your machine.  
 
-Now, select **"UnityBrowserBridge"** from the project heirarchy.
-
-<br />
-<Image src="/images/unitybrowserbridge.png" width={800} height={700} />
-
-This will open the "Unity Browser Bridge (Script)" panel on the right.
-
-Here, update the path in the **"Web Driver Directory"** to wherever you put the chromedriver (as shown below).
-
-<br />
-<Image src="/images/playroomkit-for-unity-chromedriver.png" width={800} height={700} />
-
-If you're using a *nix-based system like macOS or Linux, you should also update "Include Java Script Files" -> Element 0 with the correct path according to your system.
-
-<Callout type='info' emoji="ℹ️">
-    There are different ways to write paths based on OS.
-    - for Windows, it's backslash `\`
-    - for macOS, Linux (and more *nix based systems) it's forward slash `/`
-
-    i.e. for Windows, path would be `Playroomkit\modules\PlayroomMockBridge.js`.
-    While for macOS, path would be `Playroomkit/modules/PlayroomMockBridge.js`.
+<Callout type="warning" emoji="⚠️">
+Avoid adding the ChromeDriver to version control, as team members may use different browser versions. Each developer should maintain their own compatible version.
 </Callout>
 
----
+###### Step 3: Configure the Web Driver Path  
+1. In the Unity project hierarchy, select **"UnityBrowserBridge"**.  
+   
+   <img src="/images/unitybrowserbridge.png" alt="Unity Browser Bridge Hierarchy" width="800" height="700" />  
 
-Still thinking about which mock mode to use? Check out [this FAQ answer]() covering different scenarios and which mock mode goes best for it.
+2. In the "Inspector" panel on the right, locate **"Unity Browser Bridge (Script)"**.  
+3. Update the **"Web Driver Directory"** field with the path to your ChromeDriver file.  
+
+   <img src="/images/playroomkit-for-unity-chromedriver.png" alt="Updating ChromeDriver Path" width="800" height="700" />
+
+###### Step 4: Update Paths for *nix Systems (if applicable)  
+For macOS or Linux, update the **"Include JavaScript Files"** path in the "Element 0" field with the correct syntax for your system.  
+
+<Callout type='info' emoji="ℹ️">
+Different operating systems use different path separators. Ensure your paths are formatted correctly:  
+
+- **Windows:** Use backslashes (`\`)  
+  Example: `Playroomkit\modules\PlayroomMockBridge.js`  
+- **macOS/Linux:** Use forward slashes (`/`)  
+  Example: `Playroomkit/modules/PlayroomMockBridge.js`  
+</Callout>
+
+--- 
+
+Still thinking about which mock mode to use? Check out [this FAQ answer](/usage/unity#which-mock-mode-should-i-use) covering different scenarios and which mock mode goes best for it.
 
 ### Multiple Player testing 
 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start', gap: '0.3rem'}}>Status: <Badge style={{background: 'blue', color: 'white', width: 'fit-content', margin: '1rem 0'}}>Beta</Badge></div>
