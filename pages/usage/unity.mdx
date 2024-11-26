@@ -114,8 +114,8 @@ To bring your game to the world, you must build! Configure your Build settings t
 1. Go to `File > Build Settings` and select `WebGL` as the platform.
 2. In Player Settings:
    - Set `Resolution and Presentation > Run In Background` to `true`.
-   - Change `WebGL Template` to `PWA` (or to **DiscordTemplate**, if you want to publish to Discord Activities).
-   - Set `Compression Format` to `None` under `Publishing Settings` (this is to make sure the build works with most web servers including [itch.io](itch.io)).
+   - Choose your desired template (Choose **DiscordTemplate** if you want to publish to Discord Activities).
+   - Set `Compression Format` to `None` under `Publishing Settings` (this is to make sure the build works with the [Playroom Portal](https://dev.joinplayroom.com)).
 3. Build your game.
 4. To test the build locally in your browser, run `python -m http.server` in the resultant build folder. We also recommend using [Servez](https://greggman.github.io/servez/), a simple web server solution with a nice interface. 
 
@@ -127,7 +127,7 @@ Do note that **PlayroomKit for Unity** only works with WebGL builds.
 ## Updating from a previous version
 
 Update PlayroomKit for Unity to get the latest features and fixes. We recommend doing the following:
-1. Ensure your Unity version is **5+**
+1. Ensure your Unity version is above **2019 LTS**
 2. Delete all `node_modules` folders from your previous installation
 3. Add the latest plugin (See [Installation instructions](#1-install-the-sdk)). You **must** re-run `npm install` and get fresh packages.
 
