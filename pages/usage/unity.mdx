@@ -14,7 +14,7 @@ import { Callout } from 'nextra/components'
 import Preview from '../../components/preview'
 import Badge from '../../components/badge'
 import Image from 'next/image'
-
+import { Tabs, Tab } from 'nextra/components'
 
 <Callout type="info" emoji="🧪">
     The Unity SDK currently only supports **Unity Web.** This is an experimental technology.
@@ -28,7 +28,7 @@ Playroom Kit complements Unity by simplifying the development of multiplayer gam
 
 ### Video Tutorial
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe style={{width: '100%', maxWidth: '80vw'}} width="560" height="315" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ### 1. Install the SDK
 
@@ -45,7 +45,39 @@ This will install the required dependencies for the SDK.
 
 ### 2. Initialize Playroom
 
-In your game's `Start` method, call `PlayroomKit.InsertCoin`:
+
+<Tabs items={['>= v1.0.0 (latest)', 'Below 1.0.0']}>
+
+  <Tab>
+
+Initialize a PlayroomKit instance. We recommend initializing it in a Singleton and reusing it across your game.
+
+Then, in your game's `Start` method, call [`InsertCoin`](/apidocs/unity#insertcoininitoptions-callback):
+
+```csharp
+using Playroom;
+
+// ...
+private PlayroomKit _playroomKit = new();
+// ...
+
+void Start() {
+    _playroomKit.InsertCoin(new InitOptions()
+    {
+        maxPlayersPerRoom = 2,
+        defaultPlayerStates = new() {
+            {"score", 0},
+        },
+    }, () => {
+        // Game launch logic here
+    });
+}
+
+```
+  </Tab>
+  <Tab>
+  
+In your game's `Start` method, call [`PlayroomKit.InsertCoin`](/apidocs/unity#insertcoininitoptions-callback):
 
 ```csharp
 using Playroom;
@@ -63,35 +95,85 @@ void Start() {
     });
 }
 ```
+  </Tab>
+</Tabs>
+
+
+Now you can use Playroom throughout your game!
 
 ### 3. Manage game state
 
-Use `PlayroomKit.SetState` and `PlayroomKit.GetState` to handle game state. These automatically sync with other players.
+Use [`PlayroomKit.SetState`](/apidocs/unity#setstatestring-key-t-value-bool-reliable--false-void) and [`PlayroomKit.GetState`](/apidocs/unity#getstatetstring-key-t) to handle game state. These automatically sync with other players.
 
 See the [API reference](/apidocs/unity) for more information.
 
-### 4. Export to WebGL
+### 4. Exporting to WebGL
+
+To bring your game to the world, you must build! Configure your Build settings to our optimal settings.
 
 1. Go to `File > Build Settings` and select `WebGL` as the platform.
 2. In Player Settings:
    - Set `Resolution and Presentation > Run In Background` to `true`.
-   - Change `WebGL Template` to `PWA` (or to Discord, if you want to publish to Discord Activities).
-   - Set `Compression Format` to `None` under `Publishing Settings` (this is to make sure the build works with most web servers including [itch.io](itch.io)).
+   - Choose your desired template (Choose **DiscordTemplate** if you want to publish to Discord Activities).
+   - Set `Compression Format` to `None` under `Publishing Settings` (this is to make sure the build works with the [Playroom Portal](https://dev.joinplayroom.com)).
 3. Build your game.
-4. Test locally using `python -m http.server` in the build folder.
+4. To test the build locally in your browser, run `python -m http.server` in the resultant build folder. We also recommend using [Servez](https://greggman.github.io/servez/), a simple web server solution with a nice interface. 
 
-{/* <!-- Image: A screenshot showing the Unity build settings window with the correct options highlighted --> */}
+<br />
+<Image src="/images/playroomkit-for-unity-unity-settings.png" width={800} height={700} />
 
-Do note that **PlayroomKit for Unity** only works with WebGL builds. 
+Do note that **PlayroomKit for Unity** only works with WebGL builds.
+
+## Updating from a previous version
+
+Update PlayroomKit for Unity to get the latest features and fixes. We recommend doing the following:
+1. Ensure your Unity version is above **2019 LTS**
+2. Delete all `node_modules` folders from your previous installation
+3. Add the latest plugin (See [Installation instructions](#1-install-the-sdk)). You **must** re-run `npm install` and get fresh packages.
 
 ## Testing your games
+
+PlayroomKit for Unity ships with some helpful features to make multiplayer game dev easier.
+
+### Playroom Dev Manager
+
+The PlayroomKit for Unity plugin includes a "Playroom Dev Manager" panel for multi-instance testing and ease-of-use, which controls two features:
+1. [Mock Mode](#mock-mode)
+2. [Multiple player testing](#multiple-player-testing)
+
+![Playroom Dev Manager](/images/playroom-dev-manager.png)
+
+#### Video Tutorial
+<br />
+<iframe style={{width: '100%', maxWidth: '80vw'}} height="400" src="https://www.youtube.com/embed/0zyYW7Q2ZI8?si=cSr5z-t0335GlOCy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; muted" allowfullscreen autoPlay muted></iframe>
+
+
+#### Getting started with the Playroom Dev Manager
+
+PlayroomKit for Unity, when installed in your project, comes with a prefab called **PlayroomMockManager**. This is available inside the **PlayroomKit/Prefabs** folder.
+
+Just **drag-and-drop** it into your scene. It should have two entries.
+
+<br />
+<Image src="/images/playroommockmanager.png" width={800} height={700} />
+
+When you select **"PlayroomMockManager"**, you'll see the Playroom Dev Manager panel on the right. Here, you can:
+
+1. Set the **Insert Coin Caller**. This is required for Playroom Dev Manager to work correctly. The "Insert Coin Caller" is simply the GameObject where InsertCoin is called in your game.
+2. Choose your **Mock mode**. Learn more about it [here](#mock-mode).
+3. Launch multiple players. This currently works best with Browser Bridge mock mode. More on it [here](#multiple-player-testing).
+
+<br />
+<Image src="/images/access-the-playroom-dev-manager.png" width={800} height={700} />
+
+
 
 ### Mock Mode
 
 Since the current SDK only supports Unity Web, we've introduced **Mock mode** - a way to test out your game's logic in Unity's Preview mode, without having to build for web every single time.
 
 #### 1. Local (simulated)
-The "Local" mock mode doesn't connect to the actual Playroom server. Instead, it just mocks the API calls within Unity, and maintains a local state.
+The "Local" mock mode doesn't connect to the actual Playroom servers. Instead, it just mocks the API calls within Unity, and maintains a local state.
 
 **The "Local" Mock mode only works in single player mode for now.** We aim to make it multiplayer by Q4.
 
@@ -104,44 +186,73 @@ The "Local" mock mode doesn't connect to the actual Playroom server. Instead, it
 
 
 #### 2. Browser Bridge (live)
+
 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start', gap: '0.3rem'}}>Status: <Badge style={{background: 'blue', color: 'white', width: 'fit-content', margin: '1rem 0'}}>Beta</Badge></div>
 
-This mode connects to a live, multiplayer Playroom server. It will make real network calls, but to do so, it will launch a controlled browser (to run the underlying network calls).
+This mode connects to a live, multiplayer Playroom server **in the cloud**. It will make real network calls, but to do so, it will launch a controlled browser (to run the underlying network calls).
 
 | **✅ Pros**                                                                 | **👎 Cons**                                             |
 |--------------------------------------------------------------------------|------------------------------------------------------|
 | Live on Playroom servers, testers can join in from live games                        | Takes time to set up                               |
 | Completely accurate according to production                           | Network dependent (can't develop offline)          |
-|                                                                          | It will eat up your Playroom bill                  |
+|                                                                          | It may eat up your Playroom bill                  |
 
-#### Which one should I use?
 
-1. Start with **Local mock mode** for:
-- Initial project setup
-- Testing new features/algorithms
-- Rapid iterations
+##### Setting up the Browser Bridge mock mode
 
-2. Progress to **Browser Bridge mock mode** for:
-- Realistic testing scenarios
-- Multiplayer functionality
-- Network performance evaluation
+Follow these steps to set up **Browser Bridge mock mode** for your project. 
 
-<Callout type="info" emoji="ℹ️">
-    Remember that both mock modes in the Unity Editor approximate the final WebGL build. Some differences may occur due to the underlying C++ and JS compilation in the web environment.
+###### Step 1: Enable Browser Bridge Mock Mode  
+1. In the **Playroom Dev Manager**, locate the "Mock mode" dropdown.
+2. Select **"Browser Bridge (live)"** from the available options.
+
+###### Step 2: Download and Set Up the Chrome Driver  
+Browser Bridge mock mode requires a Chrome browser to run alongside the Unity Editor. You must install the appropriate ChromeDriver version matching your browser.
+
+1. Identify your Chrome version.  
+   - You can check this in your browser settings. Refer to [this guide](https://developer.chrome.com/docs/chromedriver/downloads) for help.  
+2. Download the corresponding ChromeDriver version from [Google's Chrome for Testing page](https://googlechromelabs.github.io/chrome-for-testing/#stable).  
+3. Place the ChromeDriver in an accessible location on your machine.  
+
+<Callout type="warning" emoji="⚠️">
+Avoid adding the ChromeDriver to version control, as team members may use different browser versions. Each developer should maintain their own compatible version.
 </Callout>
 
+###### Step 3: Configure the Web Driver Path  
+1. In the Unity project hierarchy, select **"UnityBrowserBridge"**.  
+   
+   <img src="/images/unitybrowserbridge.png" alt="Unity Browser Bridge Hierarchy" width="800" height="700" />  
+
+2. In the "Inspector" panel on the right, locate **"Unity Browser Bridge (Script)"**.  
+3. Update the **"Web Driver Directory"** field with the path to your ChromeDriver file.  
+
+   <img src="/images/playroomkit-for-unity-chromedriver.png" alt="Updating ChromeDriver Path" width="800" height="700" />
+
+###### Step 4: Update Paths for *nix Systems (if applicable)  
+For macOS or Linux, update the **"Include JavaScript Files"** path in the "Element 0" field with the correct syntax for your system.  
+
+<Callout type='info' emoji="ℹ️">
+Different operating systems use different path separators. Ensure your paths are formatted correctly:  
+
+- **Windows:** Use backslashes (`\`)  
+  Example: `Playroomkit\modules\PlayroomMockBridge.js`  
+- **macOS/Linux:** Use forward slashes (`/`)  
+  Example: `Playroomkit/modules/PlayroomMockBridge.js`  
+</Callout>
+
+--- 
+
+Still thinking about which mock mode to use? Check out [this FAQ answer](/usage/unity#which-mock-mode-should-i-use) covering different scenarios and which mock mode goes best for it.
 
 ### Multiple Player testing 
 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'start', gap: '0.3rem'}}>Status: <Badge style={{background: 'blue', color: 'white', width: 'fit-content', margin: '1rem 0'}}>Beta</Badge></div>
 
-The PlayroomKit for Unity plugin includes a "Playroom Dev Manager" panel for multi-instance testing and ease-of-use:
-
-![Playroom Dev Manager](/images/playroom-dev-manager.png)
+This currently works with **Browser Bridge mock mode** only.
 
 To test with multiple players:
 
-1. Ensure the latest version of the [PlayroomKit plugin](http://localhost:3000/usage/unity#1-install-the-sdk) is installed.
-2. Open the **Playroom Dev Manager** panel in Unity.
+1. Ensure the latest version of the [PlayroomKit plugin](/usage/unity#1-install-the-sdk) is installed.
+2. Open the [Playroom Dev Manager](#playroom-dev-manager) panel in Unity.
 3. Click "Launch player" to create a new Unity Editor instance.
 4. Repeat step 3 for additional player instances (limited by your computer's resources).
 
@@ -271,6 +382,27 @@ Even if you manage to achieve deterministic physics in Unity, floating-point det
 Given the complexities of achieving deterministic physics, the developers of [Soccer Party](https://soccerparty.playroom.gg/#r=R) decided not to rely on it. Instead, they opted to frequently send position and velocity updates for rigid bodies, and even rotation data in some cases. Their focus shifted to optimizing the size and frequency of these messages rather than ensuring deterministic physics. This approach also requires solutions for handling synchronization issues, such as what to do when objects get out of sync, how to avoid these issues, and how to prevent players from noticing them.
 
 These excerpts come from conversations with an active Discord member, **GuilhermeAlanJohann**.
+
+
+</details>
+
+<details>
+
+  ### <summary>Which mock mode should I use?</summary>
+
+1. Start with **Local mock mode** for:
+- Initial project setup
+- Testing new features/algorithms
+- Rapid iterations
+
+2. Progress to **Browser Bridge mock mode** for:
+- Realistic testing scenarios
+- Multiplayer functionality
+- Network performance evaluation
+
+<Callout type="info" emoji="ℹ️">
+    Remember that both mock modes in the Unity Editor approximate the final WebGL build. Some differences may occur due to the underlying C++ and JS compilation in the web environment.
+</Callout>
 
 </details>
 
