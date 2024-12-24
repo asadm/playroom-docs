@@ -6,6 +6,7 @@ import Preview from '../../components/preview'
 
 Playroom includes a customizable on-screen joystick controller that can be used by players as input.
 It also supports additional buttons that can be used for actions such as jumping, shooting, etc.
+Joystick can also be controlled by W,A,S and D keys of the keybord.
 
 Here is a usage example, check out the **[API Docs](/apidocs#joystick-controller)** for more details:
 
@@ -25,7 +26,8 @@ onPlayerJoin((state)=>{
     type: "dpad",
     buttons: [
       {id: "jump", label: "Jump"}
-    ]
+    ],
+    keyboard: false // Disable W,A,S and D keys which controls joystick
   });
   players.push({state, joystick});
 })
