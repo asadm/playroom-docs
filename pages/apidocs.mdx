@@ -121,6 +121,20 @@ if (isHost()) {
 }
 ```
 
+## `transferHost(playerId: string): Promise<void>`
+
+Allows the current host to assign host privileges to another player in the room.
+
+Accepts playerId as input, identifying the target player.
+This function can only be executed by the host.
+The transfer will only occur if the target player has not left the room.
+
+```js
+try {
+  await transferHost(playerId);
+} catch (error) {}
+```
+
 ## `isStreamScreen()`
 
 Returns `true` if the current screen is the stream screen; a non-player screen that is shown when the game is in [ stream mode ]( /multiplayer/stream ).
@@ -343,6 +357,7 @@ new Joystick(myPlayer(), {
 | `type`       | string  | `angular` | The type of output joystick generates. Can be `dpad` or `angular`.          |
 | `buttons`    | Array&lt;`ButtonOptions`&gt; | `[]` | An array of buttons to render on the joystick. See below for `ButtonOptions`. |
 | `zones`      | `ZoneOptions` | `null` | An object to define custom zones on the 4 sides of the joystick. See below for `ZoneOptions`. |
+| `keyboard`   | boolean | `true` | A boolean value to enable W, A, S and D keys to control joystick. |
 
 `ButtonOptions` is an object with the following properties:
 
