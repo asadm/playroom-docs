@@ -25,7 +25,7 @@
       players = []; 
 
       create() {
-        // 1. Handle players joining and quiting.
+        // 1. Handle players joining and quitting.
         onPlayerJoin(player => this.addPlayer(player));
 
         this.add.text(80*2, 150*2, 'Touch the screen to\n move the player.', { fontSize: '30px' });
