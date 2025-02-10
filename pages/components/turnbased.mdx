@@ -41,7 +41,7 @@ Returns the unique challenge ID that can be used to send this challenge to other
 
 Saves the current player's turn data. This data can be anything you want to save about the current turn. For example, in a chess game, you might want to save the current player's move and the board state.
 
-### `getAllTurnsData(): Promise<Array<any>>`
+### `getAllTurns(): Promise<Array<any>>`
 
 Returns an array of all the turns data that have been saved for this room. This can be used to display the history of the game to the players or to display a leaderboard of all attempts at this challenge.
 ### `getMyTurnData(): Promise<any>`
@@ -63,7 +63,7 @@ Clears all the turns data for this room. This can be used to reset the game or t
 - Player 2 receives the challenge ID and uses it to join the game using `insertCoin({turnBased: {challengeId: 'abc123'}})`.
 - Player 2 makes their move and saves the board state using `saveMyTurnData`.
 - Player 1 and Player 2 can continue to take turns and save the board state until the game is over.
-- Game can decide whos turn it is by checking the last element of the `getAllTurnsData` array.
+- Game can decide whos turn it is by checking the last element of the `getAllTurns` array.
 - Once the game is over, the game can be reset by calling `clearTurns`.
 
 ### A Car Racing Game with Quickest Lap Time
@@ -75,5 +75,5 @@ Clears all the turns data for this room. This can be used to reset the game or t
 - Player 2 completes a lap and saves the lap time using `saveMyTurnData`.
 - Player 3 receives the challenge ID and uses it to join the game using `insertCoin({turnBased: {challengeId: 'abc123'}})`.
 - Player 3 completes a lap and saves the lap time using `saveMyTurnData`.
-- Players who have completed the lap can view the leaderboard by calling `getAllTurnsData`.
+- Players who have completed the lap can view the leaderboard by calling `getAllTurns`.
 - Once the game is over, the game can call your service to determine the winner.
