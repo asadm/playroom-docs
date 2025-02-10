@@ -2,12 +2,12 @@ import { Callout } from 'nextra-theme-docs'
 
 
 <Callout emoji="💰">
-  This API requires Peristent API which is a pro feature and currently in Free Trial.
+  This API requires Persistent API which is a pro feature and currently in Free Trial.
 </Callout>
 
 # Turn-based & Async. Games
 
-Alongside realtime games, Playroom is great for turn-based and asyncronous games. These games are non-realtime and usually one player initiates a challenge and then sends it to another player. The other player can then play the game at their own pace and send their move back to the first player.
+Alongside realtime games, Playroom is great for turn-based and asynchronous games. These games are non-realtime and usually one player initiates a challenge and then sends it to another player. The other player can then play the game at their own pace and send their move back to the first player.
 
 Turn-based API is built on top of the [Persistence API](/components/persistence).
 
@@ -55,7 +55,7 @@ Clears all the turns data for this room. This can be used to reset the game or t
 
 ## Example Flows
 
-### TikTacToe Game
+### Tic-Tac-Toe Game
 
 - Player 1 creates a new game with `turnBased: true` and gets the challenge ID using `getChallengeId()`.
 - Player 1 makes the first move and saves the board state using `saveMyTurnData`.
@@ -63,7 +63,7 @@ Clears all the turns data for this room. This can be used to reset the game or t
 - Player 2 receives the challenge ID and uses it to join the game using `insertCoin({turnBased: {challengeId: 'abc123'}})`.
 - Player 2 makes their move and saves the board state using `saveMyTurnData`.
 - Player 1 and Player 2 can continue to take turns and save the board state until the game is over.
-- Game can decide whos turn it is by checking the last element of the `getAllTurns` array.
+- Game can decide who's turn it is by checking the last element of the `getAllTurns` array.
 - Once the game is over, the game can be reset by calling `clearTurns`.
 
 ### A Car Racing Game with Quickest Lap Time

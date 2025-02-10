@@ -21,7 +21,7 @@ class Main extends Phaser.Scene {
   players = []; 
 
   create() {
-    // 1. Handle players joining and quiting.
+    // 1. Handle players joining and quitting.
     onPlayerJoin(playerState => this.addPlayer(playerState));
 
     // 2. Pass player input to Playroom.

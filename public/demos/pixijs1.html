@@ -28,7 +28,7 @@
 
     function start(app) {
     
-      // 1. Handle players joining and quiting.
+      // 1. Handle players joining and quitting.
       onPlayerJoin((state) => {
         // create a joystick for the player
         const joystick = new Joystick(state, { type: "angular" });
