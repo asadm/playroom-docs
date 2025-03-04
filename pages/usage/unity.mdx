@@ -107,23 +107,6 @@ Use [`PlayroomKit.SetState`](/apidocs/unity#setstatestring-key-t-value-bool-reli
 
 See the [API reference](/apidocs/unity) for more information.
 
-### 4. Exporting to WebGL
-
-To bring your game to the world, you must build! Configure your Build settings to our optimal settings.
-
-1. Go to `File > Build Settings` and select `WebGL` as the platform.
-2. In Player Settings:
-   - Set `Resolution and Presentation > Run In Background` to `true`.
-   - Choose your desired template (Choose **DiscordTemplate** if you want to publish to Discord Activities).
-   - Set `Compression Format` to `None` under `Publishing Settings` (this is to make sure the build works with the [Playroom Portal](https://dev.joinplayroom.com)).
-3. Build your game.
-4. To test the build locally in your browser, run `python -m http.server` in the resultant build folder. We also recommend using [Servez](https://greggman.github.io/servez/), a simple web server solution with a nice interface. 
-
-<br />
-<Image src="/images/playroomkit-for-unity-unity-settings.png" width={800} height={700} />
-
-Do note that **PlayroomKit for Unity** only works with WebGL builds.
-
 ## Updating from a previous version
 
 Update PlayroomKit for Unity to get the latest features and fixes. We recommend doing the following:
@@ -276,6 +259,23 @@ Code for this example can be found [here](https://github.com/asadm/playroom-docs
 
 <Preview src="/demos/unity/index.html" newWindow />
 
+### Exporting to WebGL
+
+To bring your game to the world, you must build! Configure your Build settings to our optimal settings.
+
+1. Go to `File > Build Settings` and select `WebGL` as the platform.
+2. In Player Settings:
+   - Set `Resolution and Presentation > Run In Background` to `true`.
+   - Choose your desired template (Choose **DiscordTemplate** if you want to publish to Discord Activities).
+   - Set `Compression Format` to `None` under `Publishing Settings` (this is to make sure the build works with the [Playroom Portal](https://dev.joinplayroom.com)).
+3. Build your game.
+4. To test the build locally in your browser, run `python -m http.server` in the resultant build folder. We also recommend using [Servez](https://greggman.github.io/servez/), a simple web server solution with a nice interface. 
+
+<br />
+<Image src="/images/playroomkit-for-unity-unity-settings.png" width={800} height={700} />
+
+Do note that **PlayroomKit for Unity** only works with WebGL builds.
+
 ### Beanz: Discord Activity Demo
 
 Once built, this demo works on both WebGL in the browser, and in [Discord Activities](/components/discord).
@@ -405,14 +405,3 @@ These excerpts come from conversations with an active Discord member, **Guilherm
 </Callout>
 
 </details>
-
-## Aurea NetLayer: a higher level API for Unity
-
-**GuilhermeAlanJohann** from our Discord community has created a [higher level plugin](https://gitlab.com/PCista/com.aurea.packages.netlayer) for Unity that makes it easier to use Playroom with Unity.
-
-#### Features
-- Sync position and rotations of objects over the network (supports interpolation)
-- Different object authorities (Host and LocalPlayer)
-- Spawn/Unspawn objects over the network
-- Send Messages to others (including or excluding yourself)
-- RPC (...kind of). It uses Unity message system.
