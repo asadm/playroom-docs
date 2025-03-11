@@ -15,6 +15,7 @@ import Preview from '../../components/preview'
 import Badge from '../../components/badge'
 import Image from 'next/image'
 import { Tabs, Tab } from 'nextra/components'
+import { Steps } from 'nextra/components'
 
 <Callout type="info" emoji="🧪">
     The Unity SDK currently only supports **Unity Web.** This is an experimental technology.
@@ -24,13 +25,16 @@ Unity is the most popular game engine, it's also a great way to make web games t
 
 Playroom Kit complements Unity by simplifying the development of multiplayer games and interactive web-based applications.
 
+Make sure to check out the Playroom Kit Unity SDK [Changelog](https://github.com/asadm/playroom-unity/releases) to get to know about anything new in the latest version! 
+
 ## Getting started
 
 ### Video Tutorial
 
 <iframe style={{width: '100%', maxWidth: '80vw'}} width="560" height="315" src="https://www.youtube.com/embed/1LXWZmJxlKA?si=nKZOaoiEj_WwXt6X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-### 1. Install the SDK
+<Steps>
+### Install the SDK
 
 1. Download `playroomkit.unitypackage` from the [releases page](https://github.com/asadm/playroom-unity/releases) (download `playroomkit.unitypackage` file).
 2. Drag the package into your Unity project and import all files.
@@ -43,7 +47,7 @@ npm install
 
 This will install the required dependencies for the SDK.
 
-### 2. Initialize Playroom
+### Initialize Playroom
 
 
 <Tabs items={['>= v1.0.0 (latest)', 'Below 1.0.0']}>
@@ -58,10 +62,13 @@ Then, in your game's `Start` method, call [`InsertCoin`](/apidocs/unity#insertco
 using Playroom;
 
 // ...
-private PlayroomKit _playroomKit = new();
+private PlayroomKit _playroomKit;
 // ...
 
 void Start() {
+   // create a new instance before calling InsertCoin 
+    _playroomKit = new();
+
     _playroomKit.InsertCoin(new InitOptions()
     {
         maxPlayersPerRoom = 2,
@@ -101,13 +108,13 @@ void Start() {
 
 Now you can use Playroom throughout your game!
 
-### 3. Manage game state
+### Manage game state
 
-Use [`PlayroomKit.SetState`](/apidocs/unity#setstatestring-key-t-value-bool-reliable--false-void) and [`PlayroomKit.GetState`](/apidocs/unity#getstatetstring-key-t) to handle game state. These automatically sync with other players.
+PlayroomKit provides a robust state synchronization system through the [`PlayroomKit.SetState`](/apidocs/unity#setstatestring-key-t-value-bool-reliable--false-void) and [`PlayroomKit.GetState`](/apidocs/unity#getstatetstring-key-t) methods. These methods are used to handle game states and automatically sync with other players.
 
 See the [API reference](/apidocs/unity) for more information.
 
-### 4. Exporting to WebGL
+### Export your game
 
 To bring your game to the world, you must build! Configure your Build settings to our optimal settings.
 
@@ -124,12 +131,63 @@ To bring your game to the world, you must build! Configure your Build settings t
 
 Do note that **PlayroomKit for Unity** only works with WebGL builds.
 
+</Steps>
+
 ## Updating from a previous version
 
 Update PlayroomKit for Unity to get the latest features and fixes. We recommend doing the following:
 1. Ensure your Unity version is above **2019 LTS**
 2. Delete all `node_modules` folders from your previous installation
 3. Add the latest plugin (See [Installation instructions](#1-install-the-sdk)). You **must** re-run `npm install` and get fresh packages.
+
+## Examples
+
+Check out some simple and advanced use cases!
+
+import { Cards, Card } from 'nextra/components'
+import { SquareCode } from 'lucide-react';
+
+<Cards>
+  <Card
+        icon={<SquareCode size={48} />}
+        title="Simple Example"
+        href="/usage/unity/simple"
+        style={{
+          backgroundImage: "url(/images/Unity-Simple.png)",
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          color: 'white',
+
+          padding: '20px',
+          height: '210px',
+          display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    filter: 'contrast(1) brightness(0.8)',
+        }}
+      />
+    
+  <Card
+    icon={<SquareCode size={48} />}
+    title="Advanced Example"
+    href="/usage/unity/advanced"
+    style={{
+          backgroundImage: "url(/images/Unity-Advanced.png)",
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          color: 'white',
+
+          padding: '20px',
+          height: '210px',
+          display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    filter: 'contrast(1) brightness(0.8)',
+        }}
+      />
+</Cards>
 
 ## Testing your games
 
@@ -264,34 +322,42 @@ This feature uses [ParrelSync](https://github.com/VeriorPies/ParrelSync) Unity E
  
 By utilizing both Mock Modes and the Multiple Player testing feature, you can thoroughly test your game's multiplayer functionality and performance within the Unity environment before proceeding to a full WebGL build.
 
-## Examples
+### PlayroomKit Console 
 
-Check out some simple and advanced use cases!
+The `Playroom Console`, inspired by Valve's CSGO console, is a powerful Unity-based utility designed to accelerate multiplayer development with PlayroomKit. The console allows developers to rapidly `test`, `debug` and `implement` directly within the running game.
 
-### Simple Example
+The PlayroomKit Console offers a comprehensive command set, enabling developers to interact with essential PlayroomKit API functions. This includes:
+- **InsertCoin:** Facilitating game initialization and setup.
+- **Player state management:** Modifying and inspecting player-specific data with commands like `PlayerGetProfile`, `PlayerSetProfile`, `WaitForPlayerState`, and `PlayerResetState`.
+- **Matchmaking:** Simulating and testing matchmaking scenarios with commands like `RpcRegister` and `RpcCall`.
+- **Event handling:** Triggering and observing game events with commands like `MyPlayer.Kick`, and `MyPlayer.Quit`.
 
-Use `WASD` or `Arrow keys` to move the player around. The player's position is synced with other players in real-time.
+Leveraging `PowerConsole`, a Unity-based runtime console for enhanced debugging, the PlayroomKit Console provides detailed, real-time logging of command execution and game state changes. This feature allows developers to Track the execution flow of commands, identify and diagnose issues promptly, and analyze game state transitions for debugging purposes.
 
-Code for this example can be found [here](https://github.com/asadm/playroom-docs/tree/main/examples/unity-hello-world).
+The PlayroomKit console also allows developers to manage room configurations like retrieving room codes and customizing room settings.
 
-<Preview src="/demos/unity/index.html" newWindow />
+## Comparing SDK's
 
-### Beanz: Discord Activity Demo
+A comparison of the types of components our JS and Unity `playroomkit` SDK's are currently supporting:
 
-Once built, this demo works on both WebGL in the browser, and in [Discord Activities](/components/discord).
+<Callout emoji="👷🏼‍♀️">
+   We are actively working on building more components.
+</Callout>
 
-Code for this example can be found [here](https://github.com/asadm/playroom-unity/tree/main/Assets/PlayroomKit/Examples/discord-activity).
-
-<video style={{
-    width: '100%',
-    height: '32rem',
-    objectFit: 'cover',
-    borderRadius: '1rem',
-    overflow: 'hidden',
-    padding: '0',
-    margin: '1rem 0'
-}} src="/playroomkit-for-unity-discord-demo.mp4" autoPlay controls muted alt="Hello" width={1000} height={1000} />
-
+| Version   | JS | Unity                                                                                                                               |
+| --------- | :---------: | :---------: |
+| Lobby | ✅ | ✅ |
+| Matchmaking | ✅ | ✅ |
+| Joystick | ✅ | ✅ |
+| Gamepads | ✅ | ✅ |
+| Stream Mode | ✅ | ✅ |
+| State | ✅ | ✅ |
+| RPC | ✅ | ✅ |
+| Persistence | ✅ | ✅ |
+| Turn Based | ✅ | ✅ |
+| Bots | ✅ | ❌ |
+| TikTok Live | ✅ | ❌ |
+| Discord | ✅ | ✅ |
 
 ## API Reference
 
@@ -405,14 +471,3 @@ These excerpts come from conversations with an active Discord member, **Guilherm
 </Callout>
 
 </details>
-
-## Aurea NetLayer: a higher level API for Unity
-
-**GuilhermeAlanJohann** from our Discord community has created a [higher level plugin](https://gitlab.com/PCista/com.aurea.packages.netlayer) for Unity that makes it easier to use Playroom with Unity.
-
-#### Features
-- Sync position and rotations of objects over the network (supports interpolation)
-- Different object authorities (Host and LocalPlayer)
-- Spawn/Unspawn objects over the network
-- Send Messages to others (including or excluding yourself)
-- RPC (...kind of). It uses Unity message system.
