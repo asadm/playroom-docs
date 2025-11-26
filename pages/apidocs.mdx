@@ -111,6 +111,83 @@ onPlayerJoin((player) => {
 });
 ```
 
+#### Usage Guide & Version Compatibility
+
+<Tabs items={['Global Usage', 'Function-Level Usage', 'Version Notes']}>
+<Tab>
+#### Global Usage (No Cleanup Needed)
+
+Use this when you want a listener active for the entire lifetime of your app or component.
+
+```js
+// Global listener
+onPlayerJoin((player) => {
+  // Handle new player joining
+});
+
+async function initRoom() {
+  await insertCoin({ skipLobby: true, roomCode: "ABCD" });
+  const player = myPlayer();
+
+  // No cleanup needed
+}
+```
+
+**Notes:**
+- Works fine in version ≥ 0.0.92-beta.5
+- Listener stays active as long as the app/page is running
+</Tab>
+
+<Tab>
+#### Function-Level / Dynamic Usage (Cleanup Required)
+
+Use this when joining/leaving rooms multiple times or when the listener is inside a function.
+
+```js
+let unsubscribe = null;
+
+async function joinRoom() {
+  // Cleanup previous listener if exists
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
+
+  await insertCoin({ skipLobby: true, roomCode: "ABCD" });
+  const player = myPlayer();
+
+  // Subscribe to player join events
+  unsubscribe = onPlayerJoin((player) => {
+    // Handle new player joining
+  });
+}
+
+async function leaveRoom(player) {
+  if (player) await player.leaveRoom();
+}
+```
+
+**Notes:**
+- Required for version ≥ 0.0.92-beta.5
+- Prevents duplicate event listeners if the user joins multiple times
+- Always call unsubscribe before re-subscribing
+</Tab>
+
+<Tab>
+#### Version Compatibility
+
+| Scenario | Version | Unsubscribe Required? | Notes |
+|----------|---------|-------------------|-------|
+| Global listener | ≥ 0.0.92-beta.5 | No | Active for full lifetime |
+| Function / Dynamic | ≥ 0.0.92-beta.5 | Yes | Must call unsubscribe before re-subscribing |
+| Any usage | < 0.0.92-beta.5 | No | Works with both global and function usage |
+
+**Version Changes:**
+- **< 0.0.92-beta.5**: `myPlayer()` could be used directly without worrying about unsubscribe. Global or function-level subscriptions worked similarly.
+- **≥ 0.0.92-beta.5**: For global usage, it works as before, no unsubscribe needed. For function-level or dynamic usage (e.g., joining/leaving rooms multiple times), you must call the unsubscribe function returned by `onPlayerJoin` before re-subscribing to prevent duplicate listeners and unexpected behavior.
+</Tab>
+</Tabs>
+
 ## isHost()
 
 Returns `true` if the current player is the host.
@@ -330,6 +407,14 @@ Only the host can kick players.
 
 ```js
 await player.kick();
+```
+
+### `leaveRoom(): Promise<void>`
+
+Removes the player from the room. This is used when the player wants to leave the room themselves.
+
+```js
+await player.leaveRoom();
 ```
 
 ### `isBot(): boolean`
