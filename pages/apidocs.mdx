@@ -332,6 +332,17 @@ Only the host can kick players.
 await player.kick();
 ```
 
+### `leaveRoom(): Promise<void>`
+Removes the player from the room voluntarily.
+
+If `reconnectGracePeriod` is configured, the player must wait for a 5-second cooldown period before they can rejoin the same room. This cooldown allows the player's state to be safely restored upon rejoining.
+
+If `reconnectGracePeriod` is not set, no cooldown is applied, and the player can leave and rejoin the room immediately. In this case, please note that the player’s state will not be restored upon rejoin.
+
+```js
+await player.leaveRoom();
+```
+
 ### `isBot(): boolean`
 
 Returns `true` if the player is a bot.
