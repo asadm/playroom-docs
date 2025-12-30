@@ -1,0 +1,102 @@
+body {
+  background-color: #8D6BED;
+  color: #fff;
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+.App{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.emoji-button-bar {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  align-items: center;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 0px;
+}
+
+.emoji-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #FF7F56;
+  font-size: 2rem;
+  cursor: pointer;
+  box-shadow: 0px 0.4rem 0px rgba(0, 0, 0, 0.25);
+}
+
+.emoji-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.emoji-display{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+  position: absolute;
+}
+.emoji-display .card{
+  background: #fff;
+  border: 2px solid #000000;
+  /* box-shadow: 0px 0.4rem 0px rgba(0, 0, 0, 0.25); */
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  /* opacity: 0; */
+  animation: slideUp 2s linear;
+}
+
+.card .avatar img{
+  width: 2.5rem;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 1;
+    margin-top: 200vh;
+    animation-timing-function: ease-out;
+  }
+  15% {
+    margin-top: -10vh;
+    animation-timing-function: ease-in;
+  }
+  18% {
+    margin-top: 5vh;
+    animation-timing-function: ease-out;
+  }
+  20% {
+    margin-top: 0px;
+    animation-timing-function: ease-in;
+  }
+  95% {
+    opacity: 1;
+    margin-top: 0px;
+    animation-timing-function: ease-in;
+  }
+  100% {
+    margin-top: 0px;
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+}

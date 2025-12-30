@@ -7,12 +7,15 @@
     <link rel="manifest" href="manifest.json">
     <style></style>
     <title>Playroom Test</title>
-    <script src="https://unpkg.com/playroomkit/multiplayer.full.umd.js"></script>
+    <script src="https://unpkg.com/playroomkit/multiplayer.full.umd.js" crossorigin="anonymous"></script>
     <script src="playcanvas-stable.min.js"></script>
     <script src="__settings__.js"></script>
 </head>
 <body>
     <script src="__start__.js"></script>
     <script src="__loading__.js"></script>
+    <script>
+        window._USETEMPSTORAGE = true;
+    </script>
 </body>
 </html>
