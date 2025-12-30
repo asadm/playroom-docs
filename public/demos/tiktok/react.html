@@ -5,10 +5,10 @@
 
 <body>
   <div id="root"></div>
-  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-  <script src="https://unpkg.com/playroomkit/multiplayer.umd.js"></script>
+  <script src="https://unpkg.com/playroomkit/multiplayer.full.umd.js"></script>
   <script type="text/babel">
     const { useEffect, useState } = React;
     const {
@@ -42,7 +42,7 @@
                 style={{transform: randomRotations[i%randomRotations.length]}}
                 className={"card " + emojiData.type}>
                 <span className="avatar">
-                  <img src={emojiData.photo} />
+                  <img src="./ph.png" />
                   {emojiData.username}
                 </span>
                 {emojiData.type==="like" && <span className="like">❤️</span>}
@@ -57,7 +57,7 @@
       );
     };
 
-    const root = document.querySelector('#root');
-    ReactDOM.render(<App />, root);
+    const root = ReactDOM.createRoot(document.querySelector('#root'));
+    root.render(<App />);
   </script>
 </body>
