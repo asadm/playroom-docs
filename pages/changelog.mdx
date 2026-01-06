@@ -4,8 +4,11 @@ An overview of what's new in each version of `playroomkit`:
 
 | Version   | Changes                                                                                                                              |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `v0.0.95` | - Fixed: Joystick buttons stay at true when pressed only otherwise false.|
 | `v0.0.94` | - Added: Player state is now preserved when leaving and rejoining a room. |
 | `v0.0.93` | - Added: `leaveRoom` method to leave the room voluntarily. e.g. `player.leaveRoom()` |
+| `v0.0.92` | - React19 supported added. Breaking change: React17 games are now deprecated.|
+| `v0.0.91` | - Fixed the native mobile scrolling issues when joystick is enabled.|
 | `v0.0.87` | - Fixed: `getAllTurns` returning `undefined` and corrected its name in documentation and types (was `getAllTurnsData`). |
 | `v0.0.86` | - Added: On desktop, the joystick will no longer be visible when `keyboard` is set to `true`. |
 | `v0.0.85` | - <span style={{ color: 'red' }}>Breaking Change:</span> Changed `transferHost` method parameter from `transferHost(player:PlayerState)` to `transferHost(playerId:string)`.<br/>- Fixed: Discord user profile missing issue on mobile devices.<br/>- Fixed: Connectivity issues on mobile devices with the playroom server on the Discord platform. |
