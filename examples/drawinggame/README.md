@@ -1,6 +1,6 @@
 # Drawing Game React Sample
 
-This is a sample project that uses React and PlayroomKit to create a pictionary style game.
+This is a sample project that uses React and Playroom Kit to create a pictionary style game.
 
 ## Demo
 

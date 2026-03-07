@@ -59,7 +59,7 @@ func onPlayerQuit(args):
 	remove_child(scene)
 	
 
-# https://docs.joinplayroom.com/components/joystick
+# https://docs.joinplayroom.com/components/games/joystick
 func addJoystickToPlayer(state):
 	# A dpad + jump button joystick
 	var joystickOptions = JavaScript.create_object("Object")

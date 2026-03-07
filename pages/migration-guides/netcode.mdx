@@ -1,0 +1,164 @@
+## Migrating from Photon, Fishnet, Mirror, and other "Unity" stacks
+
+[Photon](https://www.photonengine.com/), [FishNet](https://fish-networking.gitbook.io/docs), and [Mirror](https://mirror-networking.com/) are popular multiplayer frameworks used in Unity games. They give you low-level control over networking, synchronization, lobbies, and replication. If you are building a complex real-time game with custom networking rules, they are powerful tools.
+
+This guide explains how to migrate from those Unity-focused stacks to Playroom Kit, and when that move makes sense.
+
+---
+
+### Why Playroom Kit?
+
+Playroom Kit takes a higher-level approach. Instead of writing network code, defining RPCs, and managing rooms manually, you work with shared state and players directly.
+
+It is designed for:
+
+* Fast iteration
+* Simpler multiplayer features
+* Web-first games and collaborative apps
+* Teams who do not want to manage networking infrastructure
+
+#### Pros of Playroom Kit
+
+* No custom networking code required
+* Built-in room and lobby experience
+* Simple shared state model
+* Works great for browser-based games
+* Can integrate with Unity without requiring a full custom backend
+* Friendly for rapid prototyping and vibe coding
+
+If your game needs shared state and presence but not deep custom transport logic, Playroom removes a lot of complexity.
+
+#### Where Unity stacks still shine
+
+Photon, FishNet, and Mirror are often better choices when:
+
+* You need full control over transport protocols
+* You are building authoritative server architectures
+* You need fine-grained control over replication
+* Your game logic is deeply tied to Unity’s networking model
+* You are building large-scale competitive real-time games
+
+Playroom Kit is not designed to replace low-level networking engines. It is designed to simplify collaborative and multiplayer features.
+
+---
+
+### Feature comparison
+
+| Feature                              | Photon    | FishNet   | Mirror    | Playroom Kit |
+| ------------------------------------ | --------- | --------- | --------- | ------------ |
+| Custom transport control             | Yes       | Yes       | Yes       | No           |
+| Requires writing networking code     | Yes       | Yes       | Yes       | No           |
+| Built-in lobby UI                    | No        | No        | No        | Yes          |
+| Room management                      | Manual    | Manual    | Manual    | Automatic    |
+| Web-first support                    | Limited   | Limited   | Limited   | Yes          |
+| Unity support                        | Yes       | Yes       | Yes       | Yes          |
+| Backend required                     | Often yes | Often yes | Often yes | No           |
+| Optimized for collaborative web apps | No        | No        | No        | Yes          |
+
+Pricing varies depending on hosting and usage. Photon typically requires paid plans for production scale. FishNet and Mirror are open-source but require hosting infrastructure. Playroom Kit removes backend management and infrastructure overhead, which can reduce operational complexity.
+
+---
+
+## Guide
+
+When migrating from Photon, FishNet, or Mirror, the biggest shift is mental.
+
+You move from writing networking logic to using shared state.
+
+### 1. Rooms and lobbies
+
+In Unity stacks:
+
+* You create and manage rooms manually.
+* You handle matchmaking and lobby flows.
+* You define join and leave behavior.
+
+In Playroom Kit:
+
+* Use `insertCoin()` to join or create a room.
+* Room lifecycle is handled for you.
+* A lobby UI is available out of the box.
+
+To understand how rooms work in Playroom, read [*Rooms and Sessions*](/features/games/lobby).
+
+---
+
+### 2. RPCs and network messages
+
+In Photon, FishNet, or Mirror:
+
+* You define RPCs.
+* You serialize and send data.
+* You manage reliability and transport layers.
+
+In Playroom Kit:
+
+* You store values in shared player or room state.
+* Other clients automatically receive updates.
+* You can choose reliable or faster transport when needed.
+
+For example:
+
+```ts
+setState("score", 10)
+```
+
+This replaces custom RPC calls in many simple cases.
+
+Transport behavior is explained in [*Unreliable Transport*](/features/apps/state#reliable-vs-unreliable-state-changes).
+
+---
+
+### 3. Player objects
+
+In Unity stacks:
+
+* You spawn networked player objects.
+* You synchronize transforms.
+* You handle ownership rules.
+
+In Playroom Kit:
+
+* Each participant has a player object.
+* You can access yourself using `myPlayer()`.
+* You can access others using `usePlayersList(true)`.
+
+You do not spawn networked GameObjects. Instead, you render locally based on shared state.
+
+This pattern is called *Client Authoritative Rendering*.
+
+---
+
+### 4. When not to migrate
+
+Do not migrate if:
+
+* Your game relies heavily on authoritative server validation
+* You require low-level transport customization
+* You need physics synchronization at a deep engine level
+* You are building a competitive shooter or complex MMO
+
+Playroom Kit is ideal for:
+
+* Casual multiplayer games
+* Web-based social experiences
+* Collaborative tools
+* Light real-time interaction layers inside existing apps
+
+---
+
+## Further reading
+
+Internal documentation:
+
+* [*Shared State Primitives*](/features/apps/state)
+* [*Rooms and Sessions*](/features/games/lobby)
+* [*Unreliable Transport*](/features/apps/state#reliable-vs-unreliable-state-changes)
+
+External resources:
+
+* Photon: [https://www.photonengine.com/](https://www.photonengine.com/)
+* FishNet: [https://fish-networking.gitbook.io/docs/](https://fish-networking.gitbook.io/docs/)
+* Mirror: [https://mirror-networking.com/](https://mirror-networking.com/)
+
+If you are unsure whether Playroom Kit fits your use case, start with a small prototype and compare development time. In many cases, the biggest gain is not performance, but simplicity.

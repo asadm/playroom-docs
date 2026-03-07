@@ -1,36 +1,39 @@
-import { Callout } from 'nextra-theme-docs'
+import { Callout } from 'nextra/components'
 
-# Setting up Playroom Kit
+# Get started
 
 <Callout emoji="💡">
-  **Note:** These methods may not apply to all engines (such as [Godot](https://docs.joinplayroom.com/usage/godot) or [Unity](https://docs.joinplayroom.com/usage/unity)). Please refer to the respective page for engine setup for explicit use. 
+  **Note:** These methods may not apply to all engines (such as [Godot](/frameworks/games/godot) or [Unity](/frameworks/games/unity)). See the respective page for engine setup.
 </Callout>
 
-## Using NPM
-If you are using npm, install Playroom Kit and its peer dependencies:
-```bash copy
-npm install --save playroomkit react react-dom
+## Using npm
+Install Playroom Kit and its peer dependencies:
+
+```sh npm2yarn copy
+npm i playroomkit react react-dom
 ```
-Then import it into your project:
+
+
+Then import in your project:
 ```js copy
 import { onPlayerJoin, insertCoin, isHost, myPlayer } from "playroomkit";
 ```
 ## Using a CDN
 
-You can also directly include it via a script tag from a CDN like `unpkg.com` or our own `cdn.joinplayroom.com`, make sure to also include the peer dependencies also (react, react-dom):
+Include via script tag (e.g. `unpkg.com` or `cdn.joinplayroom.com`). Include peer dependencies (react, react-dom) as needed:
 
-```html
+```html copy
 <body>
   <script src="https://unpkg.com/playroomkit/multiplayer.full.umd.js" crossorigin="anonymous"></script>
   <script>
-    #Do what you want
+    // Playroom Kit is available as global Playroom Kit
     Playroom.doSomething()
   </script>
 </body>
 ```
 
-This example imports the `Playroom` scope which can be used by your game.
+Use the global `Playroom` scope in your app.
 
-## Next Steps
+## Next steps
 
-Refer to [Usage](/usage) for your engine of choice.
+Go to [Usage](/frameworks) for your framework or engine.

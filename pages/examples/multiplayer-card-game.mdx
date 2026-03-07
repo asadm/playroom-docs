@@ -1,0 +1,1238 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+{/*
+
+* Metadata:
+* Primary keyword: "multiplayer pirate card game"
+* Secondary keywords: "React Three Fiber streaming game", "Playroom Kit streamMode", "real-time card game multiplayer", "mobile controller game", "3D party card game"
+* AI crawl phrases: "how to build multiplayer pirate card game with React", "Playroom Kit streaming tutorial", "real-time multiplayer card game with Playroom Kit", "React Three Fiber party game tutorial", "multiplayer streaming game setup"
+* SEO tags: [multiplayer pirate card game, React Three Fiber, Playroom Kit, streamMode, multiplayer card game, real-time party game]
+  */}
+
+# Build a Multiplayer Pirate Card Game with React Three Fiber and Playroom
+
+Learn how to build a multiplayer pirate card game where pirates compete to grab gems while punching each other. You'll use React Three Fiber for 3D rendering, Playroom Kit for multiplayer streaming, and create a streaming session with mobile controllers.
+
+<br />
+<a href="https://r3f-multiplayer-pirate-card-game.vercel.app" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/wass08/r3f-vite-starter"><Button variant={"outline"}>Get Starter Code</Button></a>
+<a href="https://github.com/wass08/r3f-multiplayer-pirate-card-game"><Button variant={"outline"}>Get Final Code</Button></a>
+<br />
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/1dVSudmc2DA?si=MIWK-ybEWK2KJpgt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Getting Started
+
+This tutorial shows you how to build a multiplayer pirate card game inspired by classic party games. Players take turns playing cards to either grab gems from the treasure, punch other players to steal their gems, or shield themselves from attacks. The game uses Playroom Kit's streaming mode using [`insertCoin`](/api-reference/js/insertCoin) with `streamMode: true` to display the main game board on one screen while players join and play using their smartphones as controllers.
+
+The game features real-time multiplayer synchronization using [`useMultiplayerState`](/api-reference/react/useMultiplayerState), card-based gameplay mechanics, physics-based character animations, and a complete game loop with rounds and winner detection. All game state is managed through Playroom Kit, which handles the multiplayer networking and streaming without requiring a custom backend server.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Card Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Card Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Multiplayer Card Game".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains all the 3D assets, audio files, and basic React setup you'll need.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Initialize Playroom Kit in main.jsx &nbsp; <PromptStepCopyButton counter={1} text="Initialize Playroom Kit with insertCoin in main.jsx. Set streamMode to true to enable streaming mode. Wrap App with GameEngineProvider and render inside React StrictMode." />
+
+Initialize Playroom Kit to handle multiplayer streaming using [`insertCoin`](/api-reference/js/insertCoin) with `streamMode: true`. This enables the game to run in streaming mode where the main screen shows the game board while players join using their smartphones as controllers.
+
+```jsx filename="main.jsx"
+import { insertCoin } from "playroomkit";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { GameEngineProvider } from "./hooks/useGameEngine";
+import "./index.css";
+
+insertCoin({
+  streamMode: true,
+}).then(() => {
+  ReactDOM.createRoot(document.getElementById("root")).render(
+    <React.StrictMode>
+      <GameEngineProvider>
+        <App />
+      </GameEngineProvider>
+    </React.StrictMode>
+  );
+});
+```
+
+---
+
+### Step 2: Set Up the Main App with Canvas and Motion Config &nbsp; <PromptStepCopyButton counter={2} text="Update App.jsx with Canvas, MotionConfig for animations, Leva for debug controls, and conditionally set camera position based on isStreamScreen. Wrap Experience component and add UI overlay." />
+
+Set up the main App component with React Three Fiber Canvas, motion configuration for animations, and conditional rendering using [`isStreamScreen`](/api-reference/js/isStreamScreen) to determine if the device is the main streaming screen or a mobile controller. Use [`isHost`](/api-reference/js/isHost) for debug controls visibility.
+
+```jsx filename="App.jsx"
+import { Canvas } from "@react-three/fiber";
+import { MotionConfig } from "framer-motion";
+import { Leva } from "leva";
+import { isHost, isStreamScreen } from "playroomkit";
+import { Experience } from "./components/Experience";
+import { UI } from "./components/UI";
+
+const DEBUG = false;
+
+function App() {
+  return (
+    <>
+      <Leva hidden={!DEBUG || !isHost()} />
+      <Canvas
+        shadows
+        camera={{
+          position: isStreamScreen() ? [14, 10, -14] : [0, 4, 12],
+          fov: 30,
+        }}
+      >
+        <color attach="background" args={["#ececec"]} />
+        <MotionConfig
+          transition={{
+            type: "spring",
+            mass: 5,
+            stiffness: 500,
+            damping: 100,
+            restDelta: 0.0001,
+          }}
+        >
+          <Experience />
+        </MotionConfig>
+      </Canvas>
+      <UI />
+    </>
+  );
+}
+
+export default App;
+```
+
+---
+
+### Step 3: Create the Experience Component &nbsp; <PromptStepCopyButton counter={3} text="Create Experience.jsx that conditionally renders Gameboard for stream screen or MobileController for players. Use Environment with dawn preset and blur, and add OrbitControls for stream screen viewing." />
+
+Create the Experience component that handles rendering different views based on whether the device is the main streaming screen or a player's mobile controller using [`isStreamScreen`](/api-reference/js/isStreamScreen).
+
+```jsx filename="Experience.jsx"
+import { Environment, OrbitControls } from "@react-three/drei";
+import { isStreamScreen } from "playroomkit";
+import { degToRad } from "three/src/math/MathUtils";
+import { Gameboard } from "./Gameboard";
+import { MobileController } from "./MobileController";
+
+export const Experience = () => {
+  return (
+    <>
+      {isStreamScreen() && <OrbitControls maxPolarAngle={degToRad(80)} />}
+      {isStreamScreen() ? <Gameboard /> : <MobileController />}
+      <Environment preset="dawn" background blur={2} />
+    </>
+  );
+};
+```
+
+---
+
+### Step 4: Create the useGameEngine Hook &nbsp; <PromptStepCopyButton counter={4} text="Create useGameEngine.jsx to manage multiplayer game state. Use useMultiplayerState for timer, round, phase, playerTurn, deck, gems. Implement game phases (lobby, cards, playerChoice, playerAction, end), card distribution, player actions (punch, grab, shield), timer logic, and winner detection." />
+
+Create the useGameEngine hook that manages all game state using [`useMultiplayerState`](/api-reference/react/useMultiplayerState), [`usePlayersList`](/api-reference/react/usePlayersList), [`getState`](/api-reference/js/getState), [`isHost`](/api-reference/js/isHost), and [`onPlayerJoin`](/api-reference/js/onPlayerJoin).
+
+```jsx filename="useGameEngine.jsx"
+import { useControls } from "leva";
+import {
+  getState,
+  isHost,
+  onPlayerJoin,
+  useMultiplayerState,
+  usePlayersList,
+} from "playroomkit";
+import React, { useEffect, useRef } from "react";
+import { randInt } from "three/src/math/MathUtils";
+
+const GameEngineContext = React.createContext();
+
+const TIME_PHASE_CARDS = 10;
+const TIME_PHASE_PLAYER_CHOICE = 10;
+const TIME_PHASE_PLAYER_ACTION = 3;
+export const NB_ROUNDS = 3;
+const NB_GEMS = 3;
+const CARDS_PER_PLAYER = 4;
+
+export const GameEngineProvider = ({ children }) => {
+  const [timer, setTimer] = useMultiplayerState("timer", 0);
+  const [round, setRound] = useMultiplayerState("round", 1);
+  const [phase, setPhase] = useMultiplayerState("phase", "lobby");
+  const [playerTurn, setPlayerTurn] = useMultiplayerState("playerTurn", 0);
+  const [playerStart, setPlayerStart] = useMultiplayerState("playerStart", 0);
+  const [deck, setDeck] = useMultiplayerState("deck", []);
+  const [gems, setGems] = useMultiplayerState("gems", NB_GEMS);
+  const [actionSuccess, setActionSuccess] = useMultiplayerState(
+    "actionSuccess",
+    true
+  );
+
+  const players = usePlayersList(true);
+  players.sort((a, b) => a.id.localeCompare(b.id));
+
+  const gameState = {
+    timer,
+    round,
+    phase,
+    playerTurn,
+    playerStart,
+    players,
+    gems,
+    deck,
+    actionSuccess,
+  };
+
+  const distributeCards = (nbCards) => {
+    const newDeck = [...getState("deck")];
+    players.forEach((player) => {
+      const cards = player.getState("cards") || [];
+      for (let i = 0; i < nbCards; i++) {
+        const randomIndex = randInt(0, newDeck.length - 1);
+        cards.push(newDeck[randomIndex]);
+        newDeck.splice(randomIndex, 1);
+      }
+      player.setState("cards", cards, true);
+      player.setState("selectedCard", 0, true);
+      player.setState("playerTarget", -1, true);
+    });
+    setDeck(newDeck, true);
+  };
+
+  const startGame = () => {
+    if (isHost()) {
+      console.log("Start game");
+      setTimer(TIME_PHASE_CARDS, true);
+      const randomPlayer = randInt(0, players.length - 1);
+      setPlayerStart(randomPlayer, true);
+      setPlayerTurn(randomPlayer, true);
+      setRound(1, true);
+      setDeck(
+        [
+          ...new Array(16).fill(0).map(() => "punch"),
+          ...new Array(24).fill(0).map(() => "grab"),
+          ...new Array(8).fill(0).map(() => "shield"),
+        ],
+        true
+      );
+      setGems(NB_GEMS, true);
+      players.forEach((player) => {
+        console.log("Setting up player", player.id);
+        player.setState("cards", [], true);
+        player.setState("gems", 0, true);
+        player.setState("shield", false, true);
+        player.setState("winner", false, true);
+      });
+      distributeCards(CARDS_PER_PLAYER);
+      setPhase("cards", true);
+    }
+  };
+
+  useEffect(() => {
+    startGame();
+    onPlayerJoin(startGame);
+  }, []);
+
+  const performPlayerAction = () => {
+    const player = players[getState("playerTurn")];
+    console.log("Perform player action", player.id);
+    const selectedCard = player.getState("selectedCard");
+    const cards = player.getState("cards");
+    const card = cards[selectedCard];
+    let success = true;
+    if (card !== "shield") {
+      player.setState("shield", false, true);
+    }
+    switch (card) {
+      case "punch":
+        let target = players[player.getState("playerTarget")];
+        if (!target) {
+          let targetIndex = (getState("playerTurn") + 1) % players.length;
+          player.setState("playerTarget", targetIndex, true);
+          target = players[targetIndex];
+        }
+        console.log("Punch target", target.id);
+        if (target.getState("shield")) {
+          console.log("Target is shielded");
+          success = false;
+          break;
+        }
+        if (target.getState("gems") > 0) {
+          target.setState("gems", target.getState("gems") - 1, true);
+          setGems(getState("gems") + 1, true);
+          console.log("Target has gems");
+        }
+        break;
+      case "grab":
+        if (getState("gems") > 0) {
+          player.setState("gems", player.getState("gems") + 1, true);
+          setGems(getState("gems") - 1, true);
+          console.log("Grabbed gem");
+        } else {
+          console.log("No gems available");
+          success = false;
+        }
+        break;
+      case "shield":
+        console.log("Shield");
+        player.setState("shield", true, true);
+        break;
+      default:
+        break;
+    }
+    setActionSuccess(success, true);
+  };
+
+  const removePlayerCard = () => {
+    const player = players[getState("playerTurn")];
+    const cards = player.getState("cards");
+    const selectedCard = player.getState("selectedCard");
+    cards.splice(selectedCard, 1);
+    player.setState("cards", cards, true);
+  };
+
+  const getCard = () => {
+    const player = players[getState("playerTurn")];
+    if (!player) {
+      return "";
+    }
+    const cards = player.getState("cards");
+    if (!cards) {
+      return "";
+    }
+    const selectedCard = player.getState("selectedCard");
+    return cards[selectedCard];
+  };
+
+  const phaseEnd = () => {
+    let newTime = 0;
+    switch (getState("phase")) {
+      case "cards":
+        if (getCard() === "punch") {
+          setPhase("playerChoice", true);
+          newTime = TIME_PHASE_PLAYER_CHOICE;
+        } else {
+          performPlayerAction();
+          setPhase("playerAction", true);
+          newTime = TIME_PHASE_PLAYER_ACTION;
+        }
+        break;
+      case "playerChoice":
+        performPlayerAction();
+        setPhase("playerAction", true);
+        newTime = TIME_PHASE_PLAYER_ACTION;
+        break;
+      case "playerAction":
+        removePlayerCard();
+        const newPlayerTurn = (getState("playerTurn") + 1) % players.length;
+        if (newPlayerTurn === getState("playerStart")) {
+          if (getState("round") === NB_ROUNDS) {
+            console.log("End of game");
+            let maxGems = 0;
+            players.forEach((player) => {
+              if (player.getState("gems") > maxGems) {
+                maxGems = player.getState("gems");
+              }
+            });
+            players.forEach((player) => {
+              player.setState(
+                "winner",
+                player.getState("gems") === maxGems,
+                true
+              );
+              player.setState("cards", [], true);
+            });
+            setPhase("end", true);
+          } else {
+            console.log("Next round");
+            const newPlayerStart =
+              (getState("playerStart") + 1) % players.length;
+            setPlayerStart(newPlayerStart, true);
+            setPlayerTurn(newPlayerStart, true);
+            setRound(getState("round") + 1, true);
+            distributeCards(1);
+            setPhase("cards", true);
+            newTime = TIME_PHASE_CARDS;
+          }
+        } else {
+          console.log("Next player");
+          setPlayerTurn(newPlayerTurn, true);
+          if (getCard() === "punch") {
+            setPhase("playerChoice", true);
+            newTime = TIME_PHASE_PLAYER_CHOICE;
+          } else {
+            performPlayerAction();
+            setPhase("playerAction", true);
+            newTime = TIME_PHASE_PLAYER_ACTION;
+          }
+        }
+        break;
+      default:
+        break;
+    }
+    setTimer(newTime, true);
+  };
+
+  const { paused } = useControls({
+    paused: false,
+  });
+
+  const timerInterval = useRef();
+
+  const runTimer = () => {
+    timerInterval.current = setInterval(() => {
+      if (!isHost()) return;
+      if (paused) return;
+      let newTime = getState("timer") - 1;
+      console.log("Timer", newTime);
+
+      if (newTime <= 0) {
+        phaseEnd();
+      } else {
+        setTimer(newTime, true);
+      }
+    }, 1000);
+  };
+
+  const clearTimer = () => {
+    clearInterval(timerInterval.current);
+  };
+
+  useEffect(() => {
+    runTimer();
+    return clearTimer;
+  }, [phase, paused]);
+
+  return (
+    <GameEngineContext.Provider
+      value={{
+        ...gameState,
+        startGame,
+        getCard,
+      }}
+    >
+      {children}
+    </GameEngineContext.Provider>
+  );
+};
+
+export const useGameEngine = () => {
+  const context = React.useContext(GameEngineContext);
+  if (context === undefined) {
+    throw new Error("useGameEngine must be used within a GameEngineProvider");
+  }
+  return context;
+};
+```
+
+---
+
+### Step 5: Create the UI Component &nbsp; <PromptStepCopyButton counter={5} text="Create UI.jsx to display game interface. Show round counter, timer, phase labels, winner announcement, play again button for host, and audio toggle button. Use Tailwind CSS for styling and handle audio playback for different phases." />
+
+Create the UI component that displays the game HUD, round counter, timer, phase labels, winner announcement, and audio controls using [`isHost`](/api-reference/js/isHost), [`isStreamScreen`](/api-reference/js/isStreamScreen), and [`myPlayer`](/api-reference/js/myPlayer).
+
+```jsx filename="UI.jsx"
+import { isHost, isStreamScreen, myPlayer } from "playroomkit";
+import { useEffect, useState } from "react";
+import { NB_ROUNDS, useGameEngine } from "../hooks/useGameEngine";
+
+const audios = {
+  background: new Audio("/audios/Drunken Sailor - Cooper Cannell.mp3"),
+  punch: new Audio("/audios/punch.mp3"),
+  shield: new Audio("/audios/shield.mp3"),
+  grab: new Audio("/audios/grab.mp3"),
+  fail: new Audio("/audios/fail.mp3"),
+  cards: new Audio("/audios/cards.mp3"),
+};
+
+export const UI = () => {
+  const {
+    phase,
+    startGame,
+    timer,
+    playerTurn,
+    players,
+    round,
+    getCard,
+    actionSuccess,
+  } = useGameEngine();
+
+  const currentPlayer = players[playerTurn];
+  const me = myPlayer();
+  const currentCard = getCard();
+  const target =
+    phase === "playerAction" &&
+    currentCard === "punch" &&
+    players[currentPlayer.getState("playerTarget")];
+
+  let label = "";
+  switch (phase) {
+    case "cards":
+      label = "Select the card you want to play";
+      break;
+    case "playerChoice":
+      label =
+        currentPlayer.id === me.id
+          ? "Select the player you want to punch"
+          : `${currentPlayer?.state.profile?.name} is going to punch someone`;
+      break;
+    case "playerAction":
+      switch (currentCard) {
+        case "punch":
+          label = actionSuccess
+            ? `${currentPlayer?.state.profile?.name} is punching ${target?.state.profile?.name}`
+            : `${currentPlayer?.state.profile?.name} failed punching ${target?.state.profile?.name}`;
+          break;
+        case "grab":
+          label = actionSuccess
+            ? `${currentPlayer?.state.profile?.name} is grabbing a gem`
+            : `No more gems for ${currentPlayer?.state.profile?.name}`;
+          break;
+        case "shield":
+          label = `${currentPlayer?.state.profile?.name} can't be punched until next turn`;
+          break;
+        default:
+          break;
+      }
+      break;
+    case "end":
+      label = "Game Over";
+      break;
+    default:
+      break;
+  }
+
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  const toggleAudio = () => {
+    setAudioEnabled((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (audioEnabled) {
+      audios.background.play();
+      audios.background.loop = true;
+    } else {
+      audios.background.pause();
+    }
+    return () => {
+      audios.background.pause();
+    };
+  }, [audioEnabled]);
+
+  useEffect(() => {
+    if (!audioEnabled) {
+      return;
+    }
+    let audioToPlay;
+    if (phase === "playerAction") {
+      if (actionSuccess) {
+        audioToPlay = audios[getCard()];
+      } else {
+        audioToPlay = audios.fail;
+      }
+    }
+    if (phase === "cards") {
+      audioToPlay = audios.cards;
+    }
+    if (audioToPlay) {
+      audioToPlay.currentTime = 0;
+      audioToPlay.play();
+    }
+  }, [phase, actionSuccess, audioEnabled]);
+  return (
+    <div className="text-white drop-shadow-xl fixed top-0 left-0 right-0 bottom-0 z-10 flex flex-col pointer-events-none">
+      <div className="p-4 w-full flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-center uppercase">
+          Round {round}/{NB_ROUNDS}
+        </h2>
+
+        <div className=" flex items-center gap-1 w-14">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
+          </svg>
+          <h2 className="text-2xl font-bold text-center uppercase">{timer}</h2>
+        </div>
+      </div>
+      <div className="flex-1" />
+      <div className="p-4 w-full">
+        <h1 className="text-2xl font-bold text-center">{label}</h1>
+
+        {phase === "end" && (
+          <p className="text-center">
+            Winner:{" "}
+            {players
+              .filter((player) => player.getState("winner"))
+              .map((player) => player.state.profile.name)
+              .join(", ")}
+            !
+          </p>
+        )}
+        {isHost() && phase === "end" && (
+          <button
+            onClick={startGame}
+            className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded pointer-events-auto"
+          >
+            Play again
+          </button>
+        )}
+      </div>
+      {isStreamScreen() && (
+        <button
+          className="fixed bottom-4 left-4 pointer-events-auto"
+          onClick={toggleAudio}
+        >
+          {audioEnabled ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z"
+              />
+            </svg>
+          )}
+        </button>
+      )}
+    </div>
+  );
+};
+```
+
+---
+
+### Step 6: Create the Gameboard Component &nbsp; <PromptStepCopyButton counter={6} text="Create Gameboard.jsx to render the 3D game scene. Use AccumulativeShadows for lighting, load Gameboard and Gem GLB models, render deck with card animations, display gems, and map players to Player components." />
+
+Create the Gameboard component that renders the main game scene with the board, deck, gems, and players.
+
+```jsx filename="Gameboard.jsx"
+import {
+  AccumulativeShadows,
+  Gltf,
+  RandomizedLight,
+  useGLTF,
+} from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
+import { motion } from "framer-motion-3d";
+import { useMemo } from "react";
+import { degToRad } from "three/src/math/MathUtils";
+import { useGameEngine } from "../hooks/useGameEngine";
+import { Card } from "./Card";
+import { Player } from "./Player";
+
+export const Gameboard = () => {
+  const viewport = useThree((state) => state.viewport);
+  const scalingRatio = Math.min(1, viewport.width / 12);
+
+  const { deck, gems, players, phase, getCard } = useGameEngine();
+
+  const shadows = useMemo(
+    () => (
+      <AccumulativeShadows
+        temporal
+        frames={35}
+        alphaTest={0.75}
+        scale={100}
+        position={[0, 0.01, 0]}
+        color="#EFBD4E"
+      >
+        <RandomizedLight
+          amount={4}
+          radius={9}
+          intensity={0.55}
+          ambient={0.25}
+          position={[30, 5, -10]}
+        />
+        <RandomizedLight
+          amount={4}
+          radius={5}
+          intensity={0.25}
+          ambient={0.55}
+          position={[-30, 5, -9]}
+        />
+      </AccumulativeShadows>
+    ),
+    []
+  );
+
+  return (
+    <group scale={scalingRatio}>
+      {/* BG */}
+      <Gltf
+        castShadow
+        src="/models/Gameboard.glb"
+        scale={0.8}
+        position-x={-1}
+        position-z={5}
+      />
+      {shadows}
+
+      {/* DECK */}
+      <group position-x={4} position-z={-2}>
+        {deck.map((_, index) => (
+          <motion.group
+            key={index}
+            position-y={index * 0.015}
+            rotation-y={index % 2 ? degToRad(2) : 0}
+            animate={
+              phase === "playerAction" && index === deck.length - 1
+                ? "selected"
+                : ""
+            }
+            variants={{
+              selected: {
+                x: -2,
+                y: 1.5,
+                z: -2,
+                rotateY: degToRad(120),
+                scale: 1.5,
+              },
+            }}
+          >
+            <motion.group
+              rotation-x={degToRad(90)}
+              variants={{
+                selected: {
+                  rotateX: degToRad(-45),
+                },
+              }}
+            >
+              <Card type={getCard() || undefined} />
+            </motion.group>
+          </motion.group>
+        ))}
+      </group>
+      {/* TREASURE */}
+      {[...Array(gems)].map((_, index) => (
+        <Gltf
+          key={index}
+          src="/models/UI_Gem_Blue.gltf"
+          position-x={index * 0.5}
+          position-y={0.25}
+          scale={0.5}
+        />
+      ))}
+      {/* CHARACTERS */}
+      {players.map((player, index) => (
+        <group key={player.id}>
+          <Player index={index} player={player} />
+        </group>
+      ))}
+    </group>
+  );
+};
+
+useGLTF.preload("/models/Gameboard.glb");
+useGLTF.preload("/models/UI_Gem_Blue.gltf");
+```
+
+---
+
+### Step 7: Create the Player Component &nbsp; <PromptStepCopyButton counter={7} text="Create Player.jsx to render player in gameboard view. Use motion animations for different card actions (Sword, Wave, Punch, Duck), display PlayerName above character, render Character with animations, show barrel for shielded players, and display gems collected." />
+
+Create the Player component that renders a player on the gameboard with animations based on their current action.
+
+```jsx filename="Player.jsx"
+import { Center, Gltf } from "@react-three/drei";
+import { motion } from "framer-motion-3d";
+import { useEffect, useState } from "react";
+import { degToRad } from "three/src/math/MathUtils";
+import { useGameEngine } from "../hooks/useGameEngine";
+import { Character } from "./Character";
+import { PlayerName } from "./PlayerName";
+
+export const Player = ({ index, player }) => {
+  const { phase, playerTurn, players, getCard } = useGameEngine();
+  const isPlayerTurn = phase === "playerAction" && index === playerTurn;
+  const currentPlayer = players[playerTurn];
+  const currentCard = getCard();
+  const hasShield = player.getState("shield");
+  const isPlayerPunched =
+    phase === "playerAction" &&
+    currentCard === "punch" &&
+    index === currentPlayer.getState("playerTarget");
+  const isWinner = player.getState("winner");
+  const [animation, setAnimation] = useState("Idle");
+
+  useEffect(() => {
+    let cardAnim = "Idle";
+    if (isPlayerTurn) {
+      switch (currentCard) {
+        case "punch":
+          cardAnim = "Sword";
+          break;
+        case "shield":
+          cardAnim = "Wave";
+          break;
+        case "grab":
+          cardAnim = "Punch";
+          break;
+        default:
+          break;
+      }
+    } else {
+      if (isPlayerPunched) {
+        cardAnim = "Duck";
+      }
+    }
+    if (isWinner) {
+      cardAnim = "Wave";
+    }
+    setAnimation(cardAnim);
+  }, [currentCard, playerTurn, phase, isPlayerPunched, isWinner]);
+
+  return (
+    <motion.group
+      animate={animation}
+      position-x={1 + index}
+      position-z={2}
+      variants={{
+        Sword: {
+          z: 0.2,
+          x: -1,
+        },
+        Wave: {
+          scale: 1.5,
+        },
+        Punch: {
+          x: 0,
+          z: 0.4,
+        },
+        Duck: {
+          z: -0.4,
+          x: -1,
+          rotateY: degToRad(180),
+        },
+      }}
+    >
+      <PlayerName name={player.state.profile.name} position-y={0.8} />
+      <Character
+        scale={0.5}
+        character={index}
+        rotation-y={degToRad(180)}
+        animation={animation}
+      />
+      {hasShield && <Gltf scale={0.5} src="/models/Prop_Barrel.gltf" />}
+      {/* PLAYER GEMS */}
+      <Center disableY disableZ>
+        {[...Array(player.getState("gems") || 0)].map((_, index) => (
+          <Gltf
+            key={index}
+            src="/models/UI_Gem_Blue.gltf"
+            position-x={index * 0.25}
+            position-y={0.25}
+            position-z={0.5}
+            scale={0.5}
+          />
+        ))}
+      </Center>
+    </motion.group>
+  );
+};
+```
+
+---
+
+### Step 8: Create the Card Component &nbsp; <PromptStepCopyButton counter={8} text="Create Card.jsx to render 3D cards with GLB model, textures for card types (punch, shield, grab), and Text components for card name and description. Preload GLB, textures, and fonts." />
+
+Create the Card component that renders a 3D card with textures and text descriptions.
+
+```jsx filename="Card.jsx"
+import { Text, useFont, useGLTF, useTexture } from "@react-three/drei";
+import React from "react";
+
+const CARD_DESCRIPTIONS = {
+  punch: "Punch another pirate and make it drop a gem",
+  shield: "Protect yourself from an attack",
+  grab: "Grab a gem from the treasure. If no gem is left, you get nothing",
+};
+
+export function Card({ type = "shield", ...props }) {
+  const { nodes, materials } = useGLTF("/models/card.glb");
+  const texture = useTexture(`cards/${type}.jpg`);
+  return (
+    <group {...props} dispose={null}>
+      <mesh castShadow receiveShadow geometry={nodes.Plane.geometry}>
+        <meshStandardMaterial
+          {...materials.Front}
+          map={texture}
+          color="white"
+        />
+      </mesh>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Plane_1.geometry}
+        material={materials.Borders}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Plane_2.geometry}
+        material={materials.Back}
+      />
+      <Text
+        font="/fonts/RobotoSlab-Bold.ttf"
+        fontSize={0.1}
+        anchorY={"top"}
+        anchorX={"left"}
+        position-x={-0.46}
+        position-y={-0.3}
+        position-z={0.01}
+      >
+        {type.toUpperCase()}
+        <meshStandardMaterial
+          color="white"
+          roughness={materials.Front.roughness}
+        />
+      </Text>
+      <Text
+        font="/fonts/RobotoSlab-Regular.ttf"
+        fontSize={0.06}
+        maxWidth={0.9}
+        anchorY={"top"}
+        anchorX={"left"}
+        position-x={-0.46}
+        position-y={-0.44}
+        position-z={0.01}
+        lineHeight={1}
+      >
+        {CARD_DESCRIPTIONS[type] || ""}
+        <meshStandardMaterial
+          color="white"
+          roughness={materials.Front.roughness}
+        />
+      </Text>
+    </group>
+  );
+}
+
+useGLTF.preload("/models/card.glb");
+useTexture.preload("/cards/punch.jpg");
+useTexture.preload("/cards/shield.jpg");
+useTexture.preload("/cards/grab.jpg");
+useFont.preload("/fonts/RobotoSlab-Bold.ttf");
+useFont.preload("/fonts/RobotoSlab-Regular.ttf");
+```
+
+---
+
+### Step 9: Create the MobileController Component &nbsp; <PromptStepCopyButton counter={9} text="Create MobileController.jsx for mobile players. Display player's character, gems, and cards. Implement card selection UI with animations, player choice phase for punch target selection, and use usePlayersList for reactivity." />
+
+Create the MobileController component that renders the mobile controller UI for players with card selection and target picking.
+
+```jsx filename="MobileController.jsx"
+import { Center, ContactShadows, Gltf } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
+import { motion } from "framer-motion-3d";
+import { myPlayer, usePlayersList } from "playroomkit";
+import { degToRad } from "three/src/math/MathUtils";
+import { useGameEngine } from "../hooks/useGameEngine";
+import { Card } from "./Card";
+import { Character } from "./Character";
+import { PlayerName } from "./PlayerName";
+
+export const MobileController = () => {
+  const me = myPlayer();
+  const { players, phase, playerTurn } = useGameEngine();
+  const myIndex = players.findIndex((player) => player.id === me.id);
+  const cards = me.getState("cards") || [];
+  usePlayersList(true);
+  let playerIdx = 0;
+  const viewport = useThree((state) => state.viewport);
+  const scalingRatio = Math.min(1, viewport.width / 3);
+  return (
+    <group position-y={-1}>
+      <ContactShadows opacity={0.12} />
+      <group scale={scalingRatio}>
+        <group position-z={3.5} position-x={-0.6}>
+          <PlayerName
+            name={me.state.profile.name}
+            position-y={0.8}
+            fontSize={0.1}
+          />
+          <Character
+            character={myIndex}
+            rotation-y={degToRad(45)}
+            scale={0.4}
+          />
+          {[...Array(me.getState("gems") || 0)].map((_, index) => (
+            <Gltf
+              key={index}
+              src="/models/UI_Gem_Blue.gltf"
+              position-x={0.7 + index * 0.25}
+              position-y={0.25}
+              scale={0.5}
+            />
+          ))}
+        </group>
+        {/* CARDS */}
+        <group position-y={1}>
+          {cards.map((card, index) => {
+            let cardAnimState = "";
+            const selected = index === me.getState("selectedCard");
+            if (phase === "cards") {
+              cardAnimState = "cardSelection";
+              if (selected) {
+                cardAnimState = "cardSelectionSelected";
+              }
+            } else {
+              if (selected) {
+                cardAnimState = "selected";
+              }
+            }
+            return (
+              <motion.group
+                key={index}
+                position-x={index * 0.1}
+                position-y={2 - index * 0.1}
+                position-z={-index * 0.1}
+                animate={cardAnimState}
+                variants={{
+                  selected: {
+                    x: -0.1,
+                    y: 2.1,
+                    z: 0.1,
+                  },
+                  cardSelection: {
+                    x: index % 2 ? 0.6 : -0.6,
+                    y: Math.floor(index / 2) * 1.6,
+                    z: -0.5,
+                  },
+                  cardSelectionSelected: {
+                    x: 0,
+                    y: 0,
+                    z: 2,
+                    rotateX: degToRad(-45),
+                    rotateY: 0,
+                    rotateZ: 0,
+                    scale: 1.1,
+                  },
+                }}
+                onClick={() => {
+                  if (phase === "cards") {
+                    me.setState("selectedCard", index, true);
+                  }
+                }}
+              >
+                <Card type={card} />
+              </motion.group>
+            );
+          })}
+        </group>
+        {phase === "playerChoice" && players[playerTurn].id === me.id && (
+          <Center disableY disableZ>
+            {players.map(
+              (player, index) =>
+                player.id !== me.id && (
+                  <motion.group
+                    key={player.id}
+                    position-x={playerIdx++ * 0.8}
+                    position-z={-2}
+                    animate={
+                      index === me.getState("playerTarget") ? "selected" : ""
+                    }
+                    scale={0.4}
+                    variants={{
+                      selected: {
+                        z: 0,
+                        scale: 0.8,
+                      },
+                    }}
+                  >
+                    <mesh
+                      onClick={() => me.setState("playerTarget", index, true)}
+                      position-y={1}
+                      visible={false}
+                    >
+                      <boxGeometry args={[1.2, 2, 0.5]} />
+                      <meshStandardMaterial color="hotpink" />
+                    </mesh>
+                    <PlayerName
+                      name={player.state.profile.name}
+                      fontSize={0.3}
+                      position-y={1.6}
+                    />
+                    <Character
+                      character={index}
+                      animation={
+                        index === me.getState("playerTarget") ? "No" : "Idle"
+                      }
+                      name={player.state.profile.name}
+                    />
+                  </motion.group>
+                )
+            )}
+          </Center>
+        )}
+      </group>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 10: Create the Character and PlayerName Components &nbsp; <PromptStepCopyButton counter={10} text="Create Character.jsx to load and animate GLB character models with useAnimations. Create PlayerName.jsx to display player names using Billboard and Text components that always face the camera." />
+
+Create the Character and PlayerName components for rendering 3D characters and player name labels.
+
+```jsx filename="Character.jsx"
+import { useAnimations, useGLTF } from "@react-three/drei";
+import { useEffect, useRef } from "react";
+
+const CHARACTERS = ["Anne", "Captain_Barbarossa", "Henry", "Mako"];
+
+export const Character = ({ character = 0, animation = "Idle", ...props }) => {
+  const { scene, animations } = useGLTF(
+    `/models/Characters_${CHARACTERS[character]}.gltf`
+  );
+
+  const ref = useRef();
+  const { actions } = useAnimations(animations, ref);
+
+  useEffect(() => {
+    actions[animation].reset().fadeIn(0.5).play();
+    return () => actions[animation]?.fadeOut(0.5);
+  }, [animation]);
+  return (
+    <group {...props} ref={ref}>
+      <primitive object={scene} />
+    </group>
+  );
+};
+```
+
+```jsx filename="PlayerName.jsx"
+import { Billboard, Text } from "@react-three/drei";
+
+export const PlayerName = ({ name = "", fontSize = 0.2, ...props }) => (
+  <Billboard {...props}>
+    <Text
+      anchorY={"bottom"}
+      fontSize={fontSize}
+      font="/fonts/RobotoSlab-Bold.ttf"
+    >
+      {name}
+    </Text>
+  </Billboard>
+);
+```
+
+---
+
+## Improvements
+
+- Add more card types like steal gems or swap gems
+- Implement power-ups and special abilities
+- Add particle effects and more elaborate animations for card actions
+- Create custom character skins and cosmetic items
+- Add a spectator mode for players who have been eliminated
+- Implement team-based gameplay

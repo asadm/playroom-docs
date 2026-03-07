@@ -4,55 +4,57 @@ title: "Introduction"
 
 import Link from 'next/link'
 import styles from './index.module.css'
-import {BlogLatestCard} from "../components/blogIndex"
+import { BlogLatestCard } from "../components/blogIndex"
 import SupportedEngines from "../components/SupportedEngines.mdx"
+import BuiltWithPlayroomKit from "../components/BuiltWithPlayroomKit.mdx"
+import Image from "next/image"
+import { Callout } from "nextra/components"
 
-<img src="/images/home1.png" style={{width: "100%", marginTop: '20px'}} />
+<Image src="/images/home1.png" width={1080} height={1920} alt="Playroom Kit Homepage" />
 
 <div style={{clear: "both"}}></div>
 
-## What is Playroom Kit?
+# Introduction
 
-Playroom Kit simplifies the development of real-time web-based multiplayer games by offering seamless synchronization and state management features. With its convenient integration capabilities, you can effortlessly incorporate the kit into popular game engines and libraries, transforming any game into a multiplayer experience.
+Playroom Kit gives you everything you need to make your app multiplayer without running your own backend.
 
-We believe that gaming is more enjoyable when shared with friends, whether they are online, nearby, connected through Discord, part of a Twitch community, or even gathered with family at home. With Playroom Kit, you have the flexibility to create your game to suit any multiplayer scenario.
+It handles rooms, shared state, and participants so multiple people can see and interact with the same experience in real time. You focus on building your product. Playroom handles the multiplayer layer.
 
+Use it for collaborative UIs, shared canvases, whiteboards, dashboards, games, and any multi-user app where people need to work together instantly in the browser.
 
--------------
+It works whether you are a solo developer shipping a side project, a small studio building a multiplayer game, or a large team adding collaboration to an existing SaaS product.
 
-## Great for Web Games
+<Callout emoji="✨">
+Playroom Kit is vibe-coding friendly. You can build real-time multiplayer features step by step using tools like [Cursor](https://cursor.com/), [Replit](https://replit.com/), or [Lovable](https://lovable.dev/), without needing to understand complex backend systems.
+</Callout>
 
-Use Playroom Kit to make web-based games. We officially support the following engines:
+If you want to see it in action, start with the [Live Cursors guide](examples/live-cursors) or explore all [Guides](/examples) to build your first real-time feature.
 
-<SupportedEngines />
+---
 
-## What's the API like?
+## Why Playroom Kit?
 
-Playroom Kit provides a simple API to set or get the state of the game room. The state is automatically synced between all players and screens.
+You might ask: why use Playroom Kit when tools like [Supabase Realtime](https://supabase.com/), [Firebase Realtime](https://firebase.google.com/), [Liveblocks](https://liveblocks.io/), or [PartyKit](https://partykit.io/) already exist?
 
-```js
-import { getState, setState } from 'playroomkit'
+Playroom Kit is not trying to replace your backend.
 
-// Set some game state, this will be synced to all players
-setState("timeRemaining", 60);
-// ...
+It is designed to be the simplest possible way to add collaborative features to your app.
 
-// One some other device: Get the time remaining
-const time = getState("timeRemaining");
-```
+If you are building a SaaS product, a dashboard, or a game, you likely already have authentication, APIs, and a database. What you may not have is an easy way for multiple users to share the same interactive experience in real time.
 
-Playroom also takes care of player and room management. You just need to call `insertCoin()` somewhere in your game to show the lobby UI.
+That is where Playroom fits.
 
-```js
-import { insertCoin } from 'playroomkit'
+It acts as a focused multiplayer layer that interoperates with your existing stack. You keep your backend. You keep your architecture. Playroom simply handles the collaborative layer.
 
-// Show the lobby UI
-await insertCoin();
+If you want to understand how this works under the hood, read [*Shared State Primitives*](features/apps/state) or [*Rooms and Sessions*](features/games/lobby).
 
-// Handle players joining the game
-onPlayerJoin((player) => {
-  console.log(`${player.getProfile().name} joined the game`);
-});
-```
+---
 
-See the [API Reference](/apidocs) for more details.
+## Built with Playroom Kit
+
+Playroom Kit powers collaborative experiences across games, tools, and multi-user products.
+
+<br />
+<BuiltWithPlayroomKit />
+
+Can’t see yours? Submit a PR [here](https://github.com/asadm/playroom-docs).

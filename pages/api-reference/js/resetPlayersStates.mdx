@@ -1,0 +1,35 @@
+---
+title: resetPlayersStates
+description: "Resets all players' states to their default values."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# resetPlayersStates
+
+Optionally exclude specific player state keys.
+
+## Signature
+
+```ts
+function resetPlayersStates(keysToExclude?: string[]): Promise<void>
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `keysToExclude?` | `string[]` | Array of keys to exclude from reset. |
+
+## Returns
+
+`Promise<void>`
+
+## Usage
+
+```ts
+await resetPlayersStates();
+await resetPlayersStates(['score']);
+
+```

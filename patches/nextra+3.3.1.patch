@@ -1,0 +1,27 @@
+diff --git a/node_modules/nextra/dist/client/normalize-pages.js b/node_modules/nextra/dist/client/normalize-pages.js
+index 15afee0..7900300 100644
+--- a/node_modules/nextra/dist/client/normalize-pages.js
++++ b/node_modules/nextra/dist/client/normalize-pages.js
+@@ -1,7 +1,7 @@
+ import { ERROR_ROUTES } from "../constants.js";
+ const DEFAULT_PAGE_THEME = {
+   breadcrumb: true,
+-  collapsed: false,
++  collapsed: undefined,
+   footer: true,
+   layout: "default",
+   navbar: true,
+@@ -164,6 +164,13 @@ The field key "${metaKey}" in \`_meta\` file refers to a page that cannot be fou
+     const item = getItem();
+     const docsItem = getItem();
+     const pageItem = getItem();
++    if ('children' in docsItem) {
++      const { collapsed } = extendedMeta.theme
++      if (typeof collapsed === 'boolean') {
++        // @ts-expect-error -- fixme
++        docsItem.theme = { collapsed }
++      }
++    }
+     docsItem.isUnderCurrentDocsTree = isCurrentDocsTree;
+     if (type === "separator") {
+       item.isUnderCurrentDocsTree = isCurrentDocsTree;

@@ -1,0 +1,175 @@
+# Playroom Kit 🤝 Your existing stack
+
+Playroom Kit fits into your app the same way live cursors fit into tools like Figma.
+
+It adds collaboration without changing how the rest of your product works.
+
+If you already use a backend like Supabase or Firebase, you keep using it. Playroom Kit does not replace your database, authentication, or API layer.
+
+It focuses on one thing: making collaborative experiences feel real-time and alive.
+
+---
+
+## Built to plug in, not replace
+
+Playroom Kit is intentionally lightweight.
+
+It does not:
+
+* Replace your backend
+* Replace your database
+* Replace your authentication system
+* Manage your business logic
+
+Instead, it adds a collaboration layer on top of what you already have.
+
+Think of it as a real-time interaction engine that works alongside your stack.
+
+Your backend stays responsible for:
+
+* Persisted data
+* User accounts
+* Authorization
+* Business rules
+
+Playroom Kit handles:
+
+* Presence
+* Cursors
+* Reactions
+* Ephemeral state
+* Multiplayer and collaborative UI patterns
+
+If your product already works for a single user, Playroom Kit helps it work beautifully for multiple users at the same time.
+
+---
+
+## What Playroom Kit is optimized for
+
+Playroom Kit is hyper-focused on collaborative use cases.
+
+Not generic backend features.
+Not data storage.
+Not auth.
+
+It shines in scenarios like:
+
+### Live cursors
+
+See where other users are pointing in real time, similar to how Figma shows teammates moving around a canvas.
+
+This is covered in the live cursors example in the Examples folder.
+
+### Presence
+
+Show who is currently online in a room.
+
+Great for multiplayer dashboards, editors, or shared workspaces.
+
+### Shared interactions
+
+Things like:
+
+* Live emoji reactions
+* Multiplayer selections
+* Pointer trails
+* Shared whiteboards
+* Collaborative UI highlights
+
+You can explore these patterns in the Examples directory and learn how they’re built using Playroom primitives.
+
+If you want to understand the foundation behind these patterns, see [*Shared State Primitives*](/features/apps/state).
+
+---
+
+## How it fits into a real product
+
+Here is a common setup:
+
+* Supabase handles auth and stores user profiles.
+* Your database stores project data.
+* Your API enforces permissions.
+* Playroom Kit manages real-time presence and collaboration.
+
+For example:
+
+1. User signs in using your existing auth system.
+2. You fetch their profile from your database.
+3. You pass basic user info into Playroom Kit.
+4. Playroom handles presence and live interactions inside a room.
+
+Your backend remains the source of truth.
+
+Playroom adds the real-time layer.
+
+If you want a concrete example, check the User Profiles documentation and see how user metadata flows into collaborative sessions.
+
+---
+
+## Example architecture
+
+A typical flow looks like this:
+
+```
+Client App (React)
+│
+├── Supabase / Firebase → Auth + Database
+│
+└── Playroom Kit → Presence + Cursors + Realtime UI
+```
+
+There is no duplication of responsibilities.
+
+Playroom does not store your application data.
+It does not replace your APIs.
+It does not interfere with your backend logic.
+
+It simply synchronizes collaborative state between connected users.
+
+If you are curious about transport behavior and reliability tradeoffs, see [*Unreliable Transport*](/features/apps/state#reliable-vs-unreliable-state-changes).
+
+---
+
+## Explore the Examples
+
+The best way to see how Playroom fits into an existing stack is to open the `examples` folder.
+
+You will find:
+
+* Live cursors
+* Multiplayer boards
+* Shared UI state patterns
+* Presence-driven interfaces
+
+Each example assumes you already have a working React app. Playroom is layered in, not built around.
+
+That design is intentional.
+
+---
+
+## When to use Playroom Kit
+
+Playroom Kit is a good fit when:
+
+* You already have a backend
+* You want to add multiplayer features
+* You care about UX quality in collaborative scenarios
+* You do not want to rebuild your stack
+
+It is not meant to be an all-in-one backend solution.
+
+It is meant to make your existing product collaborative.
+
+---
+
+## Summary
+
+Playroom Kit works with your stack, not against it.
+
+Keep your database.
+Keep your auth.
+Keep your APIs.
+
+Add Playroom where collaboration matters.
+
+That is it.

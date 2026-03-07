@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
-    private static readonly List<PlayroomKit.Player> players = new();
+    private static readonly List<Playroom Kit.Player> players = new();
     private static readonly List<GameObject> playerGameObjects = new();
 
     private static Dictionary<string, GameObject> PlayerDict = new();
@@ -17,16 +17,16 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        PlayroomKit.InitOptions options = new PlayroomKit.InitOptions
+        Playroom Kit.InitOptions options = new Playroom Kit.InitOptions
         {
             allowGamepads = false,
             maxPlayersPerRoom = 4,
             skipLobby = false,
         };
 
-        PlayroomKit.InsertCoin(() =>
+        Playroom Kit.InsertCoin(() =>
         {
-            PlayroomKit.OnPlayerJoin(AddPlayer);
+            Playroom Kit.OnPlayerJoin(AddPlayer);
         }, options);
     }
 
@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     {
         if (playerJoined)
         {
-            var myPlayer = PlayroomKit.MyPlayer();
+            var myPlayer = Playroom Kit.MyPlayer();
             var index = players.IndexOf(myPlayer);
 
             playerGameObjects[index].GetComponent<PlayerController>().Move();
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void AddPlayer(PlayroomKit.Player player)
+    public static void AddPlayer(Playroom Kit.Player player)
     {
         GameObject playerObj = (GameObject)Instantiate(Resources.Load("Player"),
             new Vector3(Random.Range(-4, 4), Random.Range(1, 5), 0), Quaternion.identity);

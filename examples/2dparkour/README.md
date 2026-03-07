@@ -13,8 +13,8 @@ This is an attempt to make the perfect platformer game mechanics as seen on game
   - Wall jump and wall to wall jumping
   - Wall sliding when holding the joystick towards the wall
 - 2D sample tile map to demonstrate the mechanics
-- Sync players using [PlayroomKit](https://docs.joinplayroom.com)
-- Uses PlayroomKit's [Joystick](https://docs.joinplayroom.com/multiplayer/joystick) component for touch controls
+- Sync players using [Playroom Kit](https://docs.joinplayroom.com)
+- Uses Playroom Kit's [Joystick](https://docs.joinplayroom.com/multiplayer/joystick) component for touch controls
 
 ### Demo
 

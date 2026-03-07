@@ -3,7 +3,8 @@ import useWindowDimensions from './useWindowDimensions'
 import { useEffect, useRef, useState } from 'react'
 import styles from './preview.module.css'
 
-export default function Preview({src, maxPlayers=4, newWindow}) {
+export default function Preview({src, maxPlayers=4, newWindow, title}) {
+  const iframeTitle = title ?? `Live demo preview: ${src.split('/').pop()?.replace(/\.html?$/, '') || 'demo'}`;
   const { width, height } = useWindowDimensions();
   const iframeRef = useRef(null);
   const [joinedIframes, setJoinedIframes] = useState(0);
@@ -13,10 +14,10 @@ export default function Preview({src, maxPlayers=4, newWindow}) {
 
   useEffect(() => {
     setTimeout(() => {
-      try{
-        setUrl(iframeRef.current?.contentWindow.location.href || "");
-      }
-      catch(e){
+      try {
+        const iframe = iframeRef.current as HTMLIFrameElement | null;
+        setUrl(iframe?.contentWindow?.location.href || "");
+      } catch (e) {
         setUrl(src); // if the iframe is cross-origin, we can't access the location
       }
     }, 2000);
@@ -31,19 +32,21 @@ export default function Preview({src, maxPlayers=4, newWindow}) {
           <a href={src} target='_blank'>Open in new window ↗</a>
         </div>}
       {!newWindow && <iframe 
-        ref={iframeRef} width="380" height="700" style={{
+        ref={iframeRef} width="380" height="700" title={iframeTitle} style={{
         // transform: `scale(${Math.min(1, width / 650)})`
         // borderRadius: "23px", 
         // margin: "20px 0px",
         }} src={src}></iframe>}
       </FakeBrowser>
         {new Array(joinedIframes).fill(0).map((_, i) => (
-          <FakeBrowser scale={scale} url={url} onClose={()=>{
+          <FakeBrowser key={`${iframeTitle}-${i}`} scale={scale} url={url} onClose={()=>{
             setJoinedIframes(Math.max(0, joinedIframes - 1));
           }}>
             <iframe 
             key={i}
-            width="380" height="700" style={{
+            width="380" height="700"
+            title={iframeTitle}
+            style={{
             // borderRadius: "23px",
             // margin: "20px 0px",
             }} src={url}></iframe>

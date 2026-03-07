@@ -1,0 +1,1066 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import CodePlayground from "../../components/CodePlayground";
+import { carsOnRoof } from "../../code/cars-on-roof";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+{/* * Metadata:
+ * Primary keyword: "multiplayer car game"
+ * Secondary keywords: "real-time car physics multiplayer", "Three.js multiplayer racing", "Playroom Kit vehicle sync", "host authoritative physics", "RaycastVehicle multiplayer"
+ * AI crawl phrases: "bruno simons", "build multiplayer car game with Playroom Kit", "real-time car physics sync tutorial", "Three.js Cannon multiplayer example", "host controlled physics multiplayer game"
+ * SEO tags: [multiplayer car game, real-time racing game, Three.js multiplayer, Playroom Kit, physics sync, RaycastVehicle]
+ */}
+
+# Build a Cars On Roof Multiplayer Game with Three.js and Playroom Kit
+
+Learn how to build a multiplayer isometric car driving game where cars race on a roof. You'll use Three.js for 3D rendering, Cannon.js for physics, and Playroom Kit for real-time multiplayer synchronization.
+
+<br />
+<a href="https://carsonroof.joinplayroom.com" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/asadm/playroom-docs/tree/main/examples/carsonroof"><Button variant="outline">Get Final Code</Button></a>
+<br />
+<br />
+
+<CodePlayground
+files={carsOnRoof}
+height="480px"
+previewUrls={[
+"https://carsonroof.joinplayroom.com/",
+"https://carsonroof.joinplayroom.com/",
+]}
+/>
+
+## Getting Started
+
+This tutorial shows you how to build a "Cars On Roof" game where multiple players drive cars on an isometric rooftop arena. Players control their cars using [`Joystick`](/api-reference/js/Joystick) controls, and physics are synchronized across all players in real-time using Playroom Kit's state management via [`setState`](/api-reference/js/setState) and [`getState`](/api-reference/js/getState).
+
+The game features realistic car physics with suspension, wheel steering, and acceleration. Each player gets their own car with a unique color from their Playroom profile. The host device acts as the authoritative source for physics calculations using [`isHost`](/api-reference/js/isHost), while other clients receive position updates.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and Three.js. Your task is to help me build a "Cars On Roof" driving game. The application should be created using Three.js as a 3D rendering library, Cannon.js for physics, and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and Three.js. Your task is to help me build a "Cars On Roof" driving game. The application should be created using Three.js as a 3D rendering library, Cannon.js for physics, and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and Three.js.
+Your task is to help me build a "Cars On Roof" driving game.
+The application should be created using Three.js as a 3D rendering library, Cannon.js for physics, and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains basic project setup with Three.js, Cannon.js, and Playroom Kit dependencies.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Initialize Playroom Kit and Set Up the Scene &nbsp; <PromptStepCopyButton counter={1} text="Initialize Playroom Kit with insertCoin in main.js. Set up Three.js scene with HemisphereLight, AmbientLight, DirectionalLight with shadows, and a fog effect. Create a WebGL renderer with shadowMap enabled, set clear color to 0xb4e0f1, and add it to the document body." />
+
+Set up the basic Three.js scene with lighting and the WebGL renderer using [`insertCoin`](/api-reference/js/insertCoin). This creates the foundation for the 3D isometric car game.
+
+```jsx filename="main.js"
+import { onPlayerJoin, insertCoin, isHost, myPlayer, setState, getState, Joystick } from "playroomkit";
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
+
+import Time from "./utils/Time"
+import Car from "./car";
+import shape2mesh from "./utils/shape2mesh";
+import createWorld from "./world";
+import loadCar from './carmodel';
+import mobileRevTriangle from './images/trianglerev.png'
+
+function setupGame() {
+  // Init world
+  const scene = new THREE.Scene()
+  const hemisphereLight = new THREE.HemisphereLight(0xaaaaff, 0xffaa00, .4);
+  const ambientLight = new THREE.AmbientLight(0xdc8874, .4);
+  const shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+  shadowLight.position.set(150, 350, 350);
+  shadowLight.castShadow = true;
+  shadowLight.shadow.camera.left = -400;
+  shadowLight.shadow.camera.right = 400;
+  shadowLight.shadow.camera.top = 400;
+  shadowLight.shadow.camera.bottom = -400;
+  shadowLight.shadow.camera.near = 1;
+  shadowLight.shadow.camera.far = 1000;
+  shadowLight.shadow.mapSize.width = 2048;
+  shadowLight.shadow.mapSize.height = 2048;
+  scene.add(hemisphereLight);
+  scene.add(shadowLight);
+  scene.add(ambientLight);
+  scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
+
+  const light = new THREE.DirectionalLight(0xffffff, 0.5);
+  light.position.set(100, 100, 50);
+  light.castShadow = true;
+  const dLight = 200;
+  const sLight = dLight * 0.25;
+  light.shadow.camera.left = - sLight;
+  light.shadow.camera.right = sLight;
+  light.shadow.camera.top = sLight;
+  light.shadow.camera.bottom = - sLight;
+  light.shadow.camera.near = dLight / 30;
+  light.shadow.camera.far = dLight;
+  light.shadow.mapSize.x = 1024 * 2;
+  light.shadow.mapSize.y = 1024 * 2;
+  scene.add(light);
+
+  // Renderer
+  const renderer = new THREE.WebGLRenderer({
+    alpha: true
+  });
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setClearColor(0xb4e0f1, 1)
+  renderer.setPixelRatio(2)
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  document.body.appendChild(renderer.domElement);
+
+  // Camera
+  const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 80);
+  const cameraCoords = new THREE.Vector3(19.36, 9.36, 11.61);
+  camera.position.copy(cameraCoords);
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
+  camera.rotation.x = -0.7;
+  camera.rotation.y = 1;
+  camera.rotation.z = 2.37;
+  window.camera = camera;
+
+  // Physics
+  let time = new Time();
+
+  const PhysicsWorld = new CANNON.World({
+    gravity: new CANNON.Vec3(0, -9.83, 0)
+  });
+
+  // Floor and walls
+  createWorld(scene, PhysicsWorld);
+}
+
+insertCoin().then(() => {
+  setupGame();
+})
+```
+
+---
+
+### Step 2: Create the World with Floor and Walls &nbsp; <PromptStepCopyButton counter={2} text="Create world.js that exports a function creating the arena. Add a floor plane using CANNON.Body with Box shape, and create four walls around the arena. Use shape2mesh utility to convert physics bodies to Three.js meshes. Set floor to gray and walls to gray color." />
+
+Create the game arena with a floor and walls that contain the cars within the play area.
+
+```jsx filename="world.js"
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
+import shape2mesh from "./utils/shape2mesh";
+
+export default function createWorld(scene, PhysicsWorld, width = 20){
+  const floor = new CANNON.Body({
+    mass: 0,
+    shape: new CANNON.Box(new CANNON.Vec3(width, width, 100)),
+  })
+  floor.position.set(0, 0, -100);
+  const floorMesh = shape2mesh(floor, new THREE.MeshPhongMaterial({ color: "gray" }));
+  PhysicsWorld.addBody(floor);
+  scene.add(floorMesh);
+
+  // create walls around the plane geometry
+  const wall1 = new CANNON.Body({
+    mass: 0,
+    shape: new CANNON.Box(new CANNON.Vec3(width, 0.1, 0.3)),
+  })
+  wall1.position.set(0, width, 0);
+  const wall1Mesh = shape2mesh(wall1, new THREE.MeshPhongMaterial({ color: "gray" }));
+  PhysicsWorld.addBody(wall1);
+  scene.add(wall1Mesh);
+
+  const wall2 = new CANNON.Body({
+    mass: 0,
+    shape: new CANNON.Box(new CANNON.Vec3(width, 0.1, 0.3)),
+  })
+  wall2.position.set(0, -width, 0);
+  const wall2Mesh = shape2mesh(wall2, new THREE.MeshPhongMaterial({ color: "gray" }));
+  PhysicsWorld.addBody(wall2);
+  scene.add(wall2Mesh);
+
+  const wall3 = new CANNON.Body({
+    mass: 0,
+    shape: new CANNON.Box(new CANNON.Vec3(0.1, width, 0.3)),
+  })
+  wall3.position.set(width, 0, 0);
+  const wall3Mesh = shape2mesh(wall3, new THREE.MeshPhongMaterial({ color: "gray" }));
+  PhysicsWorld.addBody(wall3);
+  scene.add(wall3Mesh);
+
+  const wall4 = new CANNON.Body({
+    mass: 0,
+    shape: new CANNON.Box(new CANNON.Vec3(0.1, width, 0.3)),
+  })
+  wall4.position.set(-width, 0, 0);
+  const wall4Mesh = shape2mesh(wall4, new THREE.MeshPhongMaterial({ color: "gray" }));
+  PhysicsWorld.addBody(wall4);
+  scene.add(wall4Mesh);
+}
+```
+
+---
+
+### Step 3: Create Utility Files for Time and Shape Conversion &nbsp; <PromptStepCopyButton counter={3} text="Create utils/Time.js with an EventEmitter class that tracks delta time and emits tick events. Create utils/shape2mesh.js to convert Cannon.js physics bodies to Three.js meshes, supporting sphere, plane, and box shapes with proper shadow settings." />
+
+Create utility classes for time management and converting physics bodies to visual meshes.
+
+```jsx filename="utils/Time.js"
+export default class Time {
+  constructor() {
+    this.tickCallbacks = [];
+    this.lastTime = performance.now();
+    this.delta = 0;
+    this.elapsed = 0;
+
+    this.loop = this.loop.bind(this);
+    requestAnimationFrame(this.loop);
+  }
+
+  loop() {
+    const now = performance.now();
+    this.delta = (now - this.lastTime) / 1000;
+    this.lastTime = now;
+    this.elapsed += this.delta;
+
+    this.tickCallbacks.forEach(callback => callback(this.delta, this.elapsed));
+
+    requestAnimationFrame(this.loop);
+  }
+
+  on(event, callback) {
+    if (event === 'tick') {
+      this.tickCallbacks.push(callback);
+    }
+  }
+}
+```
+
+```jsx filename="utils/shape2mesh.js"
+import * as THREE from 'three';
+import * as CANNON from 'cannon';
+
+export default function shape2mesh(body, material) {
+  var obj = new THREE.Object3D();
+
+  for (var l = 0; l < body.shapes.length; l++) {
+    var shape = body.shapes[l];
+    var mesh;
+
+    switch (shape.type) {
+      case CANNON.Shape.types.SPHERE:
+        var sphere_geometry = new THREE.SphereGeometry(shape.radius);
+        mesh = new THREE.Mesh(sphere_geometry, material);
+        break;
+
+      case CANNON.Shape.types.PLANE:
+        var geometry = new THREE.PlaneGeometry(10, 10, 4, 4);
+        mesh = new THREE.Object3D();
+        var submesh = new THREE.Object3D();
+        var ground = new THREE.Mesh(geometry, material);
+        ground.scale.set(100, 100, 100);
+        submesh.add(ground);
+        ground.castShadow = true;
+        ground.receiveShadow = true;
+        mesh.add(submesh);
+        break;
+
+      case CANNON.Shape.types.BOX:
+        var box_geometry = new THREE.BoxGeometry(shape.halfExtents.x * 2,
+          shape.halfExtents.y * 2,
+          shape.halfExtents.z * 2);
+        mesh = new THREE.Mesh(box_geometry, material);
+        break;
+
+      default:
+        throw "Visual type not recognized: " + shape.type;
+    }
+
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    if (mesh.children) {
+      for (var i = 0; i < mesh.children.length; i++) {
+        mesh.children[i].castShadow = true;
+        mesh.children[i].receiveShadow = true;
+      }
+    }
+
+    var o = body.shapeOffsets[l];
+    var q = body.shapeOrientations[l];
+    mesh.position.set(o.x, o.y, o.z);
+    mesh.quaternion.set(q.x, q.y, q.z, q.w);
+
+    obj.add(mesh);
+  }
+
+  obj.position.copy(body.position);
+  return obj;
+};
+```
+
+---
+
+### Step 4: Create the Car Physics System &nbsp; <PromptStepCopyButton counter={4} text="Create car/Physics.js with a Physics class that sets up Cannon.js RaycastVehicle. Configure chassis with Box shape, four wheels with suspension settings, steering, and acceleration. Implement postStep event for physics updates and time tick for control inputs using Joystick." />
+
+Create the physics engine for the car with realistic suspension, steering, and wheel physics using Cannon.js RaycastVehicle.
+
+```jsx filename="car/Physics.js"
+import * as CANNON from 'cannon';
+import * as THREE from 'three'
+
+export default class Physics {
+  constructor(_options) {
+    this.debug = _options.debug
+    this.time = _options.time
+    this.controls = _options.controls
+
+    if (this.debug) {
+      this.debugFolder = this.debug.addFolder('physics')
+    }
+    this.world = _options.world;
+    this.setWorld()
+    this.setModels()
+    this.setCar()
+  }
+
+  destroy(){
+    this.car.destroy()
+  }
+
+  setWorld() {
+    this.world.gravity.set(0, 0, - 3.25)
+    this.world.allowSleep = true
+    this.world.defaultContactMaterial.friction = 0
+    this.world.defaultContactMaterial.restitution = 0.2
+  }
+
+  setModels() {
+    this.models = {}
+    this.models.container = new THREE.Object3D()
+    this.models.container.visible = false
+  }
+
+  setCar() {
+    this.car = {}
+
+    this.car.steering = 0
+    this.car.accelerating = 0
+    this.car.speed = 0
+    this.car.worldForward = new CANNON.Vec3()
+    this.car.angle = 0
+    this.car.forwardSpeed = 0
+    this.car.oldPosition = new CANNON.Vec3()
+    this.car.goingForward = true
+
+    this.car.options = {}
+    this.car.options.chassisWidth = 1.02
+    this.car.options.chassisHeight = 1.16
+    this.car.options.chassisDepth = 2.03
+    this.car.options.chassisOffset = new CANNON.Vec3(0, 0, 0.41)
+    this.car.options.chassisMass = 20
+    this.car.options.wheelFrontOffsetDepth = 0.635
+    this.car.options.wheelBackOffsetDepth = - 0.475
+    this.car.options.wheelOffsetWidth = 0.39
+    this.car.options.wheelRadius = 0.25
+    this.car.options.wheelHeight = 0.24
+    this.car.options.wheelSuspensionStiffness = 25
+    this.car.options.wheelSuspensionRestLength = 0.1
+    this.car.options.wheelFrictionSlip = 5
+    this.car.options.wheelDampingRelaxation = 1.8
+    this.car.options.wheelDampingCompression = 1.5
+    this.car.options.wheelMaxSuspensionForce = 100000
+    this.car.options.wheelRollInfluence = 0.01
+    this.car.options.wheelMaxSuspensionTravel = 0.3
+    this.car.options.wheelCustomSlidingRotationalSpeed = - 30
+    this.car.options.wheelMass = 5
+    this.car.options.controlsSteeringSpeed = 0.005
+    this.car.options.controlsSteeringMax = Math.PI * 0.17
+    this.car.options.controlsSteeringQuad = false
+    this.car.options.controlsAcceleratinMaxSpeed = 0.055
+    this.car.options.controlsAcceleratinMaxSpeedBoost = 0.11
+    this.car.options.controlsAcceleratingSpeed = 2
+    this.car.options.controlsAcceleratingSpeedBoost = 3.5
+    this.car.options.controlsAcceleratingQuad = true
+    this.car.options.controlsBrakeStrength = 0.45
+
+    this.car.jump = (_toReturn = true, _strength = 60) => {
+      let worldPosition = this.car.chassis.body.position
+      worldPosition = worldPosition.vadd(new CANNON.Vec3(_toReturn ? 0.08 : 0, 0, 0))
+      this.car.chassis.body.applyImpulse(new CANNON.Vec3(0, 0, _strength), worldPosition)
+    }
+
+    this.car.create = () => {
+      this.car.chassis = {}
+      this.car.chassis.shape = new CANNON.Box(new CANNON.Vec3(this.car.options.chassisDepth * 0.5, this.car.options.chassisWidth * 0.5, this.car.options.chassisHeight * 0.5))
+
+      this.car.chassis.body = new CANNON.Body({ mass: this.car.options.chassisMass })
+      this.car.chassis.body.allowSleep = false
+      this.car.chassis.body.position.set(0, 0, 12)
+      this.car.chassis.body.sleep()
+      this.car.chassis.body.addShape(this.car.chassis.shape, this.car.options.chassisOffset)
+      this.car.chassis.body.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 0, 1), - Math.PI * 0.5)
+
+      this.car.vehicle = new CANNON.RaycastVehicle({
+        chassisBody: this.car.chassis.body
+      })
+
+      this.car.wheels = {}
+      this.car.wheels.options = {
+        radius: this.car.options.wheelRadius,
+        height: this.car.options.wheelHeight,
+        suspensionStiffness: this.car.options.wheelSuspensionStiffness,
+        suspensionRestLength: this.car.options.wheelSuspensionRestLength,
+        frictionSlip: this.car.options.wheelFrictionSlip,
+        dampingRelaxation: this.car.options.wheelDampingRelaxation,
+        dampingCompression: this.car.options.wheelDampingCompression,
+        maxSuspensionForce: this.car.options.wheelMaxSuspensionForce,
+        rollInfluence: this.car.options.wheelRollInfluence,
+        maxSuspensionTravel: this.car.options.wheelMaxSuspensionTravel,
+        customSlidingRotationalSpeed: this.car.options.wheelCustomSlidingRotationalSpeed,
+        useCustomSlidingRotationalSpeed: true,
+        directionLocal: new CANNON.Vec3(0, 0, - 1),
+        axleLocal: new CANNON.Vec3(0, 1, 0),
+        chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0)
+      }
+
+      this.car.wheels.options.chassisConnectionPointLocal.set(this.car.options.wheelFrontOffsetDepth, this.car.options.wheelOffsetWidth, 0)
+      this.car.vehicle.addWheel(this.car.wheels.options)
+
+      this.car.wheels.options.chassisConnectionPointLocal.set(this.car.options.wheelFrontOffsetDepth, - this.car.options.wheelOffsetWidth, 0)
+      this.car.vehicle.addWheel(this.car.wheels.options)
+
+      this.car.wheels.options.chassisConnectionPointLocal.set(this.car.options.wheelBackOffsetDepth, this.car.options.wheelOffsetWidth, 0)
+      this.car.vehicle.addWheel(this.car.wheels.options)
+
+      this.car.wheels.options.chassisConnectionPointLocal.set(this.car.options.wheelBackOffsetDepth, - this.car.options.wheelOffsetWidth, 0)
+      this.car.vehicle.addWheel(this.car.wheels.options)
+
+      this.car.vehicle.addToWorld(this.world)
+
+      this.car.wheels.indexes = {}
+      this.car.wheels.indexes.frontLeft = 0
+      this.car.wheels.indexes.frontRight = 1
+      this.car.wheels.indexes.backLeft = 2
+      this.car.wheels.indexes.backRight = 3
+      this.car.wheels.bodies = []
+
+      for (const _wheelInfos of this.car.vehicle.wheelInfos) {
+        const shape = new CANNON.Cylinder(_wheelInfos.radius, _wheelInfos.radius, this.car.wheels.options.height, 20)
+        const body = new CANNON.Body({ mass: this.car.options.wheelMass })
+        const quaternion = new CANNON.Quaternion()
+        quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2)
+
+        body.type = CANNON.Body.KINEMATIC
+        body.addShape(shape, new CANNON.Vec3(), quaternion)
+        this.car.wheels.bodies.push(body)
+      }
+
+      this.car.model = {}
+      this.car.model.container = new THREE.Object3D()
+      this.models.container.add(this.car.model.container)
+
+      this.car.model.material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true })
+
+      this.car.model.chassis = new THREE.Mesh(new THREE.BoxGeometry(this.car.options.chassisDepth, this.car.options.chassisWidth, this.car.options.chassisHeight), this.car.model.material)
+      this.car.model.container.add(this.car.model.chassis)
+
+      this.car.model.wheels = []
+      const wheelGeometry = new THREE.CylinderGeometry(this.car.options.wheelRadius, this.car.options.wheelRadius, this.car.options.wheelHeight, 8, 1)
+
+      for (let i = 0; i < 4; i++) {
+        const wheel = new THREE.Mesh(wheelGeometry, this.car.model.material)
+        this.car.model.container.add(wheel)
+        this.car.model.wheels.push(wheel)
+      }
+    }
+
+    this.car.destroy = () => {
+      this.car.vehicle.removeFromWorld(this.world)
+      this.models.container.remove(this.car.model.container)
+    }
+
+    this.world.addEventListener('postStep', () => {
+      let positionDelta = new CANNON.Vec3()
+      positionDelta = positionDelta.copy(this.car.chassis.body.position)
+      positionDelta = positionDelta.vsub(this.car.oldPosition)
+
+      this.car.oldPosition.copy(this.car.chassis.body.position)
+      this.car.speed = positionDelta.length()
+
+      const localForward = new CANNON.Vec3(1, 0, 0)
+      this.car.chassis.body.vectorToWorldFrame(localForward, this.car.worldForward)
+      this.car.angle = Math.atan2(this.car.worldForward.y, this.car.worldForward.x)
+
+      this.car.forwardSpeed = this.car.worldForward.dot(positionDelta)
+      this.car.goingForward = this.car.forwardSpeed > 0
+
+      for (let i = 0; i < this.car.vehicle.wheelInfos.length; i++) {
+        this.car.vehicle.updateWheelTransform(i)
+        const transform = this.car.vehicle.wheelInfos[i].worldTransform
+        this.car.wheels.bodies[i].position.copy(transform.position)
+        this.car.wheels.bodies[i].quaternion.copy(transform.quaternion)
+
+        if (i === 1 || i === 3) {
+          const rotationQuaternion = new CANNON.Quaternion(0, 0, 0, 1)
+          rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0, 0, 1), Math.PI)
+          this.car.wheels.bodies[i].quaternion = this.car.wheels.bodies[i].quaternion.mult(rotationQuaternion)
+        }
+      }
+
+      if (!this.controls.isJoystickPressed() && !this.controls.isPressed('down')) {
+        let slowDownForce = this.car.worldForward.clone()
+
+        if (this.car.goingForward) {
+          slowDownForce = slowDownForce.negate()
+        }
+
+        slowDownForce = slowDownForce.scale(this.car.chassis.body.velocity.length() * 0.1)
+        this.car.chassis.body.applyImpulse(slowDownForce, this.car.chassis.body.position)
+      }
+    })
+
+    this.time.on('tick', () => {
+      this.car.model.chassis.position.copy(this.car.chassis.body.position).add(this.car.options.chassisOffset)
+      this.car.model.chassis.quaternion.copy(this.car.chassis.body.quaternion)
+
+      for (const _wheelKey in this.car.wheels.bodies) {
+        const wheelBody = this.car.wheels.bodies[_wheelKey]
+        const wheelMesh = this.car.model.wheels[_wheelKey]
+        wheelMesh.position.copy(wheelBody.position)
+        wheelMesh.quaternion.copy(wheelBody.quaternion)
+      }
+
+      let deltaAngle = 0
+      if (this.controls.angle()) {
+        deltaAngle = (this.controls.angle() - this.car.angle + Math.PI) % (Math.PI * 2) - Math.PI
+        deltaAngle = deltaAngle < - Math.PI ? deltaAngle + Math.PI * 2 : deltaAngle
+      }
+
+      const goingForward = Math.abs(this.car.forwardSpeed) < 0.01 ? true : this.car.goingForward
+      this.car.steering = deltaAngle * (goingForward ? - 1 : 1)
+
+      if (Math.abs(this.car.steering) > this.car.options.controlsSteeringMax) {
+        this.car.steering = Math.sign(this.car.steering) * this.car.options.controlsSteeringMax
+      }
+
+      this.car.vehicle.setSteeringValue(- this.car.steering, this.car.wheels.indexes.frontLeft)
+      this.car.vehicle.setSteeringValue(- this.car.steering, this.car.wheels.indexes.frontRight)
+
+      const accelerationSpeed = this.controls.isPressed('boost') ? this.car.options.controlsAcceleratingSpeedBoost : this.car.options.controlsAcceleratingSpeed
+      const accelerateStrength = this.time.delta * accelerationSpeed
+      const controlsAcceleratinMaxSpeed = this.controls.isPressed('boost') ? this.car.options.controlsAcceleratinMaxSpeedBoost : this.car.options.controlsAcceleratinMaxSpeed
+
+      if (this.controls.isJoystickPressed() && !this.controls.isPressed('down')) {
+        if (this.car.speed < controlsAcceleratinMaxSpeed || !this.car.goingForward) {
+          this.car.accelerating = accelerateStrength
+        } else {
+          this.car.accelerating = 0
+        }
+      } else if (this.controls.isPressed('down')) {
+        if (this.car.speed < controlsAcceleratinMaxSpeed || this.car.goingForward) {
+          this.car.accelerating = - accelerateStrength
+        } else {
+          this.car.accelerating = 0
+        }
+      } else {
+        this.car.accelerating = 0
+      }
+
+      this.car.vehicle.applyEngineForce(- this.car.accelerating, this.car.wheels.indexes.backLeft)
+      this.car.vehicle.applyEngineForce(- this.car.accelerating, this.car.wheels.indexes.backRight)
+    })
+
+    this.car.create()
+  }
+}
+```
+
+---
+
+### Step 5: Create the Car Visual Component &nbsp; <PromptStepCopyButton counter={5} text="Create car/Car.js that handles the Three.js visual representation. Sync physics body positions to mesh positions, apply chassis offset, and update wheel positions from physics bodies. Add movement tracking for speed calculations." />
+
+Create the visual car component that syncs with the physics simulation and handles the 3D model rendering.
+
+```jsx filename="car/Car.js"
+import * as THREE from 'three'
+export default class Car {
+  constructor(_options) {
+    this.time = _options.time
+    this.physics = _options.physics
+    this.container = new THREE.Object3D()
+    this.position = new THREE.Vector3()
+    this.setMovement()
+    this.setChassis(_options.chassisObject)
+    this.setWheels(_options.wheelObject)
+  }
+
+  setMovement() {
+    this.movement = {}
+    this.movement.speed = new THREE.Vector3()
+    this.movement.localSpeed = new THREE.Vector3()
+    this.movement.acceleration = new THREE.Vector3()
+    this.movement.localAcceleration = new THREE.Vector3()
+
+    this.time.on('tick', () => {
+      const movementSpeed = new THREE.Vector3()
+      movementSpeed.copy(this.chassis.object.position).sub(this.chassis.oldPosition)
+      this.movement.acceleration = movementSpeed.clone().sub(this.movement.speed)
+      this.movement.speed.copy(movementSpeed)
+      this.movement.localSpeed = this.movement.speed.clone().applyAxisAngle(new THREE.Vector3(0, 0, 1), - this.chassis.object.rotation.z)
+      this.movement.localAcceleration = this.movement.acceleration.clone().applyAxisAngle(new THREE.Vector3(0, 0, 1), - this.chassis.object.rotation.z)
+    })
+  }
+
+  setChassis(object) {
+    this.chassis = {}
+    this.chassis.offset = new THREE.Vector3(0, 0, - 0.28)
+    this.chassis.object = object;
+    this.chassis.object.position.copy(this.physics.car.chassis.body.position)
+    this.chassis.oldPosition = this.chassis.object.position.clone()
+    this.container.add(this.chassis.object)
+
+    this.time.on('tick', () => {
+      this.chassis.oldPosition = this.chassis.object.position.clone()
+      this.chassis.object.position.copy(this.physics.car.chassis.body.position).add(this.chassis.offset)
+      this.chassis.object.quaternion.copy(this.physics.car.chassis.body.quaternion)
+      this.position.copy(this.chassis.object.position)
+    })
+  }
+
+  setWheels(object) {
+    this.wheels = {}
+    this.wheels.object = object;
+    this.wheels.items = []
+
+    for (let i = 0; i < 4; i++) {
+      const object = this.wheels.object.clone()
+      this.wheels.items.push(object)
+      this.container.add(object)
+    }
+
+    this.time.on('tick', () => {
+      for (const _wheelKey in this.physics.car.wheels.bodies) {
+        const wheelBody = this.physics.car.wheels.bodies[_wheelKey]
+        const wheelObject = this.wheels.items[_wheelKey]
+        wheelObject.position.copy(wheelBody.position)
+        wheelObject.quaternion.copy(wheelBody.quaternion)
+      }
+    })
+  }
+}
+```
+
+---
+
+### Step 6: Create the Car Loader &nbsp; <PromptStepCopyButton counter={6} text="Create carmodel.js with functions to load GLB car models using GLTFLoader and DRACOLoader. Process the model to center it, apply player color to the chassis, and return chassis and wheel objects for the car." />
+
+Create the car model loader that loads GLB models and applies player-specific colors.
+
+```jsx filename="carmodel.js"
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+
+async function loadModel(url) {
+  return new Promise((resolve, reject) => {
+    const dracoLoader = new DRACOLoader()
+    dracoLoader.setDecoderPath('draco/')
+    dracoLoader.setDecoderConfig({ type: 'js' })
+
+    const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader)
+
+    loader.load(url, resolve, undefined, reject)
+  });
+}
+
+function applyMaterial(mesh, primaryColor) {
+  const materials = {
+    'pureRed': new THREE.MeshBasicMaterial({ color: 0xff2800 }),
+    'pureWhite': new THREE.MeshBasicMaterial({ color: 0xfffffc }),
+    'pureBlack': new THREE.MeshBasicMaterial({ color: 0x160000 }),
+    'pureYellow': new THREE.MeshBasicMaterial({ color: 0xffe889 }),
+    'shadeWhite': new THREE.MeshPhongMaterial({ color: 0xfffffc }),
+    'shadeBlack': new THREE.MeshPhongMaterial({ color: 0x160000 }),
+    'shadeRed': new THREE.MeshPhongMaterial({ color: primaryColor || 0xff2800 }),
+  }
+
+  let materialName = Object.keys(materials).find((_materialName) => mesh.name.startsWith(_materialName));
+  if (typeof materialName === 'undefined') {
+    materialName = 'pureWhite';
+  }
+
+  mesh.material = materials[materialName].clone();
+  return mesh;
+}
+
+function processModel(obj, primaryColor) {
+  const container = new THREE.Object3D()
+  const center = new THREE.Vector3()
+  const baseChildren = [...obj.children]
+
+  for (const _child of baseChildren) {
+    if (_child.name.match(/^center_?[0-9]{0,3}?/i)) {
+      center.set(_child.position.x, _child.position.y, _child.position.z)
+    }
+
+    if (_child instanceof THREE.Mesh) {
+      const mesh = applyMaterial(_child, primaryColor);
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+      container.add(mesh);
+    }
+
+    if (center.length() > 0) {
+      for (const _child of container.children) {
+        _child.position.sub(center)
+      }
+      container.position.add(center)
+    }
+  }
+  return container;
+}
+
+export default async function loadCar(primaryColor=0xff2800) {
+  const chassisModel = await loadModel('/carmodel/chassis.glb');
+  const wheelModel = await loadModel('/carmodel/wheel.glb');
+  const chassisObject = processModel(chassisModel.scene, primaryColor);
+  const wheelObject = processModel(wheelModel.scene);
+  return { chassisObject, wheelObject };
+}
+```
+
+---
+
+### Step 7: Create the Main Car Module &nbsp; <PromptStepCopyButton counter={7} text="Create car/index.js that exports a class combining Physics and Car components. Implement position and quaternion getters/setters for multiplayer sync, set up the physics system, and create the car visuals." />
+
+Create the main car module that combines physics and visual components with methods for multiplayer synchronization.
+
+```jsx filename="car/index.js"
+import * as THREE from 'three'
+import Physics from './Physics.js'
+import Car from './Car.js'
+
+function roundOffPos(pos){
+  return {
+    x: Math.round(pos.x * 1000) / 1000,
+    y: Math.round(pos.y * 1000) / 1000,
+    z: Math.round(pos.z * 1000) / 1000
+  }
+}
+
+function roundOffQuat(quat){
+  return {
+    x: Math.round(quat.x * 1000) / 1000,
+    y: Math.round(quat.y * 1000) / 1000,
+    z: Math.round(quat.z * 1000) / 1000,
+    w: Math.round(quat.w * 1000) / 1000
+  }
+}
+
+export default class {
+  constructor({ initialPos, debug, time, physicsWorld, controls, chassisObject, wheelObject }) {
+    this.debug = debug
+    this.time = time
+    this.physicsWorld = physicsWorld
+    this.controls = controls
+    this.chassisObject = chassisObject
+    this.wheelObject = wheelObject
+
+    this.container = new THREE.Object3D()
+    this.container.matrixAutoUpdate = false
+
+    this.setPhysics()
+    this.setCar()
+    this.initCar(initialPos);
+  }
+
+  initCar(pos) {
+    this.physics.car.chassis.body.sleep()
+    this.physics.car.chassis.body.position.set(pos.x, pos.y, pos.z)
+
+    window.setTimeout(() => {
+      this.physics.car.chassis.body.wakeUp()
+    }, 300)
+  }
+
+  pos() {
+    return [
+      roundOffPos(this.physics.car.chassis.body.position),
+      roundOffPos(this.physics.car.wheels.bodies[0].position),
+      roundOffPos(this.physics.car.wheels.bodies[1].position),
+      roundOffPos(this.physics.car.wheels.bodies[2].position),
+      roundOffPos(this.physics.car.wheels.bodies[3].position),
+    ];
+  }
+
+  setPos(posArray) {
+    this.physics.car.chassis.body.position.set(posArray[0].x, posArray[0].y, posArray[0].z);
+    this.physics.car.wheels.bodies[0].position.set(posArray[1].x, posArray[1].y, posArray[1].z);
+    this.physics.car.wheels.bodies[1].position.set(posArray[2].x, posArray[2].y, posArray[2].z);
+    this.physics.car.wheels.bodies[2].position.set(posArray[3].x, posArray[3].y, posArray[3].z);
+    this.physics.car.wheels.bodies[3].position.set(posArray[4].x, posArray[4].y, posArray[4].z);
+  }
+
+  quaternion() {
+    return [
+      roundOffQuat(this.physics.car.chassis.body.quaternion),
+      roundOffQuat(this.physics.car.wheels.bodies[0].quaternion),
+      roundOffQuat(this.physics.car.wheels.bodies[1].quaternion),
+      roundOffQuat(this.physics.car.wheels.bodies[2].quaternion),
+      roundOffQuat(this.physics.car.wheels.bodies[3].quaternion),
+    ]
+  }
+
+  setQuaternion(quaternionArray) {
+    this.physics.car.chassis.body.quaternion.set(quaternionArray[0].x, quaternionArray[0].y, quaternionArray[0].z, quaternionArray[0].w);
+    this.physics.car.wheels.bodies[0].quaternion.set(quaternionArray[1].x, quaternionArray[1].y, quaternionArray[1].z, quaternionArray[1].w);
+    this.physics.car.wheels.bodies[1].quaternion.set(quaternionArray[2].x, quaternionArray[2].y, quaternionArray[2].z, quaternionArray[2].w);
+    this.physics.car.wheels.bodies[2].quaternion.set(quaternionArray[3].x, quaternionArray[3].y, quaternionArray[3].z, quaternionArray[3].w);
+    this.physics.car.wheels.bodies[3].quaternion.set(quaternionArray[4].x, quaternionArray[4].y, quaternionArray[4].z, quaternionArray[4].w);
+  }
+
+  setPhysics() {
+    this.physics = new Physics({
+      debug: this.debug,
+      time: this.time,
+      controls: this.controls,
+      world: this.physicsWorld,
+    })
+
+    this.container.add(this.physics.models.container)
+  }
+
+  setCar() {
+    this.car = new Car({
+      time: this.time,
+      physics: this.physics,
+      chassisObject: this.chassisObject,
+      wheelObject: this.wheelObject,
+    })
+    this.container.add(this.car.container)
+  }
+
+  destroy() {
+    this.physics.destroy();
+  }
+}
+```
+
+---
+
+### Step 8: Add Player Join Handler and Game Loop &nbsp; <PromptStepCopyButton counter={8} text="Update main.js to handle onPlayerJoin from Playroom Kit. Create a Joystick control for each player, load their car with their profile color, add the car to the scene, and handle player quit events. Implement the main game loop that syncs physics on host and updates positions on clients." />
+
+Add the multiplayer player handling using [`onPlayerJoin`](/api-reference/js/onPlayerJoin) and the game loop that synchronizes physics across all players. Use [`Joystick`](/api-reference/js/Joystick) for controls, [`isHost`](/api-reference/js/isHost) for host-authoritative physics, [`setState`](/api-reference/js/setState) to broadcast positions, and [`getState`](/api-reference/js/getState) to receive remote positions.
+
+```jsx filename="main.js (additions)"
+  // Handle players joining
+  let playersAndCars = [];
+  onPlayerJoin(async (player) => {
+    const color = player.getProfile().color.hex;
+    const { chassisObject, wheelObject } = await loadCar(color);
+    let controls = new Joystick(player, {
+      buttons: [
+        {id: "down", icon: mobileRevTriangle}
+      ],
+    });
+    const car = new Car({
+      initialPos: new THREE.Vector3(Math.random() * 10, Math.random() * 10, 12),
+      time: time,
+      chassisObject: chassisObject,
+      wheelObject: wheelObject,
+      physicsWorld: PhysicsWorld,
+      controls: controls
+    });
+    scene.add(car.container);
+    player.onQuit(() => {
+      scene.remove(car.container);
+      car.destroy();
+    });
+    playersAndCars.push({ player, car });
+  });
+
+  // Add some spheres
+  const spherePos = getState('spherePos') || [
+    { x: 0, y: 0, z: 40 },
+    { x: 15, y: 10, z: 40 },
+    { x: 0, y: -10, z: 30 },
+    { x: -15, y: 10, z: 40 },
+  ];
+  const sphereColors = [0xff3300, 0xff3300, 0xff3300, 0xff3300];
+  const sphereRadii = [1, 0.5, 1, 0.5];
+  const spheres = spherePos.map((pos, i) => {
+    return addSphere(
+      pos,
+      sphereColors[i],
+      sphereRadii[i],
+      10 * sphereRadii[i]);
+  });
+
+  spheres.forEach(({ mesh, body }) => {
+    scene.add(mesh);
+    PhysicsWorld.addBody(body);
+  });
+
+  // Main loop
+  time.on('tick', (delta) => {
+    renderer.render(scene, camera);
+    PhysicsWorld.step(1 / 60, delta, 3);
+
+    // On host device, update all player and spheres pos
+    if (isHost()) {
+      playersAndCars.forEach(({ player, car }) => {
+        player.setState('pos', car.pos());
+        player.setState('quaternion', car.quaternion());
+      });
+
+      spheres.forEach(({ mesh, body }) => {
+        mesh.position.copy(body.position);
+      });
+      setState('spherePos', spheres.map(({ mesh }) => mesh.position));
+    }
+
+    // On client, get everyone's pos and update locally
+    else {
+      playersAndCars.forEach(({ player, car }) => {
+        const pos = player.getState('pos');
+        if (pos) {
+          car.setPos(pos);
+        }
+        const quaternion = player.getState('quaternion');
+        if (quaternion) {
+          car.setQuaternion(quaternion);
+        }
+      });
+
+      const spherePos = getState('spherePos');
+      if (spherePos) {
+        spheres.forEach(({ mesh }, i) => {
+          mesh.position.copy(spherePos[i]);
+        });
+      }
+    }
+
+    // Follow my car with camera
+    const pos = myPlayer().getState('pos') ? myPlayer().getState('pos')[0] : null;
+    if (pos) {
+      camera.position.copy(pos);
+      camera.position.add(cameraCoords);
+    }
+  });
+```
+
+---
+
+### Step 9: Add Helper Function for Spheres &nbsp; <PromptStepCopyButton counter={9} text="Add a helper function addSphere in main.js that creates a physics sphere with a visual mesh. Use CANNON.Sphere for physics, THREE.MeshLambertMaterial for rendering, and apply linear damping. This adds interactive objects to the arena that cars can push around." />
+
+Add a helper function to create interactive sphere objects that cars can push around in the arena.
+
+```jsx filename="main.js (additions)"
+function addSphere(pos = { x: 0, y: 20, z: 0 }, color = 0xF9F9F9, radius = 1, mass = 1) {
+  const sphereShape = new CANNON.Sphere(radius);
+  const body = new CANNON.Body({ mass: mass, shape: sphereShape });
+  body.position.set(pos.x, pos.y, pos.z);
+  body.linearDamping = 0.6;
+
+  const material = new THREE.MeshLambertMaterial({ color: color, shading: THREE.FlatShading });
+  const mesh = shape2mesh(body, material);
+  return { mesh, body };
+}
+```
+
+---
+
+### Step 10: Style and Camera Setup &nbsp; <PromptStepCopyButton counter={10} text="Add CSS styles for full-screen canvas and remove margins. Set up camera with isometric perspective using position (19.36, 9.36, 11.61), looking at origin with specific rotation angles to create the top-down angled view." />
+
+Style the application and set up the isometric camera angle for the game view.
+
+```jsx filename="styles.css"
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  background: #b4e0f1;
+}
+
+canvas {
+  display: block;
+}
+```
+
+---
+
+## Improvements
+
+- Add collision detection between cars for more competitive gameplay
+- Implement lap timing and checkpoint system for racing modes
+- Add boost pads or speed power-ups on the arena
+- Create different car models or customization options
+- Add particle effects for collisions and car exhaust
+- Implement a spectate mode for players who disconnect

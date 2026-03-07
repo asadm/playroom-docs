@@ -1,0 +1,766 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+ {/* * Metadata:
+title: "Build a TikTok Christmas Live Game with React Three Fiber and Playroom"
+description: "Step-by-step tutorial on how to build a TikTok Christmas live game using React Three Fiber and Playroom Kit with real-time TikTok Live events, multiplayer state sync, and 3D animations."
+primary_keyword: "TikTok live game"
+secondary_keywords:
+
+* "React Three Fiber"
+* "Playroom Kit"
+* "TikTok Live integration"
+* "real-time multiplayer game"
+* "3D web game tutorial"
+  ai_crawl_phrases:
+* "how to build a TikTok live game"
+* "React Three Fiber TikTok tutorial"
+* "Playroom Kit TikTok liveMode"
+* "real-time TikTok live game with React"
+* "multiplayer TikTok live game tutorial"
+  seo_tags:
+* "TikTok live game"
+* "React Three Fiber"
+* "Playroom Kit"
+* "real-time multiplayer"
+* "3D web game"
+*/}
+
+# Build a TikTok Christmas Live Game with React Three Fiber and Playroom
+
+Learn how to build an interactive Christmas live video game for TikTok where viewers help Santa escape from evil snowmen using likes, gifts, and chat messages. The game uses React Three Fiber for 3D rendering and Playroom Kit for TikTok live integration.
+
+<br />
+<a href="https://r3f-tiktok-christmas.vercel.app/" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/wass08/r3f-vite-starter"><Button variant={"outline"}>Get Starter Code</Button></a>
+<a href="https://github.com/wass08/r3f-tiktok-christmas"><Button variant={"outline"}>Get Final Code</Button></a>
+<br />
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/RObw_WRbX6k?si=20Q4vYF0RDDIslyD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Getting Started
+
+This tutorial shows you how to create a TikTok live game where viewers interact in real-time to help Santa escape from snowmen. Players can type snowman names to kill them, use likes for instant kills, and send gifts to drop bombs that eliminate all visible snowmen. The game runs directly in the TikTok browser, making it accessible to any viewer without additional downloads.
+
+The game features real-time TikTok live integration through Playroom Kit's [`onTikTokLiveEvent`](/api-reference/js/onTikTokLiveEvent), 3D animated characters using React Three Fiber, a scrolling gameboard environment, and a leaderboard system that tracks kills. All viewer interactions are synchronized across all players through Playroom's multiplayer state management.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Christmas Live Game for TikTok". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Christmas Live Game for TikTok". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Christmas Live Game for TikTok".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains all the 3D assets, audio files, and basic React setup you'll need.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Set Up App.jsx with Canvas, GameProvider, and Post-Processing Effects &nbsp; <PromptStepCopyButton counter={1} text="Update App.jsx to wrap Canvas with GameProvider, set camera to position [0, 8, 12] with fov 90, add fog with #333 color from 14 to 35, add EffectComposer with Bloom (mipmapBlur, intensity 1.2, luminanceThreshold 1), and add UI component. Define game constants: SNOWMAN_COLUMNS = 4, SNOWMAN_SPACE_COLUMN = 2.5, SNOWMAN_SPACE_ROW = 4, SCROLL_SPEED = 10, GAMEBOARD_LENGTH = 56." />
+
+Set up the main App component with React Three Fiber Canvas, game provider, post-processing effects, and UI components. This creates the foundation for the 3D scene and game state management.
+
+```jsx filename="App.jsx"
+import { Canvas } from "@react-three/fiber";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
+import { Experience } from "./components/Experience";
+import { UI } from "./components/UI";
+import { GameProvider } from "./hooks/useGame";
+
+export const DEBUG_MODE = false;
+
+export const SNOWMAN_COLUMNS = 4;
+export const SNOWMAN_SPACE_COLUMN = 2.5;
+export const SNOWMAN_SPACE_ROW = 4;
+export const SCROLL_SPEED = 10;
+export const GAMEBOARD_LENGTH = 56;
+
+function App() {
+  return (
+    <GameProvider>
+      <Canvas shadows camera={{ position: [0, 8, 12], fov: 90 }}>
+        <color attach="background" args={["#333"]} />
+        <fog attach={"fog"} args={["#333", 14, 35]} />
+        <Experience />
+        <EffectComposer>
+          <Bloom mipmapBlur intensity={1.2} luminanceThreshold={1} />
+        </EffectComposer>
+      </Canvas>
+      <UI />
+    </GameProvider>
+  );
+}
+
+export default App;
+```
+
+---
+
+### Step 2: Create the useGame Hook &nbsp; <PromptStepCopyButton counter={2} text="Create hooks/useGame.jsx with GameProvider component. Use insertCoin with liveMode: 'tiktok' and onTikTokLiveEvent to handle chat (attack), gift (bomb), and like events. Implement gameReducer with states: start, playing, gameover. Include timer logic (60 seconds), snowmen array with names, leaderboard tracking, respawn logic (3s respawn, 1.8s attackable after), and bomb/attack/like handlers. Export useGame hook." />
+
+Create the useGame hook that manages all game state, TikTok live integration using [`insertCoin`](/api-reference/js/insertCoin) with `liveMode: "tiktok"` and [`onTikTokLiveEvent`](/api-reference/js/onTikTokLiveEvent), and game logic including player interactions, timer management, and snowman behavior.
+
+```jsx filename="useGame.jsx"
+import { insertCoin, onTikTokLiveEvent } from "playroomkit";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import { randInt } from "three/src/math/MathUtils";
+import { DEBUG_MODE } from "../App";
+
+const GAME_TIME = 60;
+const NB_SNOWMEN = 8;
+const SNOWMAN_RESPAWN_TIME = 3000;
+const SNOWMAN_ATTACKABLE_TIME_AFTER_RESPAWN = 1800;
+
+function generateRandomSnowmanName() {
+  const possibleNames = [
+    "heart", "gift", "love", "friend", "christmas", "snowman", "winter", "snow",
+    "snowflake", "snowball", "santa", "rudolph", "reindeer", "elf", "candy",
+    "cane", "gingerbread", "cookie", "mistletoe", "holly", "jolly", "joy",
+    "jingle", "bell", "merry", "tree", "lights", "ornament", "turkey", "socks",
+    "chimney", "family", "dance",
+  ];
+  return possibleNames[randInt(0, possibleNames.length - 1)];
+}
+
+function isSnowmanAttackable(snowman) {
+  return (
+    !snowman.dead &&
+    (!snowman.respawnTime ||
+      Date.now() - snowman.respawnTime > SNOWMAN_ATTACKABLE_TIME_AFTER_RESPAWN)
+  );
+}
+
+const GameContext = createContext();
+
+function gameReducer(state, action) {
+  if (action.type === "start") {
+    return { ...state, timer: GAME_TIME, status: "playing" };
+  }
+  if (action.type === "restart") {
+    return { ...state, status: "start", timer: 0, leaderboard: [] };
+  }
+  if (action.type === "respawn") {
+    const now = Date.now();
+    const snowmen = [...state.snowmen];
+    return {
+      ...state,
+      snowmen: snowmen.map((snowman) => {
+        if (snowman.dead && now - snowman.deathTime > SNOWMAN_RESPAWN_TIME) {
+          return { ...snowman, dead: false, respawnTime: now, name: generateRandomSnowmanName() };
+        }
+        return snowman;
+      }),
+    };
+  }
+  if (action.type === "hideBomb") {
+    return { ...state, showBomb: false };
+  }
+  if (state.status !== "playing") {
+    return state;
+  }
+  if (action.type === "updateLoop") {
+    const timer = state.timer - 1;
+    if (timer <= 0) {
+      return { ...state, status: "gameover" };
+    }
+    return { ...state, timer };
+  }
+  if (action.type === "bomb" && !state.showBomb) {
+    const snowmen = [...state.snowmen];
+    let killed = 0;
+    for (let i = 0; i < snowmen.length; i++) {
+      if (isSnowmanAttackable(snowmen[i])) {
+        killed++;
+        snowmen[i] = { ...snowmen[i], dead: true, deathTime: Date.now(), killedBy: action.player, deathCause: action.type };
+      }
+    }
+    const leaderboard = [...state.leaderboard];
+    if (killed > 0) {
+      const playerIndex = leaderboard.findIndex((p) => p.username === action.player.username);
+      if (playerIndex > -1) {
+        leaderboard[playerIndex] = { ...action.player, kills: leaderboard[playerIndex].kills + killed };
+      } else {
+        leaderboard.push({ ...action.player, kills: killed });
+      }
+      leaderboard.sort((a, b) => b.kills - a.kills);
+    }
+    return { ...state, showBomb: true, snowmen, leaderboard };
+  }
+  if (action.type === "like" || action.type === "attack") {
+    const snowmen = [...state.snowmen];
+    const leaderboard = [...state.leaderboard];
+    for (let i = 0; i < snowmen.length; i++) {
+      if (isSnowmanAttackable(snowmen[i]) && (action.type === "like" || snowmen[i].name === action.name.toLowerCase())) {
+        snowmen[i] = { ...snowmen[i], dead: true, deathTime: Date.now(), killedBy: action.player, deathCause: action.type };
+        const playerIndex = leaderboard.findIndex((p) => p.username === action.player.username);
+        if (playerIndex > -1) {
+          leaderboard[playerIndex] = { ...action.player, kills: leaderboard[playerIndex].kills + 1 };
+        } else {
+          leaderboard.push({ ...action.player, kills: 1 });
+        }
+        leaderboard.sort((a, b) => b.kills - a.kills);
+        return { ...state, snowmen, leaderboard };
+      }
+    }
+  }
+  return state;
+}
+
+export const GameProvider = ({ children }) => {
+  const [gameState, dispatch] = useReducer(gameReducer, {
+    status: "start",
+    timer: 0,
+    snowmen: [...Array(NB_SNOWMEN).fill().map((_, i) => ({ name: generateRandomSnowmanName() }))],
+    showBomb: false,
+    leaderboard: [],
+  });
+
+  const setupTiktok = async () => {
+    await insertCoin({ liveMode: "tiktok" });
+    onTikTokLiveEvent((event) => {
+      const player = { username: event.data.username, userPhotoUrl: event.data.userPhotoUrl };
+      switch (event.type) {
+        case "chat": dispatch({ type: "attack", player, name: event.data.comment }); break;
+        case "gift": dispatch({ type: "bomb", player }); break;
+        case "like": dispatch({ type: "like", player }); break;
+      }
+    });
+  };
+
+  useEffect(() => {
+    const gameLoop = setInterval(() => dispatch({ type: "updateLoop" }), 1000);
+    return () => clearInterval(gameLoop);
+  }, []);
+
+  useEffect(() => {
+    const gameLoop = setInterval(() => dispatch({ type: "respawn" }), 100);
+    return () => clearInterval(gameLoop);
+  }, []);
+
+  useEffect(() => {
+    if (!DEBUG_MODE) { setupTiktok(); }
+  }, []);
+
+  const { snowmen, status, timer, leaderboard, showBomb } = gameState;
+
+  useEffect(() => {
+    if (!showBomb) return;
+    const timeout = setTimeout(() => dispatch({ type: "hideBomb" }), 900);
+    return () => clearTimeout(timeout);
+  }, [showBomb]);
+
+  return (
+    <GameContext.Provider value={{ dispatch, snowmen, status, timer, leaderboard, isSnowmanAttackable, showBomb }}>
+      {children}
+    </GameContext.Provider>
+  );
+};
+
+export const useGame = () => {
+  const context = useContext(GameContext);
+  if (context === undefined) { throw new Error("useGame must be used within a GameProvider"); }
+  return context;
+};
+```
+
+---
+
+### Step 3: Create the Experience Component &nbsp; <PromptStepCopyButton counter={3} text="Update Experience.jsx to render 3D scene. Add Environment with sunset preset, DirectionalLight with shadow, and OrbitControls. Import game constants from App.jsx and useGame hook. Render Final component visible when status is gameover, Gameboard at three positions (0, 42, -GAMEBOARD_LENGTH) when playing, Explosion when showBomb is true, and map snowmen array to Snowman components with Grave for dead snowmen. Position Santa at z=6." />
+
+Create the Experience component that renders the 3D environment including lighting, camera controls, game objects, and character animations.
+
+```jsx filename="Experience.jsx"
+import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { Suspense } from "react";
+import { degToRad } from "three/src/math/MathUtils";
+import { GAMEBOARD_LENGTH, SNOWMAN_COLUMNS, SNOWMAN_SPACE_COLUMN, SNOWMAN_SPACE_ROW } from "../App";
+import { useGame } from "../hooks/useGame";
+import { Explosion } from "./Explosion";
+import { Final } from "./Final";
+import { Gameboard } from "./Gameboard";
+import { Grave } from "./Grave";
+import { Santa } from "./Santa";
+import { Snowman } from "./Snowman";
+
+export const Experience = () => {
+  const { snowmen, status, showBomb } = useGame();
+  return (
+    <>
+      <OrbitControls />
+      <Environment preset="sunset" />
+      <directionalLight position={[10, 8, 20]} intensity={0.5} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}>
+        <PerspectiveCamera attach={"shadow-camera"} near={1} far={50} fov={80} />
+      </directionalLight>
+      <Final position-y={-2} rotation-x={degToRad(-20)} visible={status === "gameover"} />
+      <group visible={status === "playing"}>
+        <Gameboard position-z={status === "start" ? 42 : 0} />
+        <Gameboard position-z={status === "start" ? 42 : GAMEBOARD_LENGTH} />
+        <Gameboard position-z={status === "start" ? 42 : -GAMEBOARD_LENGTH} />
+        {showBomb && <Explosion />}
+        {snowmen.map((snowman, index) => {
+          const column = index % SNOWMAN_COLUMNS;
+          const row = Math.floor(index / SNOWMAN_COLUMNS);
+          const xPos = column * SNOWMAN_SPACE_COLUMN - ((SNOWMAN_COLUMNS - 1) * SNOWMAN_SPACE_COLUMN) / 2;
+          return (
+            <group key={index} position-z={-1 - row * SNOWMAN_SPACE_ROW} position-x={xPos}>
+              {snowman.dead && (
+                <Suspense>
+                  <Grave position-y={1} position-z={-0.5} player={snowman.killedBy} />
+                </Suspense>
+              )}
+              <Snowman snowman={snowman} />
+            </group>
+          );
+        })}
+        <Santa position-z={6} />
+      </group>
+    </>
+  );
+};
+```
+
+---
+
+### Step 4: Create the Gameboard Component &nbsp; <PromptStepCopyButton counter={4} text="Create Gameboard.jsx using useGLTF to load /models/gameboard.glb. Use useFrame to scroll the board along z-axis at SCROLL_SPEED, resetting position when below -2*GAMEBOARD_LENGTH. Render all geometry nodes from the GLB including presents, trees, benches, arches, and decorations with their materials." />
+
+Create the Gameboard component that renders the scrolling environment with all decorative elements.
+
+```jsx filename="Gameboard.jsx"
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import React, { useRef } from "react";
+import { GAMEBOARD_LENGTH, SCROLL_SPEED } from "../App";
+
+export function Gameboard(props) {
+  const { nodes, materials } = useGLTF("/models/gameboard.glb");
+  const ref = useRef();
+
+  useFrame((_, delta) => {
+    ref.current.position.z -= SCROLL_SPEED * delta;
+    if (ref.current.position.z < -2 * GAMEBOARD_LENGTH) {
+      ref.current.position.z = GAMEBOARD_LENGTH;
+    }
+  });
+
+  return (
+    <group {...props} dispose={null} ref={ref}>
+      <group position={[-6.564, 0, 2.846]} rotation={[0, 0.294, 0]} scale={0.672}>
+        <mesh castShadow receiveShadow geometry={nodes.Present.geometry} material={materials["Material.001"]} />
+        <mesh castShadow receiveShadow geometry={nodes.Present001.geometry} material={materials["Material.001"]} position={[31.075, 0, -24.218]} rotation={[0, 0.007, 0]} scale={1.07} />
+        <mesh castShadow receiveShadow geometry={nodes.Present005.geometry} material={materials["Material.001"]} position={[19.575, 0, 13.355]} scale={1.314} />
+        <mesh castShadow receiveShadow geometry={nodes.Present006.geometry} material={materials["Material.001"]} position={[29.901, 0, -21.739]} rotation={[0, -0.45, 0]} scale={0.914} />
+        <mesh castShadow receiveShadow geometry={nodes.Present007.geometry} material={materials["Material.001"]} position={[18.452, 0, 16.133]} rotation={[0, 0.056, 0]} scale={0.836} />
+        <mesh castShadow receiveShadow geometry={nodes.Present008.geometry} material={materials["Material.001"]} position={[18.953, 0, 10.164]} rotation={[0, 0.056, 0]} scale={0.836} />
+      </group>
+      <mesh castShadow receiveShadow geometry={nodes.arch_gate.geometry} material={materials.HalloweenBits} position={[10.578, -0.161, 0.041]} rotation={[0, -1.146, 0]} />
+      <mesh castShadow receiveShadow geometry={nodes.bench.geometry} material={materials.HalloweenBits} position={[11.232, 0, -8.993]} rotation={[0, -0.954, 0]} />
+      <mesh castShadow receiveShadow geometry={nodes.bench_decorated.geometry} material={materials.HalloweenBits} position={[8.272, 0, 3.939]} rotation={[0, -0.583, 0]} />
+      <mesh castShadow receiveShadow geometry={nodes.post_lantern.geometry} material={materials.HalloweenBits} position={[-9.965, 0, -7.411]} rotation={[0, 1.222, 0]} />
+      <mesh castShadow receiveShadow geometry={nodes.post_skull.geometry} material={materials.HalloweenBits} position={[12.005, 0, -12.215]} rotation={[0, -1.097, 0]} />
+      <mesh castShadow receiveShadow geometry={nodes.tree_dead_large.geometry} material={materials.HalloweenBits} position={[-7.932, 0, -2.029]} />
+      <mesh castShadow receiveShadow geometry={nodes.tree_dead_large_decorated.geometry} material={materials.HalloweenBits} position={[-10.481, 0, 8.717]} rotation={[0, 0.507, 0]} />
+      <mesh castShadow receiveShadow geometry={nodes.tree_dead_medium.geometry} material={materials.HalloweenBits} position={[11.437, 0, -6.858]} />
+      <mesh castShadow receiveShadow geometry={nodes.arch.geometry} material={materials.HalloweenBits} position={[-10.443, -0.013, 2.02]} rotation={[0, 0.637, 0]} />
+      <mesh castShadow receiveShadow geometry={nodes.tree_pine_orange_large.geometry} material={materials.HalloweenBits} position={[-9.925, 0, -22.603]} />
+      <mesh castShadow receiveShadow geometry={nodes.tree_pine_yellow_large.geometry} material={materials.HalloweenBits} position={[-10.471, 0, 18.631]} />
+    </group>
+  );
+}
+
+useGLTF.preload("/models/gameboard.glb");
+```
+
+---
+
+### Step 5: Create the Santa Component &nbsp; <PromptStepCopyButton counter={5} text="Create Santa.jsx using useGLTF to load /models/santa.glb and useAnimations for animations. Play the Run animation on mount. Use SkeletonUtils to clone the scene for proper rendering. Render the skinned mesh with proper skeleton and material." />
+
+Create the Santa component that renders the animated Santa character running toward the finish line.
+
+```jsx filename="Santa.jsx"
+import { useAnimations, useGLTF } from "@react-three/drei";
+import React, { useEffect, useRef } from "react";
+
+export function Santa(props) {
+  const group = useRef();
+  const { nodes, materials, animations } = useGLTF("/models/santa.glb");
+  const { actions } = useAnimations(animations, group);
+
+  useEffect(() => {
+    actions["Run"].play();
+  }, []);
+
+  return (
+    <group ref={group} {...props} dispose={null}>
+      <group name="Scene">
+        <group name="Armature" rotation={[Math.PI / 2, 0, 0]}>
+          <primitive object={nodes.mixamorigHips} />
+          <skinnedMesh castShadow receiveShadow name="mesh_char_135" geometry={nodes.mesh_char_135.geometry} material={materials._100_SaintClaus} skeleton={nodes.mesh_char_135.skeleton} morphTargetDictionary={nodes.mesh_char_135.morphTargetDictionary} morphTargetInfluences={nodes.mesh_char_135.morphTargetInfluences} />
+        </group>
+      </group>
+    </group>
+  );
+}
+
+useGLTF.preload("/models/santa.glb");
+```
+
+---
+
+### Step 6: Create the Snowman Component &nbsp; <PromptStepCopyButton counter={6} text="Create Snowman.jsx using useGLTF to load /models/snowman.glb, useAnimations, Billboard, and Text. Clone scene with SkeletonUtils. Play Run animation with random time offset. Use useFrame to animate z position (move to -40 when dead, lerp to 0 when alive) and animate name opacity based on isSnowmanAttackable. Render Billboard with snowman name in red emissive material." />
+
+Create the Snowman component that renders animated snowmen with names that can be targeted by viewers.
+
+```jsx filename="Snowman.jsx"
+import { Billboard, Text, useAnimations, useGLTF } from "@react-three/drei";
+import { useFrame, useGraph } from "@react-three/fiber";
+import React, { useEffect, useMemo, useRef } from "react";
+import { SkeletonUtils } from "three-stdlib";
+import { lerp } from "three/src/math/MathUtils";
+import { useGame } from "../hooks/useGame";
+
+export function Snowman({ snowman, ...props }) {
+  const group = useRef();
+  const { scene, materials, animations } = useGLTF("/models/snowman.glb");
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
+  const { actions } = useAnimations(animations, group);
+  const nameMaterial = useRef();
+  const { isSnowmanAttackable } = useGame();
+
+  useEffect(() => {
+    actions["Run"].time = Math.random() * actions["Run"].getClip().duration;
+    actions["Run"].play();
+  }, []);
+
+  useFrame((_, delta) => {
+    if (snowman.dead) {
+      group.current.position.z = -40;
+    } else {
+      group.current.position.z = lerp(group.current.position.z, 0, delta * 1.2);
+    }
+    nameMaterial.current.opacity = lerp(nameMaterial.current.opacity, isSnowmanAttackable(snowman) ? 1 : 0, delta * 2);
+  });
+
+  return (
+    <group ref={group} {...props} dispose={null}>
+      <Billboard position-y={4}>
+        <Text fontSize={0.42} font="fonts/Poppins-Bold.ttf">
+          {snowman.name}
+          <meshStandardMaterial color="red" emissive={"orange"} emissiveIntensity={2} toneMapped={false} ref={nameMaterial} />
+        </Text>
+      </Billboard>
+      <group name="Scene">
+        <group name="Armature" rotation={[Math.PI / 2, 0, 0]}>
+          <primitive object={nodes.mixamorigHips} />
+          <skinnedMesh castShadow receiveShadow name="Body_11" geometry={nodes.Body_11.geometry} material={materials._092_Chili} skeleton={nodes.Body_11.skeleton} morphTargetDictionary={nodes.Body_11.morphTargetDictionary} morphTargetInfluences={nodes.Body_11.morphTargetInfluences} />
+        </group>
+      </group>
+    </group>
+  );
+}
+
+useGLTF.preload("/models/snowman.glb");
+```
+
+---
+
+### Step 7: Create the Grave Component &nbsp; <PromptStepCopyButton counter={7} text="Create Grave.jsx using useGLTF to load /models/grave.glb and useTexture for player photo. Use useFrame to scroll the grave along z-axis. Render Explosion component with limitX=1, limitY=5, limitZ=3, scale=0.15, multicolor=false. Render grave mesh and plane with player photo texture." />
+
+Create the Grave component that displays when a snowman is killed, showing which player eliminated it.
+
+```jsx filename="Grave.jsx"
+import { useGLTF, useTexture } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import React, { useRef } from "react";
+import { SCROLL_SPEED } from "../App";
+import { Explosion } from "./Explosion";
+
+export function Grave({ player, ...props }) {
+  const { nodes, materials } = useGLTF("/models/grave.glb");
+  const texture = useTexture(player.userPhotoUrl?.includes("testavatars") ? "https://robohash.org/stefan-one" : player.userPhotoUrl);
+  const ref = useRef();
+  useFrame((_, delta) => { ref.current.position.z -= SCROLL_SPEED * delta; });
+
+  return (
+    <group {...props} dispose={null} ref={ref}>
+      <Explosion limitX={1} limitY={5} limitZ={3} scale={0.15} multicolor={false} />
+      <mesh castShadow receiveShadow geometry={nodes.grave_A.geometry} material={materials.HalloweenBits} />
+      <mesh geometry={nodes.Plane.geometry} position={[0, 0, 1.406]}>
+        <meshBasicMaterial map={texture} />
+      </mesh>
+    </group>
+  );
+}
+
+useGLTF.preload("/models/grave.glb");
+```
+
+---
+
+### Step 8: Create the Explosion Component &nbsp; <PromptStepCopyButton counter={8} text="Create Explosion.jsx using Instances and Instance from drei. Create AnimatedBox subcomponent that lerps position toward target and scales down over time. Generate nb random boxes with targets within limits, random speeds, and colors (green, red, white, blue, yellow for multicolor, red only for bombs). Use useFrame to animate each box." />
+
+Create the Explosion component that renders particle effects when snowmen are eliminated or bombs are dropped.
+
+```jsx filename="Explosion.jsx"
+import { Instance, Instances } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { Color, MathUtils, Vector3 } from "three";
+import { randInt } from "three/src/math/MathUtils";
+
+const greenColor = new Color("green");
+greenColor.multiplyScalar(12);
+const redColor = new Color("red");
+redColor.multiplyScalar(12);
+const whiteColor = new Color("white");
+whiteColor.multiplyScalar(12);
+const blueColor = new Color("blue");
+blueColor.multiplyScalar(12);
+const yellowColor = new Color("yellow");
+yellowColor.multiplyScalar(12);
+const colors = [greenColor, redColor, whiteColor, blueColor, yellowColor];
+
+const AnimatedBox = ({ scale, target, speed, color }) => {
+  const ref = useRef();
+  useFrame((_, delta) => {
+    if (ref.current.scale.x > 0) {
+      ref.current.scale.x = ref.current.scale.y = ref.current.scale.z -= speed * delta;
+    }
+    ref.current.position.lerp(target, speed);
+  });
+  return <Instance ref={ref} scale={scale} position={[0, 0, 0]} color={color} />;
+};
+
+export const Explosion = ({ nb = 100, position = new Vector3(0, 0, 0), limitX = 5, limitY = 10, limitZ = 10, scale = 0.4, multicolor = true }) => {
+  const boxes = useMemo(
+    () => Array.from({ length: nb }, () => ({
+      target: new Vector3(MathUtils.randFloat(-limitX, limitX), MathUtils.randFloat(0, limitY), MathUtils.randFloat(-limitZ, limitZ)),
+      scale,
+      speed: MathUtils.randFloat(0.4, 0.6),
+    })), [nb]
+  );
+
+  return (
+    <group position={[position.x, position.y, position.z]}>
+      <Instances>
+        <boxGeometry />
+        <meshStandardMaterial toneMapped={false} />
+        {boxes.map((box, i) => (
+          <AnimatedBox key={i} color={multicolor ? colors[randInt(0, colors.length - 1)] : redColor} {...box} />
+        ))}
+      </Instances>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 9: Create the Final Component &nbsp; <PromptStepCopyButton counter={9} text="Create Final.jsx using useGLTF to load /models/final.glb and useAnimations. Loop all animations with LoopRepeat. Render the victory stage with multiple characters (tree, candy cane, santa, present), sled, and presents." />
+
+Create the Final component that displays the victory celebration scene when the game ends.
+
+```jsx filename="Final.jsx"
+import { useAnimations, useGLTF } from "@react-three/drei";
+import React, { useEffect, useRef } from "react";
+import { LoopRepeat } from "three";
+
+export function Final(props) {
+  const group = useRef();
+  const { nodes, materials, animations } = useGLTF("/models/final.glb");
+  const { actions } = useAnimations(animations, group);
+
+  useEffect(() => {
+    Object.keys(actions).forEach((key) => {
+      actions[key].loop = LoopRepeat;
+      actions[key].clampWhenFinished = false;
+      actions[key].play();
+    });
+  });
+
+  return (
+    <group ref={group} {...props} dispose={null}>
+      <group name="Scene">
+        <group name="Armature" position={[0.628, 2.317, -6.101]} rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
+          <primitive object={nodes.mixamorigHips} />
+          <skinnedMesh castShadow receiveShadow name="mesh_char_129001" geometry={nodes.mesh_char_129001.geometry} material={materials._096_XmasTree} skeleton={nodes.mesh_char_129001.skeleton} />
+        </group>
+        <group name="Armature001" position={[4.401, 0.772, 2.353]} rotation={[Math.PI / 2, 0, 0.763]} scale={0.01}>
+          <primitive object={nodes.mixamorigHips_1} />
+          <skinnedMesh castShadow receiveShadow name="mesh_char_126_1001" geometry={nodes.mesh_char_126_1001.geometry} material={materials._095_CandyCane} skeleton={nodes.mesh_char_126_1001.skeleton} />
+        </group>
+        <group name="Armature002" position={[-4.064, 0.772, 2.529]} rotation={[Math.PI / 2, 0, -1.126]} scale={0.01}>
+          <primitive object={nodes.mixamorigHips_2} />
+          <skinnedMesh castShadow receiveShadow name="mesh_char_135001" geometry={nodes.mesh_char_135001.geometry} material={materials._100_SaintClaus} skeleton={nodes.mesh_char_135001.skeleton} />
+        </group>
+        <group name="Armature003" position={[-1.713, 0.772, -1.109]} rotation={[Math.PI / 2, 0, -0.516]} scale={0.01}>
+          <primitive object={nodes.mixamorigHips_3} />
+          <skinnedMesh castShadow receiveShadow name="mesh_char_132_1001" geometry={nodes.mesh_char_132_1001.geometry} material={materials._099_Present} skeleton={nodes.mesh_char_132_1001.skeleton} />
+        </group>
+        <mesh castShadow receiveShadow name="Sledge" geometry={nodes.Sledge.geometry} material={materials.Cube} position={[0.319, 1.539, 2.403]} rotation={[0, -0.452, 0]} scale={0.006} />
+        <mesh castShadow receiveShadow name="Present" geometry={nodes.Present.geometry} material={materials["Material.001"]} position={[0.022, 1.675, 2.126]} scale={1026.752} />
+        <mesh castShadow receiveShadow name="Stage" geometry={nodes.Stage.geometry} material={materials.mat4} position={[0.001, 7.134, -4.396]} rotation={[Math.PI, -0.003, Math.PI]} scale={16.886} />
+        <mesh castShadow receiveShadow name="Present001" geometry={nodes.Present001.geometry} material={materials["Material.001"]} position={[1.258, 1.589, 2.145]} rotation={[0, -0.783, 0]} scale={809.743} />
+        <mesh castShadow receiveShadow name="Present002" geometry={nodes.Present002.geometry} material={materials["Material.001"]} position={[-0.881, 1.675, 1.134]} rotation={[0, 0.771, 0]} scale={603.463} />
+        <mesh castShadow receiveShadow name="Present003" geometry={nodes.Present003.geometry} material={materials["Material.001"]} position={[0.666, 1.671, 3.024]} rotation={[0, -0.131, 0]} scale={571.78} />
+      </group>
+    </group>
+  );
+}
+
+useGLTF.preload("/models/final.glb");
+```
+
+---
+
+### Step 10: Create the UI Component &nbsp; <PromptStepCopyButton counter={10} text="Create UI.jsx with leaderboard display at top (scrolls horizontally), start screen with instructions and START button, gameover screen with congratulations and PLAY AGAIN button, timer display during gameplay, and debug buttons for chat/like/gift when DEBUG_MODE is true. Use useGame hook for status, snowmen, dispatch, leaderboard, timer. Use gradients array for top 3 leaderboard positions. Add snowman icon asset for kill count." />
+
+Create the UI component that displays the game interface including leaderboard, timer, start/gameover screens, and debug controls.
+
+```jsx filename="UI.jsx"
+import { useEffect, useRef } from "react";
+import { randInt } from "three/src/math/MathUtils";
+import { DEBUG_MODE } from "../App";
+import { useGame } from "../hooks/useGame";
+import IconSnowman from "../assets/icon-snowman.svg";
+
+const fakeUser = { username: "Bobby", userPhotoUrl: "https://robohash.org/stefan-one" };
+
+const gradients = [
+  "bg-gradient-to-t from-yellow-600 to-yellow-400",
+  "bg-gradient-to-t from-gray-600 to-slate-300",
+  "bg-gradient-to-t from-yellow-900 to-amber-600",
+  "bg-gradient-to-t from-black to-gray-600",
+];
+
+export const UI = () => {
+  const leaderboardRef = useRef();
+  const { status, snowmen, dispatch, leaderboard, timer } = useGame();
+
+  useEffect(() => {
+    let toEnd = false;
+    const interval = setInterval(() => {
+      leaderboardRef.current?.scrollTo({ top: 0, left: toEnd ? leaderboardRef.current.scrollWidth : 0, behavior: "smooth" });
+      toEnd = !toEnd;
+    }, 4500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <main className="fixed top-0 left-0 right-0 bottom-0 z-10 flex flex-col gap-4 items-stretch justify-between pointer-events-none">
+      <div className="flex w-full overflow-x-auto pointer-events-auto" ref={leaderboardRef}>
+        {leaderboard.map((player, index) => (
+          <div key={index} className={`p-2 flex-shrink-0 w-32 flex flex-col justify-center items-center gap-1 ${gradients[index < 3 ? index : 3]}`}>
+            <img className="w-20 h-20 rounded-full border-4 border-white border-opacity-50" src={player.userPhotoUrl?.includes("testavatars") ? "https://robohash.org/stefan-one" : player.userPhotoUrl} alt="Player avatar" />
+            <h2 className="font-bold text-sm text-white truncate max-w-full">#{index + 1} {player.username}</h2>
+            <div className="flex items-center gap-1">
+              <img src={IconSnowman} alt="Snowman icon" className="w-5" />
+              <p className="font-bold text-white">{player.kills}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {status === "start" && (
+        <div className="p-4">
+          <p className="text-center text-white text-4xl font-bold">🎅🌲☃️<br />Save Christmas from the evil snowmen!</p>
+          <p className="text-left text-white text-lg"><br /><b>✍️ Type</b> a snowman name to kill it<br /><b>❤️ Like</b> to kill one instantly<br /><b>🎁 Gift</b> to drop a magical bomb</p>
+          <button className="mt-2 bg-green-200 text-green-700 font-bold p-4 rounded-md pointer-events-auto w-full" onClick={() => dispatch({ type: "start" })}>START</button>
+        </div>
+      )}
+      <div className="p-4">
+        {status === "gameover" && (
+          <>
+            <p className="text-center text-white text-lg font-bold">Congratulations! 🎄<br />You saved Christmas from the evil snowmen!</p>
+            <button className="mt-2 bg-green-200 text-green-700 font-bold p-4 rounded-md pointer-events-auto w-full" onClick={() => dispatch({ type: "restart" })}>PLAY AGAIN</button>
+          </>
+        )}
+        {status === "playing" && <p className="text-right text-4xl font-bold text-white">⏳ {timer}</p>}
+        {status === "playing" && DEBUG_MODE && (
+          <div className="mt-4 flex gap-4">
+            <button className="mt-4 bg-red-400 p-4 rounded-md pointer-events-auto" onClick={() => dispatch({ type: "attack", player: fakeUser, name: snowmen[randInt(0, snowmen.length - 1)].name })}>CHAT</button>
+            <button className="mt-4 bg-red-400 p-4 rounded-md pointer-events-auto" onClick={() => dispatch({ type: "like", player: fakeUser })}>LIKE</button>
+            <button className="mt-4 bg-orange-400 p-4 rounded-md pointer-events-auto" onClick={() => dispatch({ type: "bomb", player: fakeUser })}>GIFT</button>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+};
+```
+
+---
+
+## Improvements
+
+- Add sound effects for kills, bomb explosions, and background music
+- Implement power-ups that viewers can send to help Santa
+- Add more character animations and visual effects
+- Create different game modes with varying difficulty levels
+- Add a spectator mode showing statistics and replays

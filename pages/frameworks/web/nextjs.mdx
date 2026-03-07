@@ -1,0 +1,50 @@
+# Using Next.js with Playroom Kit
+
+[Next.js](https://nextjs.org/) is a React framework for production-grade web apps with SSR, routing, and API routes. Playroom Kit adds real-time collaboration—shared state, rooms, and participants—without a custom backend.
+
+Use the same React hooks and patterns as the [React](/api-reference/react) guide. Run Playroom Kit in **client components** so the real-time connection runs in the browser.
+
+## Setup
+
+1. Install Playroom Kit in your Next.js project:
+
+```sh npm2yarn copy
+npm install playroomkit
+```
+
+2. Use Playroom Kit in a **client component** (add `"use client"` at the top):
+
+```jsx copy
+"use client";
+
+import { useState, useEffect } from "react";
+import { insertCoin, onPlayerJoin, myPlayer } from "playroomkit";
+
+export default function App() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    insertCoin().then(() => setReady(true));
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    const unsub = onPlayerJoin((state) => {
+      // Handle new player
+      return () => { /* cleanup on quit */ };
+    });
+    return unsub;
+  }, [ready]);
+
+  if (!ready) return <div>Loading...</div>;
+  return <div>{/* Your multiplayer UI */}</div>;
+}
+```
+
+3. For shared state, use `myPlayer().setState(key, value)` and `playerState.getState(key)` as in the [JavaScript](/api-reference/js) guide.
+
+## Learn more
+
+- [Available hooks](/api-reference/react) (same as React)
+- [API](/api-reference)
+- [Features](/components)

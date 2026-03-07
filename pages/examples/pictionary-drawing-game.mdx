@@ -1,0 +1,902 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import CodePlayground from "../../components/CodePlayground";
+import {pictionaryDrawing} from "../../code/pictionary-drawing-game";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+{/*
+
+* Metadata:
+* Primary keyword: "multiplayer Pictionary game"
+* Secondary keywords: "React drawing game", "Playroom Kit multiplayer", "real-time drawing sync", "online guessing game", "multiplayer canvas app"
+* AI crawl phrases: "how to build multiplayer Pictionary game with React", "Playroom Kit drawing game tutorial", "real-time drawing synchronization with Playroom Kit", "React multiplayer guessing game tutorial", "build online Pictionary clone"
+* SEO tags: [multiplayer Pictionary game, React drawing app, Playroom Kit, real-time multiplayer, online guessing game, collaborative drawing]
+  */}
+
+
+# Build a Pictionary Drawing Game with Playroom Kit and React
+
+Learn how to build a multiplayer Pictionary-style drawing game where players take turns drawing words while others guess. You'll use React for the UI, Playroom Kit for real-time multiplayer, and the DrawingBoard library for the canvas.
+
+<br />
+<a href="https://draw.joinplayroom.com/" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/example/pictionary-starter"><Button variant="outline">Get Final Code</Button></a>
+<br />
+<br />
+
+<CodePlayground
+files={pictionaryDrawing}
+height="1400px"
+previewUrls={[
+"https://draw.joinplayroom.com",
+"https://draw.joinplayroom.com",
+]}
+/>
+
+## Getting Started
+
+This tutorial shows you how to build a Pictionary drawing game where one player draws a randomly selected word while others guess in the chat. The game supports multiple players, real-time drawing synchronization, turn management, and scoring using Playroom Kit's state management via [`useMultiplayerState`](/api-reference/react/useMultiplayerState), [`usePlayersList`](/api-reference/react/usePlayersList), and [`usePlayersState`](/api-reference/react/usePlayersState).
+
+The game features real-time multiplayer synchronization using Playroom Kit, a drawing canvas for artists, a chat system for guesses, and an avatar bar showing player status. All game state is managed through Playroom Kit, which handles the multiplayer networking and streaming without requiring a custom backend server.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Pictionary Drawing Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Pictionary Drawing Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Pictionary Drawing Game".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains the basic React setup, CSS files, and placeholder components you'll need.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Initialize Playroom Kit in main.jsx &nbsp; <PromptStepCopyButton counter={1} text="Initialize Playroom Kit by importing insertCoin from playroomkit. Call insertCoin() and render the App component inside ReactDOM.createRoot after the promise resolves." />
+
+Initialize Playroom Kit to handle multiplayer state and player connections using [`insertCoin`](/api-reference/js/insertCoin). This enables the game to sync game state across all connected players.
+
+```jsx filename="main.jsx"
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import { insertCoin } from "playroomkit";
+
+insertCoin().then(() => {
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <App />,
+  )
+});
+```
+
+---
+
+### Step 2: Set Up the Main App with Game State &nbsp; <PromptStepCopyButton counter={2} text="Create App.jsx with usePlayersList to get players, useMultiplayerState for playerDrawing, currentWord, timer, picture, and guesses. Implement isHost() logic for turn management, word selection, timer countdown, and correct guess detection. Render AvatarBar, header with word/guesses, DrawingArea, and ChatArea components." />
+
+Set up the main App component with game state management using Playroom Kit hooks including [`isHost`](/api-reference/js/isHost), [`myPlayer`](/api-reference/js/myPlayer), [`usePlayersState`](/api-reference/react/usePlayersState), [`usePlayersList`](/api-reference/react/usePlayersList), [`useMultiplayerState`](/api-reference/react/useMultiplayerState), and [`getState`](/api-reference/js/getState).
+
+```jsx filename="App.jsx"
+import { useState, useEffect, useRef } from 'react'
+import { isHost, myPlayer, usePlayersState, usePlayersList, useMultiplayerState, getState } from "playroomkit";
+import words from './words.json';
+import DrawingArea from './DrawingArea';
+import AvatarBar from './AvatarBar';
+import ChatArea from './ChatArea';
+import './App.css'
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function App() {
+  const players = usePlayersList();
+  const drawingAreaRef = useRef(null);
+  const [intervalId, setIntervalId] = useState(null);
+  const [playerDrawing, setPlayerDrawing] = useMultiplayerState('playerDrawing', players[0]?.id);
+  const playersThatHaveGuessed = usePlayersState('guessed');
+  const [currentWord, setCurrentWord] = useMultiplayerState('currentWord');
+  const [timer, setTimer] = useMultiplayerState('timer', 0);
+  const [picture, setPicture] = useMultiplayerState('picture');
+  const [guesses, setGuesses] = useMultiplayerState('guesses', []);
+  const amIDrawing = playerDrawing === myPlayer().id;
+
+  const haveIGuessed = playersThatHaveGuessed.find(p => p.player.id === myPlayer().id && p.state);
+
+  function isCorrectGuess(guess){
+    return guess.toLowerCase() === currentWord.toLowerCase();
+  }
+
+  function getNextPlayer() {
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].id === playerDrawing) {
+        return players[(i + 1) % players.length];
+      }
+    }
+  }
+
+  function copyImage(){
+    const data = drawingAreaRef.current?.getImg();
+    if (!data) return;
+    setPicture(data, true);
+  }
+  // Host will see who has guessed correctly and will be able to move on to the next round
+  useEffect(() => {
+    if (isHost()) {
+      const correctGuesses = guesses.filter(guess => isCorrectGuess(guess.guess));
+      correctGuesses.forEach(guess => {
+        const player = players.find(p => p.id === guess.playerId);
+        player.setState("guessed", true);
+      });
+      if (correctGuesses.length === players.length - 1) {
+        // Everyone has guessed correctly, change the turn to next player
+        let nextPlayer = getNextPlayer();
+        sleep(4000).then(() => {
+          setPlayerDrawing(nextPlayer.id, true);
+        });
+      }
+    }
+  }, [guesses, currentWord]);
+
+  // When the timer runs out
+  useEffect(() => {
+    if (isHost() && timer <= 0) {
+      let nextPlayer = getNextPlayer();
+      setPlayerDrawing(nextPlayer.id, true);
+    }
+  }, [timer]);
+
+  // When the host changes the turn
+  useEffect(() => {
+    if (isHost()) {
+      // Pick a random word and init all states
+      const randomWord = words[Math.floor(Math.random() * words.length)];
+      setCurrentWord(randomWord);
+      setTimer(60, true);
+      
+      setPicture(null, true);
+      setGuesses([], true);
+
+      // Award points to players that have guessed correctly, reset the guessed state
+      players.forEach(player => {
+        if (player.getState('guessed')) {
+          player.setState('score', (player.getState('score') || 0) + 1);
+        }
+        player.setState('guessed', false);
+      });
+    }
+
+    // Clear the canvas if the player is drawing
+    if (amIDrawing) {
+      setTimer(60);
+      copyImage();
+      try{
+        drawingAreaRef.current.reset();
+      }catch(e){}
+      const intervalId = setInterval(() => {
+        copyImage();
+        setTimer(getState('timer') - 1, true);
+      }, 1000);
+      setIntervalId(intervalId);
+    }
+    else {
+      if (intervalId) {
+        clearInterval(intervalId);
+        setIntervalId(null);
+      }
+    }
+  }, [amIDrawing, drawingAreaRef]);
+
+  if (!currentWord) return <div>Loading...</div>
+
+  return (
+    <div className='game-container'> 
+      <AvatarBar />
+      <div className="header-container">
+        <div className={'header' + (amIDrawing? " active":"")}>
+          {amIDrawing ? <h3>Your turn to draw ({timer})</h3> : <h3>Guess the word  ({timer})</h3>}
+          {amIDrawing ?
+            <h1>{currentWord}</h1>
+            : <h1>{!haveIGuessed ? currentWord.split("").map(e => "_ ").join("") : currentWord}</h1>
+          }
+        </div>
+      </div>
+      <DrawingArea 
+        ref={drawingAreaRef} 
+        playerDrawing={playerDrawing} 
+        currentWord={currentWord} 
+        picture={picture} />
+      <ChatArea 
+        amIDrawing={amIDrawing} 
+        guesses={guesses} 
+        isCorrectGuess={isCorrectGuess} />
+    </div>
+  )
+}
+
+export default App
+```
+
+---
+
+### Step 3: Create the AvatarBar Component &nbsp; <PromptStepCopyButton counter={3} text="Create AvatarBar/index.jsx using usePlayersList to display player avatars. Use useMultiplayerState to get playerDrawing. Map through players and show AvatarIcon, drawing indicator when playerDrawing matches, and guessed checkmark when player has guessed correctly." />
+
+Create the AvatarBar component that displays all players in the game with their status indicators using [`usePlayersList`](/api-reference/react/usePlayersList) and [`useMultiplayerState`](/api-reference/react/useMultiplayerState).
+
+```jsx filename="AvatarBar/index.jsx"
+import React from "react";
+import AvatarIcon from "./AvatarIcon";
+import { usePlayersList, useMultiplayerState } from "playroomkit";
+import "./style.css";
+
+export default function AvatarBar() {
+  const players = usePlayersList(true);
+  const [playerDrawing, _setPlayerDrawing] = useMultiplayerState('playerDrawing');
+  return (
+    <div
+      className="player-avatar-bar">
+      {players.map((playerState) => {
+        return (
+          <div
+            key={playerState.id}
+            className="player-avatar-container"
+            style={{ backgroundColor: playerState.getState("profile")?.color }}>
+            {playerState.id === playerDrawing && <div className="drawing"></div>}
+            {playerState.getState("guessed") && <div className="guessed"></div>}
+            <AvatarIcon playerState={playerState} />
+        </div>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+---
+
+### Step 4: Create the AvatarIcon Component &nbsp; <PromptStepCopyButton counter={4} text="Create AvatarBar/AvatarIcon.jsx that accepts playerState and displays the player's profile photo with fallback to default avatar. Apply border color from player profile and handle missing photo cases." />
+
+Create the AvatarIcon component that renders individual player avatars with their profile photos.
+
+```jsx filename="AvatarBar/AvatarIcon.jsx"
+import React from "react";
+import defaultImg from "./default-avatar.png";
+
+export default function generateAvatarIcon({
+  playerState,
+  key,
+  style,
+  noDefault,
+  defaultImage,
+}) {
+  var profile = playerState ? playerState.getState("profile") : false;
+  style = style || {};
+  if (profile) style["borderColor"] = profile.color;
+  if (profile && profile.photo) {
+    style["backgroundImage"] = `url(${profile.photo})`;
+    style["backgroundSize"] = "contain";
+  } else if (!noDefault) {
+    if (defaultImage === "color" && profile) {
+      style["background"] = profile.color;
+    } else {
+      style["backgroundImage"] = `url(${defaultImage || defaultImg})`;
+    }
+    style["backgroundSize"] = defaultImage ? "cover" : "contain";
+  }
+  return (
+    <div
+      key={key || (playerState ? playerState.id : "")}
+      className="avatar-holder"
+      style={style}
+    ></div>
+  );
+}
+```
+
+---
+
+### Step 5: Create the DrawingArea Component &nbsp; <PromptStepCopyButton counter={5} text="Create DrawingArea/index.jsx using forwardRef. Implement useImperativeHandle with reset and getImg methods for the DrawingBoard. Use myPlayer to check if current player is drawing. Initialize DrawingBoard when amIDrawing is true. Show canvas for drawing player, display synced picture for guessers." />
+
+Create the DrawingArea component that handles the drawing canvas using the DrawingBoard library and [`myPlayer`](/api-reference/js/myPlayer) to determine if the current player is drawing.
+
+```jsx filename="DrawingArea/index.jsx"
+import {  useEffect, useImperativeHandle, forwardRef } from 'react'
+import { myPlayer } from "playroomkit";
+import './style.css'
+
+const DrawingArea = forwardRef(({
+  playerDrawing,
+  currentWord,
+  picture
+}, ref) => {
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      if (window.myBoard) window.myBoard.reset({ background: true });
+    },
+    getImg: () => {
+      if (window.myBoard) return window.myBoard.getImg();
+    }
+  }));
+  const amIDrawing = playerDrawing === myPlayer().id;
+
+  // Init: Create the drawing area when it's my turn.
+  useEffect(() => {
+    if (!amIDrawing || !currentWord || window.myBoard) return;
+
+    // DrawingBoard is a global variable imported in index.html.
+    var myBoard = new DrawingBoard.Board('canvas', {
+      size: 10,
+      webStorage: false,
+      controlsPosition: 'bottom left',
+      controls: [
+        'Color',
+        { Size: { type: "dropdown" } },
+      ]
+    });
+    window.myBoard = myBoard;
+  }, [amIDrawing, currentWord]);
+
+  return (
+    <div className='drawing-area'>
+      <div id="canvas" style={{ display: amIDrawing ? "block" : "none" }} />
+      <div id="picture" style={{ display: amIDrawing ? "none" : "block" }}>
+        {picture && <img src={picture} alt="drawing" />}
+      </div>
+    </div>
+  )
+});
+
+export default DrawingArea
+```
+
+---
+
+### Step 6: Create the ChatArea Component &nbsp; <PromptStepCopyButton counter={6} text="Create ChatArea/index.jsx with usePlayersList and useMultiplayerState for guesses. Use myPlayer to check if player is drawing or has guessed. Create guesses list showing player names and guesses with correct guesses highlighted. Create input field to submit guesses, disabled for drawer and those who guessed correctly." />
+
+Create the ChatArea component that handles player guesses and chat messages using [`myPlayer`](/api-reference/js/myPlayer), [`useMultiplayerState`](/api-reference/react/useMultiplayerState), [`usePlayersState`](/api-reference/react/usePlayersState), and [`usePlayersList`](/api-reference/react/usePlayersList).
+
+```jsx filename="ChatArea/index.jsx"
+import {  useEffect, useState } from 'react'
+import { myPlayer, useMultiplayerState, usePlayersState, usePlayersList } from "playroomkit";
+import useWindowDimensions from './useWindowDimension';
+import './style.css'
+
+function isMobile() {
+  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    return true;
+  }
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+function ChatArea({guesses, isCorrectGuess, amIDrawing}) {
+  const players = usePlayersList();
+  const dimensions = useWindowDimensions();
+  const [guessIsFocused, setGuessIsFocused] = useState(false);
+  const [_, setGuesses] = useMultiplayerState('guesses');
+  const playersThatHaveGuessed = usePlayersState('guessed');
+  const haveIGuessed = playersThatHaveGuessed.find(p => p.player.id === myPlayer().id && p.state);
+
+  // Scroll to bottom of chat when new message is added
+  useEffect(()=>{
+      const guessList = document.querySelector('.guesses');
+      if (guessList) guessList.scrollTop = guessList.scrollHeight;
+    }, [guesses]);
+
+  // When window is resized, check if virtual keyboard is open
+  // If it is, change css class to move chat up
+  useEffect(() => {
+    const MIN_KEYBOARD_HEIGHT = 300;
+    const isKeyboardOpen = dimensions.height - MIN_KEYBOARD_HEIGHT > window.visualViewport.height;
+    if (isKeyboardOpen) {
+      setGuessIsFocused(true);
+    }
+    else{
+      setGuessIsFocused(false);
+    }
+
+    // iOS pushes the page up when the keyboard is open
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  }, [dimensions]);
+
+  return (
+    <div className={guessIsFocused && isMobile() ? 'guess-input-focused' : ""}>
+      <div className='guess-container'>
+        <div className='guesses'>
+          <ul className='guess-list'>
+            {guesses.map((guess, i) => {
+              const player = players.find(p => p.id === guess.playerId);
+              if (isCorrectGuess(guess.guess)) {
+                return <li key={i} className='correct'><span><b>{player?.getProfile().name}</b> guessed correctly.</span></li>
+              }
+              return <li key={i}><b>{player?.getProfile().name}</b>: {guess.guess}</li>
+            })}
+          </ul>
+        </div>
+        
+          <div className='guess-input-container'>
+            <div className='guess-input'>
+              <input type="text"
+                placeholder={(!amIDrawing && !haveIGuessed) ? "Enter your guess here" : "Waiting for guesses..."}
+                disabled={(amIDrawing || haveIGuessed)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const guess = e.target.value.trim();
+                    if (guess === '') return;
+                    e.target.value = '';
+                    setGuesses([...guesses, { playerId: myPlayer().id, guess }], true);
+                  }
+                }} />
+            </div>
+          </div>
+        </div>
+      </div>
+  )
+};
+
+export default ChatArea
+```
+
+---
+
+### Step 7: Create the useWindowDimensions Hook &nbsp; <PromptStepCopyButton counter={7} text="Create ChatArea/useWindowDimension.js that exports useWindowDimensions hook. Use useState to store window dimensions including visualViewport.height. Add resize event listeners for both window and visualViewport to update dimensions." />
+
+Create the useWindowDimensions hook for detecting keyboard open/close on mobile devices.
+
+```jsx filename="ChatArea/useWindowDimension.js"
+import { useState, useEffect } from "react";
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+    visualViewportHeight: window.visualViewport.height,
+  };
+}
+
+export default function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+    window.visualViewport.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.visualViewport.removeEventListener("resize", handleResize)
+    }
+  }, []);
+
+  return windowDimensions;
+}
+```
+
+---
+
+### Step 8: Create the words.json File &nbsp; <PromptStepCopyButton counter={8} text="Create src/words.json with an array of words for the game. Include various categories like animals, objects, actions, and everyday items that players can draw and guess." />
+
+Create the words.json file containing the pool of words that players will draw and guess.
+
+```json filename="words.json"
+[
+  "Coat",
+  "Shoe",
+  "Ocean",
+  "Dog",
+  "Mouth",
+  "Milk",
+  "Duck",
+  "Skateboard",
+  "Bird",
+  "Mouse",
+  "Whale",
+  "Jacket",
+  "Shirt",
+  "Hippo",
+  "Beach",
+  "Egg",
+  "Cookie",
+  "Cheese",
+  "Skip",
+  "Drum",
+  "homework",
+  "Glue",
+  "Eraser",
+  "Peace",
+  "Alarm",
+  "Comfy",
+  "dripping",
+  "boring",
+  "hot",
+  "cold",
+  "parents",
+  "closet",
+  "laugh",
+  "falling",
+  "sleepover",
+  "calendar",
+  "sunscreen",
+  "panda",
+  "hair",
+  "dictionary",
+  "homerun",
+  "spitball",
+  "imagination",
+  "Angry",
+  "Fireworks",
+  "Pumpkin",
+  "Baby",
+  "Flower",
+  "Rainbow",
+  "Beard",
+  "Recycle",
+  "Bible",
+  "Giraffe",
+  "Bikini",
+  "Glasses",
+  "Snowflake",
+  "Book",
+  "Stairs",
+  "Bucket",
+  "Starfish",
+  "Igloo",
+  "Strawberry",
+  "Butterfly",
+  "Sun",
+  "Camera",
+  "Lamp",
+  "Tire",
+  "Cat",
+  "Lion",
+  "Toast",
+  "Church",
+  "Mailbox",
+  "Toothbrush",
+  "Crayon",
+  "Night",
+  "Toothpaste",
+  "Dolphin",
+  "Nose",
+  "Truck",
+  "Olympics",
+  "Volleyball",
+  "Peanut",
+  "oar",
+  "shampoo",
+  "point",
+  "yardstick",
+  "think",
+  "World",
+  "Avocado",
+  "shower",
+  "Curtain",
+  "Sandbox",
+  "Bruise",
+  "Quicksand",
+  "Fog",
+  "Gasoline",
+  "pocket",
+  "sponge",
+  "bride",
+  "wig",
+  "zipper",
+  "fiddle",
+  "pilot",
+  "baguette",
+  "fireman",
+  "season",
+  "Internet",
+  "chess",
+  "puppet",
+  "chime",
+  "ivy",
+  "applause",
+  "avocato",
+  "award",
+  "badge",
+  "baggage",
+  "baker",
+  "barber",
+  "bargain",
+  "basket",
+  "bedbug",
+  "bettle",
+  "beggar",
+  "birthday",
+  "biscuit",
+  "bleach",
+  "blinds",
+  "bobsled",
+  "Bonnet",
+  "bookend",
+  "boundary",
+  "brain",
+  "bubble",
+  "Kitten",
+  "Playground",
+  "Kiwi",
+  "Buckle",
+  "Lipstick",
+  "Raindrop",
+  "Bus",
+  "Lobster",
+  "Robot",
+  "Lollipop",
+  "Castle",
+  "Magnet",
+  "Slipper",
+  "Megaphone",
+  "Snowball",
+  "Mermaid",
+  "Sprinkler",
+  "Computer",
+  "Minivan",
+  "Crib",
+  "Tadpole",
+  "Dragon",
+  "Music",
+  "Teepee",
+  "Dumbbell",
+  "Telescope",
+  "Eel",
+  "Nurse",
+  "Train",
+  "Owl",
+  "Tricycle",
+  "Flag",
+  "Pacifier",
+  "Tutu",
+  "Piano",
+  "Garbage",
+  "Park",
+  "Pirate",
+  "Ski",
+  "Whistle",
+  "State",
+  "Baseball",
+  "Coal",
+  "Queen",
+  "Photograph",
+  "Hockey",
+  "iPad",
+  "Frog",
+  "Lawnmower",
+  "Mattress",
+  "Pinwheel",
+  "Cake",
+  "Circus",
+  "Battery",
+  "Mailman",
+  "Cowboy",
+  "Highchair",
+  "Sasquatch",
+  "Hotel",
+  "Blizzard",
+  "Burrito",
+  "Koala",
+  "Captain",
+  "Leprechaun",
+  "Chandelier",
+  "Light",
+  "Space",
+  "Mask",
+  "Stethoscope",
+  "Run",
+  "Jump",
+  "Swim",
+  "Fly",
+  "Row",
+  "Catch",
+  "Watch",
+  "Swing",
+  "Love",
+  "Drink",
+  "Burp",
+  "Eat",
+  "Text",
+  "Pose",
+  "Shout",
+  "Sleep",
+  "Scratch",
+  "Hug",
+  "Cut",
+  "Spit",
+  "Tie",
+  "Open",
+  "Listen",
+  "Write",
+  "Sing",
+  "Pray",
+  "Dance",
+  "Dispatch",
+  "Trade",
+  "Drive",
+  "Unite",
+  "Multiply",
+  "Cook",
+  "Unplug",
+  "Purchase",
+  "Mechanic",
+  "Stork",
+  "Mom",
+  "Sunburn",
+  "Deodorant",
+  "Thread",
+  "Facebook",
+  "Tourist",
+  "Flat",
+  "Frame",
+  "Photo",
+  "WIFI",
+  "moon",
+  "Pilgram",
+  "Zombie",
+  "Game",
+  "cabin",
+  "cardboard",
+  "carpenter",
+  "carrot",
+  "ceiling",
+  "channel",
+  "charger",
+  "cheerleader",
+  "chef",
+  "chestnut",
+  "cliff",
+  "cloak",
+  "clog",
+  "coach",
+  "comedian",
+  "comfy",
+  "commercial",
+  "conversation",
+  "convertible",
+  "cramp",
+  "criticize",
+  "cruise",
+  "crumbs",
+  "crust",
+  "cuff",
+  "cupcake",
+  "curtain",
+  "darts",
+  "dashboard",
+  "Bicycle",
+  "Skate",
+  "Electricity",
+  "Thief",
+  "Teapot",
+  "Spring",
+  "Nature",
+  "Shallow",
+  "Outside",
+  "America",
+  "Wax",
+  "Popsicle",
+  "Knee",
+  "Pineapple",
+  "Tusk",
+  "Money",
+  "Pool",
+  "Doormat",
+  "Face",
+  "Flute",
+  "Rug",
+  "Purse"
+]
+```
+
+---
+
+### Step 9: Set Up index.html with DrawingBoard Library &nbsp; <PromptStepCopyButton counter={9} text="Update index.html to include DrawingBoard CSS and JS files from public folder. Add jQuery dependency required by DrawingBoard. Set up proper meta tags for mobile and the root div." />
+
+Set up the index.html file with the DrawingBoard library dependencies.
+
+```html filename="index.html"
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/css/drawingboard.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Draw The Thing</title>
+  </head>
+  <body>
+    <div id="root"></div>
+		<script src="/js/jquery-1.10.1.min.js"></script>
+    <script src="/js/drawingboard.min.js"></script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+```
+
+---
+
+## Improvements
+
+- Add more game modes like timed challenges or team-based gameplay
+- Implement power-ups and hints for harder words
+- Add drawing tools like eraser, shapes, and stickers
+- Create custom word categories and difficulty levels
+- Add sound effects and animations for correct guesses
+- Implement a spectator mode for eliminated players

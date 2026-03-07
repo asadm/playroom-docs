@@ -1,0 +1,34 @@
+---
+title: onTikTokLiveEvent
+description: "Register a callback that will be called when a live event is received from TikTok. Returns a function that can be called to unsubscribe the callback."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# onTikTokLiveEvent
+
+## Signature
+
+```ts
+function onTikTokLiveEvent(callback: (event: TikTokLiveEvent) => void): () => void
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `callback` | `(event: TikTokLiveEvent) => void` | Function called with a TikTokLiveEvent. |
+
+## Returns
+
+`() => void`
+
+## Usage
+
+```ts
+const unsubscribe = onTikTokLiveEvent((event) => {
+  console.log(event.type, event.data);
+});
+
+```

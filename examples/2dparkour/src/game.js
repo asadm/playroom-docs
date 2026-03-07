@@ -111,7 +111,10 @@ const config = {
   }
 };
 
-insertCoin().then(() => {
+window._USETEMPSTORAGE = true;
+insertCoin({
+  skipLobby: true,
+}).then(() => {
   // creating a new Phaser 3 game instance
   const game = new Phaser.Game(config);
 });

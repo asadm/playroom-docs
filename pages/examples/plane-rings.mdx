@@ -1,0 +1,752 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import { planeRings } from "../../code/plane-rings";
+import {Button} from "../../components/ui/button";
+import CodePlayground from "../../components/CodePlayground";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+{/*
+
+* Metadata:
+* Primary keyword: "multiplayer airplane game"
+* Secondary keywords: "React Three Fiber multiplayer", "Playroom Kit tutorial", "real-time multiplayer game", "3D airplane game", "ring passing game"
+* AI crawl phrases: "how to build multiplayer airplane game with React Three Fiber", "Playroom Kit multiplayer tutorial", "real-time 3D multiplayer game with React", "sync player position with Playroom Kit", "React Three Fiber airplane game tutorial"
+* SEO tags: [multiplayer airplane game, React Three Fiber, Playroom Kit, real-time multiplayer, 3D game development, ring passing game]
+  */}
+
+
+# Build a Multiplayer Airplane Ring Game with React Three Fiber and Playroom Kit
+
+Learn how to build a multiplayer airplane ring-passing game using React Three Fiber for 3D rendering and Playroom Kit for real-time multiplayer functionality. Players fly vintage toy airplanes through rings while competing against each other.
+
+<br />
+<a href="https://planerings.joinplayroom.com/" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/asadm/playroom-docs/tree/main/examples/r3f-plane-rings"><Button variant="outline">Get Final Code</Button></a>
+<br />
+<br />
+
+<CodePlayground
+files={planeRings}
+height="480px"
+previewUrls={[
+"https://planerings.joinplayroom.com#skipLobby=true",
+"https://planerings.joinplayroom.com#skipLobby=true",
+]}
+/>
+
+## Getting Started
+
+This tutorial shows you how to create a multiplayer airplane game where players navigate through floating rings in a 3D environment. The game uses Playroom Kit to handle multiplayer networking without requiring a custom backend server via [`insertCoin`](/api-reference/js/insertCoin). Each player controls their own airplane that syncs in real-time across all connected players using [`setState`](/api-reference/js/setState) and [`getState`](/api-reference/js/getState).
+
+The game features a vintage toy airplane model, reflective water surfaces, dynamic camera following, motion blur effects based on speed, and a ring-target system where players score by flying through rings. All player positions, rotations, and game state are synchronized through Playroom Kit's state management using [`usePlayersList`](/api-reference/react/usePlayersList) and [`useMultiplayerState`](/api-reference/react/useMultiplayerState).
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Airplane Ring Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Airplane Ring Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Multiplayer Airplane Ring Game".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't created the project yet, set up a new React project with Vite before moving to the first step. You'll need to install the necessary dependencies including React Three Fiber, Drei, postprocessing, and Playroom Kit.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Set Up the Project with Dependencies &nbsp; <PromptStepCopyButton counter={1} text="Initialize a new React project with Vite, then install dependencies: @react-three/fiber, @react-three/drei, @react-three/postprocessing, three, and playroomkit. Create the main.jsx file with Canvas and Suspense." />
+
+Set up the React project with all necessary dependencies for 3D rendering and multiplayer functionality.
+
+```jsx filename="main.jsx"
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import { Canvas } from "@react-three/fiber";
+import "./index.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Canvas shadows>
+    <Suspense fallback={null}>
+      <App />
+    </Suspense>
+  </Canvas>
+);
+```
+
+---
+
+### Step 2: Initialize Playroom Kit in App.jsx &nbsp; <PromptStepCopyButton counter={2} text="Create App.jsx with insertCoin from playroomkit to initialize multiplayer. Add useState for coinInserted, useEffect to call insertCoin, and return null while waiting for coin insertion. Then create the Scene component with usePlayersList to get all connected players." />
+
+Initialize Playroom Kit to handle multiplayer connections and authentication using [`insertCoin`](/api-reference/js/insertCoin) and [`usePlayersList`](/api-reference/react/usePlayersList).
+
+```jsx filename="App.jsx"
+import React, { useEffect, useState } from "react";
+import { PerspectiveCamera, Environment } from "@react-three/drei";
+import { EffectComposer, HueSaturation } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
+import { Landscape } from "./Landscape";
+import { SphereEnv } from "./SphereEnv";
+import { Airplane } from "./Airplane";
+import { Targets } from "./Targets";
+import { MotionBlur } from "./MotionBlur";
+import { Joystick, insertCoin, myPlayer, usePlayersList } from "playroomkit";
+
+function App() {
+  const [coinInserted, setCoinInserted] = useState(false);
+  useEffect(() => {
+    insertCoin().then(() => {
+      setCoinInserted(true);
+    });
+  }, []);
+
+  if (!coinInserted) {
+    return null;
+  }
+  return (
+    <Scene />
+  );
+}
+
+function Scene(){
+  const players = usePlayersList();
+  const [joystick, setJoystick] = useState();
+
+  useEffect(() => {
+    if (!joystick){
+      setJoystick(new Joystick(myPlayer(), {
+        type: "angular",
+        buttons: [
+          {id: "boost", label: "Boost"},
+          {id: "reset", label: "Reset"}
+        ]
+      }));
+    }
+  }, [joystick]);
+
+  return (
+    <>
+      <SphereEnv />
+      <Environment background={false} files={"assets/textures/envmap.hdr"} />
+
+      <PerspectiveCamera makeDefault position={[0, 10, 10]} />
+
+      <Landscape />
+      {players.map((player) => 
+        <Airplane key={player.id} player={player} joystick={player.id===myPlayer().id? joystick: undefined} />
+      )}
+      <Targets />
+
+      <directionalLight
+        castShadow
+        color={"#f3d29a"}
+        intensity={2}
+        position={[10, 5, 4]}
+        shadow-bias={-0.0005}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-camera-near={0.01}
+        shadow-camera-far={20}
+        shadow-camera-top={6}
+        shadow-camera-bottom={-6}
+        shadow-camera-left={-6.2}
+        shadow-camera-right={6.4}
+      />
+
+      <EffectComposer>
+        <MotionBlur />
+        <HueSaturation
+          blendFunction={BlendFunction.NORMAL}
+          hue={-0.15}
+          saturation={0.1}
+        />
+      </EffectComposer>
+    </>
+  );
+}
+
+export default App;
+```
+
+---
+
+### Step 3: Create the Controls Module &nbsp; <PromptStepCopyButton counter={3} text="Create controls.js with keyboard event listeners for WASD and shift keys. Implement updatePlaneAxis function that handles airplane rotation based on joystick or keyboard input, including pitch and yaw velocities, and turbo boost mechanics. Export planePosition vector and turbo variable." />
+
+Create the controls module to handle keyboard input and airplane movement physics.
+
+```jsx filename="controls.js"
+function easeOutQuad(x) {
+  return 1 - (1 - x) * (1 - x);
+}
+
+export let controls = {};
+
+window.addEventListener("keydown", (e) => {
+  controls[e.key.toLowerCase()] = true;
+});
+window.addEventListener("keyup", (e) => {
+  controls[e.key.toLowerCase()] = false;
+});
+
+let maxVelocity = 0.04;
+let jawVelocity = 0;
+let pitchVelocity = 0;
+let planeSpeed = 0.006;
+export let turbo = 0;
+
+export function updatePlaneAxis(x, y, z, planePosition, camera, joystick) {
+  jawVelocity *= 0.95;
+  pitchVelocity *= 0.95;
+
+  const angle = joystick.angle();
+  const yAxis = joystick.isJoystickPressed() ? Math.cos(angle): 0;
+  const xAxis = joystick.isJoystickPressed() ? Math.sin(angle) * -1: 0;
+
+  if (Math.abs(jawVelocity) > maxVelocity) 
+    jawVelocity = Math.sign(jawVelocity) * maxVelocity;
+
+  if (Math.abs(pitchVelocity) > maxVelocity) 
+    pitchVelocity = Math.sign(pitchVelocity) * maxVelocity;
+
+
+  jawVelocity += xAxis * 0.0015;
+  pitchVelocity += yAxis * 0.0005;
+
+  if (controls["a"]) {
+    jawVelocity += 0.0025;
+  }
+
+  if (controls["d"]) {
+    jawVelocity -= 0.0025;
+  }
+
+  if (controls["w"]) {
+    pitchVelocity -= 0.0025;
+  }
+
+  if (controls["s"]) {
+    pitchVelocity += 0.0025;
+  }
+
+  if (controls["r"] || joystick.isPressed('reset')) {
+    jawVelocity = 0;
+    pitchVelocity = 0;
+    turbo = 0;
+    x.set(1, 0, 0);
+    y.set(0, 1, 0);
+    z.set(0, 0, 1);
+    planePosition.set(0, 3, 7);
+  }
+
+  x.applyAxisAngle(z, jawVelocity);
+  y.applyAxisAngle(z, jawVelocity);
+
+  y.applyAxisAngle(x, pitchVelocity);
+  z.applyAxisAngle(x, pitchVelocity);
+
+  x.normalize();
+  y.normalize();
+  z.normalize();
+
+
+  if (controls.shift || joystick.isPressed('boost')) {
+    turbo += 0.025;
+  } else {
+    turbo *= 0.95;
+  }
+  turbo = Math.min(Math.max(turbo, 0), 1);
+
+  let turboSpeed = easeOutQuad(turbo) * 0.02;
+
+  camera.fov = 45 + turboSpeed * 900;
+  camera.updateProjectionMatrix();
+
+  planePosition.add(z.clone().multiplyScalar(-planeSpeed -turboSpeed));
+}
+```
+
+---
+
+### Step 4: Create the Airplane Component &nbsp; <PromptStepCopyButton counter={4} text="Create Airplane.jsx that loads the airplane GLB model using useGLTF. Implement useFrame to handle local player movement via updatePlaneAxis and sync position/rotation to playroom state. For other players, interpolate their position from playroom state. Add spinning helix animation and apply player color to the chassis." />
+
+Create the Airplane component that renders the 3D airplane model and handles multiplayer synchronization using [`myPlayer`](/api-reference/js/myPlayer), [`setState`](/api-reference/js/setState), and [`getState`](/api-reference/js/getState).
+
+```jsx filename="Airplane.jsx"
+import React, { useRef } from 'react'
+import { useGLTF } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber';
+import { Matrix4, Quaternion, Vector3 } from 'three';
+import { updatePlaneAxis } from './controls';
+import { myPlayer } from 'playroomkit';
+import { useEffect, useState } from 'react';
+import * as THREE from 'three';
+
+const x = new Vector3(1, 0, 0);
+const y = new Vector3(0, 1, 0);
+const z = new Vector3(0, 0, 1);
+export const planePosition = new Vector3(0, 3, 7);
+
+const delayedRotMatrix = new Matrix4();
+const delayedQuaternion = new Quaternion();
+
+export function Airplane({ player, joystick, ...props }) {
+  
+  const [thisIsMyPlane, setThisIsMyPlane] = useState(false);
+  const [myColorMaterial, setMyColorMaterial] = useState();
+  useEffect(() => {
+    const me = myPlayer();
+    setThisIsMyPlane(player.id === me.id);
+    const color = player.getProfile().color;
+    if (color) {
+      const material = new THREE.MeshStandardMaterial();
+      material.color.setHex(color.hex);
+      setMyColorMaterial(material);
+    }
+  }, [player]);
+
+  const { nodes, materials } = useGLTF('assets/models/airplane.glb');
+  const groupRef = useRef();
+  const helixMeshRef = useRef();
+
+  useFrame(({ camera }) => {
+    
+
+    helixMeshRef.current.rotation.z -= 1.0;
+
+    if (thisIsMyPlane) {
+
+    updatePlaneAxis(x, y, z, planePosition, camera, joystick);
+
+    const rotMatrix = new Matrix4().makeBasis(x, y, z);
+
+    const matrix = new Matrix4()
+    .multiply(new Matrix4().makeTranslation(planePosition.x, planePosition.y, planePosition.z))
+    .multiply(rotMatrix);
+
+    groupRef.current.matrixAutoUpdate = false;
+    groupRef.current.matrix.copy(matrix);
+    groupRef.current.matrixWorldNeedsUpdate = true;
+
+
+    var quaternionA = new Quaternion().copy(delayedQuaternion);
+
+    var quaternionB = new Quaternion();
+    quaternionB.setFromRotationMatrix(rotMatrix);
+
+    var interpolationFactor = 0.175;
+    var interpolatedQuaternion = new Quaternion().copy(quaternionA);
+    interpolatedQuaternion.slerp(quaternionB, interpolationFactor);
+    delayedQuaternion.copy(interpolatedQuaternion);
+
+    delayedRotMatrix.identity();
+    delayedRotMatrix.makeRotationFromQuaternion(delayedQuaternion);
+
+        const cameraMatrix = new Matrix4()
+        .multiply(new Matrix4().makeTranslation(planePosition.x, planePosition.y, planePosition.z))
+        .multiply(delayedRotMatrix)
+        .multiply(new Matrix4().makeRotationX(-0.2))
+        .multiply(
+          new Matrix4().makeTranslation(0, 0.015, 0.76)
+        );
+
+      camera.matrixAutoUpdate = false;
+      camera.matrix.copy(cameraMatrix);
+      camera.matrixWorldNeedsUpdate = true; 
+
+      const position = new Vector3();
+      const quaternion = new Quaternion();
+      groupRef.current.getWorldPosition(position);
+      groupRef.current.getWorldQuaternion(quaternion);
+      player.setState("position", position);
+      player.setState("x", x);
+      player.setState("y", y);
+      player.setState("z", z);
+    }
+    else{
+      const position = player.getState("position");
+      const x = player.getState("x");
+      const y = player.getState("y");
+      const z = player.getState("z");
+      if (position && x && y && z) {
+        const rotMatrix = new Matrix4().makeBasis(x, y, z);
+      const matrix = new Matrix4()
+    .multiply(new Matrix4().makeTranslation(position.x, position.y, position.z))
+    .multiply(rotMatrix);
+
+    groupRef.current.matrixAutoUpdate = false;
+    groupRef.current.matrix.copy(matrix);
+    groupRef.current.matrixWorldNeedsUpdate = true;
+      }
+    }
+  });
+
+  return (
+    <>
+      <group ref={groupRef}>
+        <group {...props} dispose={null} scale={0.01} rotation-y={Math.PI}>
+          <mesh geometry={nodes.supports.geometry} material={materials['Material.004']} />
+          <mesh geometry={nodes.chassis.geometry} material={myColorMaterial} />
+          <mesh geometry={nodes.helix.geometry} material={materials['Material.005']} ref={helixMeshRef} />
+        </group>
+      </group>
+    </>
+  )
+}
+
+useGLTF.preload('assets/models/airplane.glb');
+```
+
+---
+
+### Step 5: Create the Landscape Component &nbsp; <PromptStepCopyButton counter={5} text="Create Landscape.jsx that loads the scene GLB model using useGLTF. Add MeshReflectorMaterial for reflective water surfaces, customize materials for landscape and trees, and add glowing light elements." />
+
+Create the Landscape component with the 3D environment and reflective water.
+
+```jsx filename="Landscape.jsx"
+import React, { useEffect, useMemo } from "react";
+import { MeshReflectorMaterial, useGLTF } from "@react-three/drei";
+import { Color, MeshStandardMaterial } from "three";
+
+export function Landscape(props) {
+  const { nodes, materials } = useGLTF("assets/models/scene.glb");
+
+  const [lightsMaterial, waterMaterial] = useMemo(() => {
+    return [
+      new MeshStandardMaterial({
+        envMapIntensity: 0,
+        color: new Color("#ea6619"),
+        roughness: 0,
+        metalness: 0,
+        emissive: new Color("#f6390f").multiplyScalar(1),
+      }),
+      <MeshReflectorMaterial
+        transparent={true}
+        opacity={0.6}
+        color={"#23281b"}
+        roughness={0}
+        blur={[10, 10]}
+        mixBlur={1}
+        mixStrength={20}
+        mixContrast={1.2}
+        resolution={512}
+        mirror={0}
+        depthScale={0}
+        minDepthThreshold={0}
+        maxDepthThreshold={0.1}
+        depthToBlurRatioBias={0.0025}
+        debug={0}
+        reflectorOffset={0.0}
+      />,
+    ];
+  }, []);
+
+  useEffect(() => {
+    const landscapeMat = materials["Material.009"];
+    landscapeMat.envMapIntensity = 0.75;
+
+    const treesMat = materials["Material.008"];
+    treesMat.color = new Color("#2f2f13");
+    treesMat.envMapIntensity = 0.3;
+    treesMat.roughness = 1;
+    treesMat.metalness = 0;
+  }, [materials]);
+
+  return (
+    <group {...props} dispose={null}>
+      <mesh
+        geometry={nodes.landscape_gltf.geometry}
+        material={materials["Material.009"]}
+        castShadow
+        receiveShadow
+      />
+      <mesh
+        geometry={nodes.landscape_borders.geometry}
+        material={materials["Material.010"]}
+      />
+      <mesh
+        geometry={nodes.trees_light.geometry}
+        material={materials["Material.008"]}
+        castShadow
+        receiveShadow
+      />
+      <mesh
+        position={[-2.536, 1.272, 0.79]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+        scale={[1.285, 1.285, 1]}
+      >
+        <planeGeometry args={[1, 1]} />
+        {waterMaterial}
+      </mesh>
+      <mesh
+        position={[1.729, 0.943, 2.709]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+        scale={[3, 3, 1]}
+      >
+        <planeGeometry args={[1, 1]} />
+        {waterMaterial}
+      </mesh>
+      <mesh
+        position={[0.415, 1.588, -2.275]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+        scale={[3.105, 2.405, 1]}
+      >
+        <planeGeometry args={[1, 1]} />
+        {waterMaterial}
+      </mesh>
+      <mesh
+        geometry={nodes.lights.geometry}
+        material={lightsMaterial}
+        castShadow
+      />
+    </group>
+  );
+}
+
+useGLTF.preload("assets/models/scene.glb");
+```
+
+---
+
+### Step 6: Create the SphereEnv Component &nbsp; <PromptStepCopyButton counter={6} text="Create SphereEnv.jsx that renders a large sphere with the envmap.jpg texture on the backside to create a skybox background." />
+
+Create the SphereEnv component for the skybox environment.
+
+```jsx filename="SphereEnv.jsx"
+import { useTexture } from "@react-three/drei";
+import { BackSide } from "three";
+
+export function SphereEnv() {
+  const map = useTexture("assets/textures/envmap.jpg");
+
+  return <mesh>
+    <sphereGeometry args={[60, 50, 50]} />
+    <meshBasicMaterial 
+      side={BackSide}
+      map={map}
+    />
+  </mesh>
+}
+```
+
+---
+
+### Step 7: Create the Targets Component &nbsp; <PromptStepCopyButton counter={7} text="Create Targets.jsx that generates 25 random ring targets using TorusGeometry. Use useMultiplayerState from playroomkit to sync targets across players. Implement collision detection in useFrame to check if plane passes through rings, removing hit targets. Host creates initial targets." />
+
+Create the Targets component with ring targets and collision detection using [`useMultiplayerState`](/api-reference/react/useMultiplayerState) and [`isHost`](/api-reference/js/isHost).
+
+```jsx filename="Targets.jsx"
+import { useState, useMemo, useEffect } from "react";
+import { Quaternion, TorusGeometry, Vector3 } from "three";
+import { mergeBufferGeometries } from "three-stdlib";
+import { useFrame } from "@react-three/fiber";
+import { planePosition } from "./Airplane";
+import { isHost, useMultiplayerState } from "playroomkit";
+
+function randomPoint(scale) {
+  return new Vector3(
+    Math.random() * 2 - 1,
+    Math.random() * 2 - 1,
+    Math.random() * 2 - 1
+  ).multiply(scale || new Vector3(1, 1, 1));
+}
+
+const TARGET_RAD = 0.125;
+
+export function Targets() {
+  const [targets, setTargets] = useMultiplayerState("targets", []);
+  useEffect(() => {
+    if (targets.length === 0 && isHost()) {
+      const arr = [];
+      for (let i = 0; i < 25; i++) {
+        arr.push({
+          center: randomPoint(new Vector3(4, 1, 4)).add(
+            new Vector3(0, 2 + Math.random() * 2, 0)
+          ),
+          direction: randomPoint().normalize(),
+          hit: false,
+        });
+      }
+
+      setTargets(arr);
+    }
+  }, []);
+
+  const geometry = useMemo(() => {
+    let geo;
+
+    targets.forEach((target) => {
+      const torusGeo = new TorusGeometry(TARGET_RAD, 0.02, 8, 25);
+      torusGeo.applyQuaternion(
+        new Quaternion().setFromUnitVectors(
+          new Vector3(0, 0, 1),
+          target.direction
+        )
+      );
+      torusGeo.translate(target.center.x, target.center.y, target.center.z);
+
+      if (!geo) geo = torusGeo;
+      else geo = mergeBufferGeometries([geo, torusGeo]);
+    });
+
+    return geo;
+  }, [targets]);
+
+  useFrame(() => {
+    targets.forEach((target, i) => {
+      const v = planePosition.clone().sub(target.center);
+      const direction = new Vector3().copy(target.direction).normalize();
+      const dist = direction.dot(v);
+      const projected = planePosition
+        .clone()
+        .sub(direction.clone().multiplyScalar(dist));
+
+      const hitDist = projected.distanceTo(new Vector3().copy(target.center));
+      if (hitDist < TARGET_RAD) {
+        target.hit = true;
+      }
+    });
+
+    const atLeastOneHit = targets.find((target) => target.hit);
+    if (atLeastOneHit) {
+      setTargets(targets.filter((target) => !target.hit));
+    }
+  });
+
+  return (
+    <mesh geometry={geometry}>
+      <meshStandardMaterial roughness={0.5} metalness={0.5} />
+    </mesh>
+  );
+}
+```
+
+---
+
+### Step 8: Create the MotionBlur Component &nbsp; <PromptStepCopyButton counter={8} text="Create MotionBlur.jsx with a custom postprocessing effect using a fragment shader. Implement radial motion blur that increases with the turbo variable from controls.js. Use forwardRef and useMemo to create the Effect class." />
+
+Create the MotionBlur component for speed-based post-processing effects.
+
+```jsx filename="MotionBlur.jsx"
+import React, { forwardRef, useMemo } from 'react';
+import { Uniform } from 'three';
+import { Effect } from 'postprocessing';
+import { turbo } from './controls';
+
+const fragmentShader = `
+uniform float strength;
+
+float rand2 (vec2 n) { 
+	return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+}
+
+void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+  vec2 aspectCorrection = vec2(1.0, aspect);
+
+  vec2 dir = normalize(uv - vec2(0.5));
+  float dist = length(uv - vec2(0.5));
+  float positionalStrength = max(dist - 0.1, 0.0) * 0.1;
+  positionalStrength = pow(positionalStrength, 1.5) * 7.0;
+
+  vec4 accum = vec4(0.0);
+  for (int i = 0; i < 7; i++) {
+    vec2 offs1 = -dir * positionalStrength * strength * ((float(i) + rand2(uv * 5.0)) * 0.2);
+    vec2 offs2 = dir * positionalStrength * strength * ((float(i) + rand2(uv * 5.0)) * 0.2);
+
+    accum += texture2D(inputBuffer, uv + offs1);
+    accum += texture2D(inputBuffer, uv + offs2);
+  }
+  accum *= 1.0 / 14.0;
+
+	outputColor = accum;
+}`
+
+class MotionBlurImpl extends Effect {
+  constructor() {
+    super('MotionBlur', fragmentShader, {
+      uniforms: new Map([['strength', new Uniform(0)]]),
+    })
+  }
+
+  update(renderer, inputBuffer, deltaTime) {
+    this.uniforms.get('strength').value = turbo;
+  }
+}
+
+export const MotionBlur = forwardRef(({ }, ref) => {
+  const effect = useMemo(() => new MotionBlurImpl(), [])
+  return <primitive ref={ref} object={effect} dispose={null} />
+});
+```
+
+---
+
+## Improvements
+
+- Add scoring system to track how many rings each player has collected
+- Implement respawning rings so players can continue scoring
+- Add particle effects when flying through rings
+- Create a leaderboard UI to show player scores
+- Add sound effects for engine, ring collection, and background music
+- Implement different airplane skins or colors for players

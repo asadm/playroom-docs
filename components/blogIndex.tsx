@@ -1,5 +1,5 @@
-import { Card, Cards } from 'nextra-theme-docs'
-import list from "../pages/blog/_meta.json";
+import { Cards } from 'nextra/components'
+import list from "../pages/blog/_meta";
 import styles from './blogIndex.module.css'
 
 export default function BlogIndex() {
@@ -14,7 +14,7 @@ export default function BlogIndex() {
         day: "numeric",
       }):"";
     return (
-      <Card
+      <Cards.Card
         icon={<img src={image} style={{width: "80px"}}></img>}
         style={{border:"1px solid #8D6BED"}}
         // className="blog-card"
@@ -25,7 +25,7 @@ export default function BlogIndex() {
         href={`/blog/${key}`}
       >
         
-      </Card>
+      </Cards.Card>
     );
   })}
 </Cards>
@@ -42,7 +42,7 @@ export function BlogLatestCard() {
   )
   return (
   <Cards num={1}>
-    <Card
+    <Cards.Card
       icon={<img src={latest.image} style={{width: "80px"}}></img>}
       style={{border:"1px solid #8D6BED"}}
       // className="blog-card"
@@ -57,7 +57,7 @@ export function BlogLatestCard() {
       href={`/blog/${Object.keys(list)[0]}`}
     >
       
-    </Card>
+    </Cards.Card>
 </Cards>
   )
 }

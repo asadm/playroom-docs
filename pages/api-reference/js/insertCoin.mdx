@@ -1,0 +1,73 @@
+---
+title: insertCoin
+description: "Initialize Playroom and start the multiplayer session."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# insertCoin
+
+Tell Playroom to start! Playroom Kit will then handle room creation, players joining and also let players pick their names, colors and avatars. Once host taps "Launch", the promise resolves (and `onLaunchCallback` is called if provided). At this point you can start your game.
+
+## Signature
+
+```ts
+function insertCoin(options: InitOptions, onLaunchCallback?: (callback: () => {}) => {}, onDisconnectCallback?: (callback: () => {}) => {}): Promise<void>
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `options` | `InitOptions` | Initialization settings for the session. |
+| `onLaunchCallback?` | `(callback: () => {}) => {}` | A callback function that will be called when the host taps "Launch". |
+| `onDisconnectCallback?` | `(callback: () => {}) => {}` | A callback function that will be called when the current player disconnects from the room. |
+
+## Returns
+
+`Promise<void>`
+
+## Usage
+
+**Example 1**
+
+Here's a vanilla example:
+
+```ts
+// Show Playroom UI, let it handle players joining etc and wait for host to tap "Launch"
+await insertCoin();
+// Start your game!
+
+```
+
+**Example 2**
+
+Sets a maximum limit for the number of players per room:
+
+```ts
+try {
+  await insertCoin({
+    maxPlayersPerRoom: 2, // maximum limit for 2 players per room
+  });
+} catch (error) {}
+
+```
+
+**Example 3**
+
+When `skipLobby` is set to `true`, Playroom Kit will skip both the default lobby and the "room is full" modal:
+
+```ts
+try {
+  await insertCoin({
+    skipLobby: true,
+    maxPlayersPerRoom: 2,
+  });
+} catch (error) {
+  if (error.message === "ROOM_LIMIT_EXCEEDED") {
+    // Here you can display a custom error
+  }
+}
+
+```

@@ -1,0 +1,33 @@
+---
+title: onPlayerJoin
+description: "Registers a callback when a new player joins the room."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# onPlayerJoin
+
+The callback first runs for all existing players, then for any new players that join. This is useful for "catching up" a new player with existing players or getting the full list in a new game scene.
+
+## Signature
+
+```ts
+function onPlayerJoin(callback: (player: PlayerState) => void): void
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `callback` | `(player: PlayerState) => void` | Function called with the PlayerState object of the joining player. |
+
+
+## Usage
+
+```ts
+onPlayerJoin((player) => {
+  console.log(`${player.id} joined!`);
+});
+
+```

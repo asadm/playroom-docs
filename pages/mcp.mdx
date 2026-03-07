@@ -1,0 +1,75 @@
+# MCP Server
+
+Playroom docs are exposed as an **MCP (Model Context Protocol)** server so AI assistants (Cursor, Claude Desktop, Replit, etc.) can read documentation programmatically instead of relying on pasted context.
+
+## Endpoint
+```text copy
+https://docs.joinplayroom.com/api/mcp
+```
+
+Use this URL in your MCP client configuration.
+
+## Connecting
+
+### Cursor
+
+Add to **Cursor Settings → MCP → Edit Config** (or `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "playroom-docs": {
+      "url": "https://docs.joinplayroom.com/api/mcp"
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+Edit your Claude Desktop config (e.g. `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+
+```json
+{
+  "mcpServers": {
+    "playroom-docs": {
+      "url": "https://docs.joinplayroom.com/api/mcp"
+    }
+  }
+}
+```
+
+### stdio-only clients
+
+If your client only supports stdio, use [mcp-remote](https://www.npmjs.com/package/mcp-remote) as a proxy:
+
+```json
+{
+  "mcpServers": {
+    "playroom-docs": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://docs.joinplayroom.com/api/mcp"]
+    }
+  }
+}
+```
+
+## Tools
+
+The server exposes these tools:
+
+| Tool | Description |
+|------|-------------|
+| **docs_toc** | Markdown table of contents for the whole site (all pages with links and descriptions). Use first to discover pages. |
+| **docs_page** | Single page content by slug (e.g. `examples/live-cursors`, `api-reference`). Use after **docs_toc** or **docs_search** to get the right slug. |
+| **docs_full** | Entire documentation as plain text (all pages with frontmatter). Use when full context is needed. |
+| **docs_toc_section** | Table of contents for one section only (e.g. `api-reference`, `examples`). |
+| **docs_full_section** | Full content for one section (all pages under that path). |
+| **docs_search** | Search by keyword (titles, descriptions, content). Returns matching slugs and titles for use with **docs_page**. |
+
+Slugs are paths without a leading slash: `api-reference`, `examples/live-cursors`, `concepts/ai-features`.
+
+## Related
+
+- [AI features](/concepts/ai-features) — Overview of Playroom’s AI support (MCP, npm skill).
+- [llms.txt](/llms.txt) — Same content as **docs_toc** in a single text file for manual or scripted use.

@@ -1,0 +1,33 @@
+---
+title: onDisconnect
+description: "Register a callback that will be called when the current player disconnects."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# onDisconnect
+
+The callback is also triggered if the player is kicked from the room.
+
+## Signature
+
+```ts
+function onDisconnect(callback: (e: { code: number; reason: string; }) => void): void
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `callback` | `(e: { code: number; reason: string; }) => void` | Function called with an event containing:  - `code`: number code of the disconnect  - `reason`: human-readable reason |
+
+
+## Usage
+
+```ts
+onDisconnect((event) => {
+  console.log(`Disconnected! Code: ${event.code}, Reason: ${event.reason}`);
+});
+
+```

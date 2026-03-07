@@ -1,6 +1,6 @@
-# How is Playroom different?
+# How is Playroom Kit different?
 
-If you are shopping for a multiplayer stack, you might be wondering how Playroom is different from other services. Here is a quick comparison of Playroom with other popular multiplayer stacks.
+If you are shopping for a multiplayer stack, you might be wondering how Playroom Kit is different from other services. Here is a quick comparison of Playroom Kit with other popular multiplayer stacks.
 
 ## Photon, Fishnet, Mirror, and other "Unity" stacks
 
@@ -8,9 +8,9 @@ If you are shopping for a multiplayer stack, you might be wondering how Playroom
 
 **❌ Not great for:** Games that are simple and don't require a complex multiplayer stack.
 
-**"Unity" stacks:** These are popular multiplayer stacks that have been around for a long time. All are great choice for games that are somewhat complex and are made in Unity. Photon/Fishnet are a bit low-level than Playroom and require you to write network code. You also need to manage rooms and lobbies yourself. 
+**"Unity" stacks:** These are popular multiplayer stacks that have been around for a long time. All are great choice for games that are somewhat complex and are made in Unity. Photon/Fishnet are a bit low-level than Playroom Kit and require you to write network code. You also need to manage rooms and lobbies yourself. 
 
-**Playroom:** A higher-level stack that is designed to be easy to use and requires no network code. It also includes a lobby UI that you can use out of the box. Playroom is also optimized for web games but also has support for Unity.
+**Playroom Kit:** A higher-level stack that is designed to be easy to use and requires no network code. It also includes a lobby UI that you can use out of the box. Playroom Kit is also optimized for web games but also has support for Unity.
 
 ## Hathora
 
@@ -22,8 +22,8 @@ If you are shopping for a multiplayer stack, you might be wondering how Playroom
 
 Hathora does offer BuildKits, that are pre-built game servers that you can use. But you still need to write server code. Hathora is a great choice for games that require an authoritative server. 
 
-**Playroom:** If you can use a client-authoritative / p2p model and can live without a server, Playroom is a better choice. Because there is no custom server code:
-1. You can get started quickly and drop-in Playroom into your game.
+**Playroom Kit:** If you can use a client-authoritative / p2p model and can live without a server, Playroom Kit is a better choice. Because there is no custom server code:
+1. You can get started quickly and drop-in Playroom Kit into your game.
 2. We can scale your game to millions of players without your server code breaking or needing to be deployed in multiple regions.
 
 ## Nakama and Heroic Cloud
@@ -34,7 +34,7 @@ Hathora does offer BuildKits, that are pre-built game servers that you can use. 
 
 **Nakama (and Heroic Cloud)** is a popular open-source multiplayer stack that you can self-host. It provides a lot of features and a dashboard for better visibility into your games. Nakama runs your server code in a distributed cluster and either you manage yourself or pay Heroic Cloud to manage it for you.
 
-**Playroom:** If you can use a client-authoritative / p2p model and can live without a server, Playroom is a better choice because there is no custom server code. There are **No Clusters to Manage**.
+**Playroom Kit:** If you can use a client-authoritative / p2p model and can live without a server, Playroom Kit is a better choice because there is no custom server code. There are **No Clusters to Manage**.
 
 ## Steam Networking
 
@@ -44,4 +44,4 @@ Hathora does offer BuildKits, that are pre-built game servers that you can use. 
 
 **Steam Networking** offers several APIs for multiplayer communication, relaying packets through Valve's network for protection and performance. The newest API, `ISteamNetworkingMessages`, provides UDP-like functionality with added reliability, while `ISteamNetworkingSockets` and `ISteamNetworkingUtils` offer lower-level control and utilities. Steam Datagram Relay enhances connection quality and security by routing traffic through Valve's backbone.
 
-**Playroom:** Playroom is easy to implement and to set up and runs/works great for web games. You are provided with a dashboard to set up your game like Steam Networking, but you don't have to set up server joining, server lists, or networking elements. Playroom runs on any web browser, so you can export your game onto any web-based platform and it will work beautify!
+**Playroom Kit:** Playroom Kit is easy to implement and to set up and runs/works great for web games. You are provided with a dashboard to set up your game like Steam Networking, but you don't have to set up server joining, server lists, or networking elements. Playroom Kit runs on any web browser, so you can export your game onto any web-based platform and it will work beautify!

@@ -1,0 +1,134 @@
+export default {
+  tim: {
+    title: "Game Industry Veteran joins Playroom",
+    date: "Aug 20, 2024",
+    image: "/images/blog/450fc00bcc3df678cbbc2ee649cc4d174b5b204e.png",
+  },
+  casestudy: {
+    title: "Case Study: Building and Scaling a Multiplayer AI Game on Discord",
+    date: "Aug 13, 2024",
+    image: "/images/blog/00cb4e4e1e52eae57babb990d85292013ae891ad.png",
+  },
+  discordplaybook: {
+    title: "Discord Activity Playbook",
+    date: "Jun 13, 2024",
+    image: "/images/blog/00cb4e4e1e52eae57babb990d85292013ae891ad.png",
+  },
+  "5mil": {
+    title: "5M+ Players on Discord Game",
+    date: "Jun 03, 2024",
+    image: "/images/blog/00cb4e4e1e52eae57babb990d85292013ae891ad.png",
+  },
+  cloudflare24: {
+    title: "Playroom joins Cloudflare Launchpad",
+    date: "April 05 2024",
+    image:
+      "/images/blog/cloudflare24/f690862acb79248bcf264d32c835e8d26399d36f.png",
+  },
+  gdc24: {
+    title: "Playroom GDC Announcement",
+    date: "March 20 2024",
+    image: "/images/blog/gdc24/header.png",
+  },
+  feb24marketreport: {
+    title: "Gaming Market Report",
+    date: "February 02 2024",
+    image:
+      "/images/blog/feb24marketreport/d0a238d90467b727090388addf27d9fa1908f01b.png",
+  },
+  feb24: {
+    title: "New Multiplayer Modes, Tiktok & Stats",
+    date: "February 01 2024",
+    image: "/images/blog/feb24/650fc667404c1b8aec33a2d7d5ba3cd82a63933d.png",
+  },
+  highlights23: {
+    title: "Playroom Highlights: Let's review last 6 months",
+    date: "December 22 2023",
+    image: "/images/blog/highlights23.png",
+  },
+  december23: {
+    title: "December Update: Death by AI, Twitch Insights and Godot",
+    date: "December 06 2023",
+    image: "/images/blog/dec232.png",
+  },
+  multiplayeredgecases: {
+    title: "Multiplayer Edge Cases",
+    date: "November 07 2023",
+    image: "/images/blog/multiplayeredgecases.png",
+  },
+  october23: {
+    title: "October & November Update: Community-driven Success",
+    date: "October 02 2023",
+    image: "/images/blog/october231.jpg",
+  },
+  axiegamejam23: {
+    title: "Playroom partners with Axie Infinity",
+    date: "September 28 2023",
+    image: "/images/blog/axiegamejam23.png",
+  },
+  september23: {
+    title: "September Update: Tech Milestones, Developers and Games",
+    date: "September 02 2023",
+    image: "/images/blog/september231.jpg",
+  },
+  unityweb: {
+    title: "Making Playroom's JavaScript Plugin for Unity",
+    date: "23 Aug 2023",
+    image: "/images/blog/unity-blog.png",
+  },
+  webxr: {
+    title: "WebXR, Vision Pro, and Multiplayer",
+    date: "8 Aug 2023",
+    image: "/images/blog/webxr0.png",
+  },
+  streamersdemand: {
+    title: "Streamers Drive Explosive Demand for Social Multiplayer Games",
+    date: "August 07 2023",
+    image: "/images/blog/streamersdemand1.png",
+  },
+  august23: {
+    title: "August Update: Launches, Learnings and Templates!",
+    date: "August 01 2023",
+    image: "/images/blog/august231.jpg",
+  },
+  multiplayerhard: {
+    title: "Making a multiplayer game is not simple",
+    date: "June 22 2023",
+    image: "/images/blog/multiplayerhard.jpg",
+  },
+  july23: {
+    title: "July Update: YouTuber joins Playroom and GameJam",
+    date: "July 01 2023",
+    image: "/images/blog/july233.jpg",
+  },
+  june23: {
+    title: "June Update: Bunch partnership and Multiplayer Kit",
+    date: "June 01 2023",
+    image: "/images/blog/june231.png",
+  },
+  may23: {
+    title: "May Update: SDK & AI Game Editor",
+    date: "May 01 2023",
+    image: "/images/blog/may231.jpg",
+  },
+  april23: {
+    title: "April Update: GDC & Playroom AI Engine",
+    date: "Apr 03 2023",
+    image: "/images/blog/april232.png",
+  },
+  march23: {
+    title: "March Update: Game making with AI",
+    date: "Mar 01 2023",
+    image: "/images/blog/march231.gif",
+  },
+  february23: {
+    title: "February Update: Multiplayer & AI Trivia",
+    date: "Feb 01 2023",
+    image: "/images/blog/february231.jpg",
+  },
+  january23: {
+    title: "January Update: AssemblyAI Hack Winner & SDK",
+    date: "Jan 01 2023",
+    image: "/images/blog/january231.jpg",
+  },
+};

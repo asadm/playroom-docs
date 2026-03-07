@@ -1,0 +1,41 @@
+import { Callout } from 'nextra/components'
+
+# State (synced state)
+
+Synced state is the core of Playroom Kit—like a shared object for everyone in the room. Two types:
+
+## Global state
+Shared by all participants in the room. Use it for things like time remaining, current phase, or shared scene data. 
+
+```js copy
+// Set the global state
+setState("object1", { x: 20, y: 10 })
+
+// Read the global state (same on all devices in the room)
+const object1 = getState("object1")
+```
+
+## Per-participant state
+State that belongs to each participant. Use it for score, position, cursor, or any per-user data. 
+
+```js copy
+// Set the player state
+myPlayer().setState("score", 99);
+
+// Read another participant's state
+const score = players[1].getState("score");
+```
+
+## How state is synchronized
+
+Playroom Kit elects one participant as the **host**. The host is the authority for room state. Changes from others are sent to the host; the host applies them in order. On conflict, the host's version wins.
+
+## Reliable vs. Unreliable State Changes
+
+Playroom Kit has two ways to propagate state changes: reliable and unreliable.
+
+**Reliable** state changes are guaranteed to reach all participants, but are slower than unreliable. Playroom Kit uses websocket backend to send reliable state changes. Playroom Kit's websocket server is usually within the same region as the host, so the latency is usually low.
+
+**Unreliable (experimental)** state changes are faster, but they are not always guaranteed to be delivered. Playroom Kit uses WebRTC data channel to send unreliable state changes. In case WebRTC is not available or cannot be used, Playroom Kit will fall back to using websocket backend.
+
+The `setState` function accepts an optional `reliable` parameter to specify whether the state change should be reliable or unreliable. By default, `setState` uses reliable for global state and unreliable for per-participant state.

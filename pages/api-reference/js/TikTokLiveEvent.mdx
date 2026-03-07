@@ -1,0 +1,16 @@
+---
+title: TikTokLiveEvent
+description: "The TikTokLiveEvent interface represents a live event sent from TikTok to the game."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# TikTokLiveEvent
+
+## Properties
+
+| Name | Type | Description |
+|------|------|-------------|
+| `type?` | `"chat" | "gift" | "like"` | Type of the live event (chat, gift, or like). |
+| `data?` | `{ t?: number; msgId?: string; userId?: string; name?: string; userPhotoUrl?: string; comment?: string; giftName?: string; giftPhotoUrl?: string; giftId?: string; giftDiamondCount?: number; }` | Event data containing user and event-specific information. |

@@ -1,0 +1,53 @@
+---
+title: usePlayersList
+description: "Returns PlayerState objects for all players in the game. Use this hook to get a list of all players in the game. The list will be updated as players join and leave the game."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/react-docs-api-full.ts` and run `npm run generate:react-docs` to regenerate. */}
+
+# usePlayersList
+
+If `triggerOnPlayerStateChange` is `true`, the hook will trigger a re-render when a player's state changes. This is useful for times when you want to display a list of players and their state values like scores.
+
+By default, this hook only re-renders when players join or leave. Set `triggerOnPlayerStateChange` to `true` only when you need to track player state changes. Consider using `usePlayersState` for specific state values rather than tracking all state changes.
+
+## Signature
+
+```ts
+function usePlayersList(triggerOnPlayerStateChange?: boolean): PlayerState[]
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `triggerOnPlayerStateChange?` | `boolean` | If `true`, the hook will trigger a re-render when a player's state changes. Defaults to `false`. |
+
+## Returns
+
+`PlayerState[]`
+
+## Usage
+
+```ts
+import { usePlayersList } from 'playroomkit'
+
+function PlayersList() {
+  const players = usePlayersList();
+
+  return (
+    <div>
+      <h3>Players ({players.length})</h3>
+      {players.map(player => (
+        <div key={player.id}>
+          <img src={player.getProfile().photo} alt="Avatar" />
+          <span>{player.getProfile().name}</span>
+          {player.isBot() && <span> (Bot)</span>}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+```

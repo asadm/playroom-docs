@@ -1,0 +1,37 @@
+---
+title: Joystick
+description: "A component that renders a joystick controller. The joystick can be used to control the player's position in the game."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# Joystick
+
+## Signature
+
+```ts
+function Joystick(player: PlayerState, options: JoystickOptions): JoystickController
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `player` | `PlayerState` | The PlayerState for the joystick. |
+| `options` | `JoystickOptions` | Joystick options. |
+
+## Returns
+
+`JoystickController`
+
+## Usage
+
+```ts
+import { Joystick, myPlayer } from 'playroomkit';
+
+new Joystick(myPlayer(), {
+  type: "dpad"
+})
+
+```

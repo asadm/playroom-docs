@@ -1,0 +1,34 @@
+---
+title: transferHost
+description: "Transfers host privileges to another player."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# transferHost
+
+Only the current host can call this. The target player must be in the room.
+
+## Signature
+
+```ts
+function transferHost(playerId: string): Promise<void>
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `playerId` | `string` | The ID of the player to transfer host to. |
+
+## Returns
+
+`Promise<void>`
+
+## Usage
+
+```ts
+await transferHost('player123');
+
+```

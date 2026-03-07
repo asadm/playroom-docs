@@ -1,0 +1,48 @@
+# Using Remix with Playroom Kit
+
+[Remix](https://remix.run/) is a full-stack React framework with built-in data loading, mutations, and nested routing. Playroom Kit adds real-time collaboration—shared state, rooms, and participants—without a custom backend.
+
+Use the same React hooks and patterns as the [React](/api-reference/react) guide. Run Playroom Kit inside **client-side effects** (e.g. `useEffect`) so the real-time connection runs in the browser after hydration.
+
+## Setup
+
+1. Install Playroom Kit in your Remix project:
+
+```sh npm2yarn copy
+npm install playroomkit
+```
+
+2. Use Playroom Kit in a route component with **client-side only** init (e.g. inside `useEffect`):
+
+```jsx copy
+import { useState, useEffect } from "react";
+import { insertCoin, onPlayerJoin, myPlayer } from "playroomkit";
+
+export default function App() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    insertCoin().then(() => setReady(true));
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    const unsub = onPlayerJoin((state) => {
+      // Handle new player
+      return () => { /* cleanup on quit */ };
+    });
+    return unsub;
+  }, [ready]);
+
+  if (!ready) return <div>Loading...</div>;
+  return <div>{/* Your multiplayer UI */}</div>;
+}
+```
+
+3. For shared state, use `myPlayer().setState(key, value)` and `playerState.getState(key)` as in the [JavaScript](/api-reference/js) guide.
+
+## Learn more
+
+- [Available hooks](/usage/web/react#available-hooks) (same as React)
+- [API](/api-reference)
+- [Features](/components)

@@ -1,0 +1,147 @@
+# Vibe Coding Friendly
+
+If you build with tools like [Replit](https://replit.com/) or [Lovable](https://lovable.dev/), you already know the workflow.
+
+You describe what you want.
+AI generates the code.
+You refine it with prompts.
+You ship fast.
+
+Playroom Kit is designed to fit directly into that loop.
+
+You can copy structured context into your LLM.
+You can paste full guides as prompts.
+You can connect via MCP.
+You can install an npm skill.
+
+Everything is shaped for developers who build with AI first.
+
+---
+
+## Copy-ready `llms.txt`
+
+When you are working inside Replit or Lovable, context is everything.
+
+Playroom provides a structured `llms.txt` file that explains:
+
+* Core concepts
+* Multiplayer primitives
+* Presence and cursor patterns
+* Recommended architecture
+* Common pitfalls
+
+Instead of manually explaining how Playroom works, you paste `llms.txt` into your prompt and continue building.
+
+<div className="bg-neutral-950 text-neutral-100 rounded-2xl p-6 border border-neutral-800">
+  <div className="flex items-center justify-between mb-4">
+    <div className="text-sm font-medium">llms.txt</div>
+    <a
+      href="/llms.txt"
+      className="text-xs px-3 py-1.5 rounded-xl bg-white text-black hover:bg-neutral-200 transition"
+    >
+      Copy llms.txt
+    </a>
+  </div>
+
+  <pre className="text-xs overflow-x-auto text-neutral-400">
+# Playroom Kit
+Lightweight multiplayer primitives for React apps.
+Focus: presence, cursors, ephemeral shared state.
+Not a backend replacement.
+Designed to layer on Supabase/Firebase stacks.
+  </pre>
+
+</div>
+
+This makes LLM responses dramatically more accurate.
+
+---
+
+## Prompt-ready guides
+
+Every guide in the docs is structured to be pasted directly into an AI tool.
+
+You can copy an entire section and say:
+
+> “Follow this guide and generate the code inside my existing React app.”
+
+The guides are:
+
+* Step-by-step
+* Minimal
+* Concrete
+* Copy-friendly
+
+This works especially well inside Replit, where you can iteratively paste instructions and regenerate components.
+
+It also works inside Lovable, where you describe the feature and attach the guide as structured context.
+
+<div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6">
+  <div className="text-sm font-medium mb-3">Example prompt</div>
+  <pre className="text-xs text-neutral-400 overflow-x-auto">
+Use Playroom Kit to add live cursors to my existing React canvas.
+Follow the official step-by-step guide below.
+Do not modify my backend.
+Only add presence and cursor logic.
+  </pre>
+</div>
+
+The documentation is written so AI can execute it cleanly.
+
+## MCP Server
+
+If you use advanced AI workflows, Playroom exposes an MCP server.
+
+MCP allows tools like Replit agents or local AI assistants to:
+
+* Read Playroom docs programmatically
+* Access structured API references
+* Retrieve patterns on demand
+
+Instead of pasting context manually, your AI agent can query Playroom directly.
+
+<div className="bg-neutral-950 border border-neutral-800 rounded-2xl p-6 flex items-center justify-between">
+  <div>
+    <div className="text-sm font-medium">Playroom MCP Server</div>
+    <div className="text-xs text-neutral-400 mt-1">
+      Structured documentation access for AI agents
+    </div>
+  </div>
+  <a
+    href="/mcp"
+    className="text-xs px-4 py-2 rounded-xl bg-white text-black hover:bg-neutral-200 transition"
+  >
+    View MCP Docs
+  </a>
+</div>
+
+This is useful if you are building AI-powered dev environments or custom coding agents.
+
+## Built for AI-native builders
+
+If you are building:
+
+* A multiplayer whiteboard inside Replit
+* A collaborative editor scaffolded by Lovable
+* A real-time dashboard generated through prompts
+
+Playroom fits naturally into that workflow.
+
+You describe the collaboration feature.
+Your AI tool scaffolds the UI.
+Playroom handles presence, cursors, and shared interactions.
+
+No backend rewrite.
+No complex setup.
+No architectural overhaul.
+
+## Summary
+
+Playroom Kit is built for vibe coding.
+
+* Copy structured context with `llms.txt`
+* Paste guides directly into AI prompts
+* Connect through MCP for advanced agents
+* Install an npm skill for better code generation
+
+If you build with AI every day, Playroom meets you there.

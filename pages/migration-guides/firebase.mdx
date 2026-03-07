@@ -1,0 +1,183 @@
+## Migrating from Firebase
+
+[Firebase](https://firebase.google.com/) is an app database solution from Google. In it, [Firebase Realtime Database](https://firebase.google.com/products/realtime-database) is a cloud-hosted NoSQL database that syncs data instantly between clients. It is widely used for chat apps, dashboards, collaborative tools, and lightweight multiplayer games.
+
+You connect clients to a shared database, listen for changes, and update UI when data changes.
+
+If you are already using Firebase Realtime for multiplayer features, this guide explains when it makes sense to move to Playroom Kit and what changes when you do.
+
+---
+
+### Why Playroom Kit?
+
+Firebase Realtime is a general-purpose database. It can power multiplayer, but you still have to design the multiplayer layer yourself.
+
+With Firebase, you typically:
+
+* Design your own room structure in the database
+* Store participants manually
+* Handle presence tracking
+* Clean up disconnected users
+* Secure paths with custom rules
+* Think about data shape and write patterns
+
+Playroom Kit is purpose-built for multiplayer and collaboration.
+
+Instead of treating multiplayer as database syncing, Playroom gives you rooms, participants, and shared state as first-class concepts.
+
+#### When Playroom Kit is a better fit
+
+Playroom Kit works best when:
+
+* You are building multiplayer features, not just syncing data
+* You want built-in rooms and presence
+* You do not want to design a database schema for live state
+* You want a lobby UI included
+* You are building a web-first collaborative experience
+
+It removes a lot of the manual setup that Firebase requires for real-time multiplayer.
+
+#### When Firebase Realtime is still the right choice
+
+Firebase Realtime makes sense when:
+
+* You already rely heavily on Firebase for your backend
+* You need persistent structured data storage
+* You require deep integration with other Firebase services
+* Multiplayer is only a small part of your product
+* You need fine-grained security rules at the database level
+
+Playroom Kit focuses on live multiplayer state. It is not a general-purpose database.
+
+---
+
+### Feature comparison
+
+| Feature                          | Firebase Realtime | Playroom Kit |
+| -------------------------------- | ----------------- | ------------ |
+| General-purpose database         | Yes               | No           |
+| Built-in multiplayer rooms       | No                | Yes          |
+| Built-in lobby UI                | No                | Yes          |
+| Presence tracking                | Manual setup      | Built-in     |
+| Schema design required           | Yes               | No           |
+| Security rules management        | Yes               | No           |
+| Web-first multiplayer            | Yes               | Yes          |
+| Setup complexity for multiplayer | Medium to high    | Very low     |
+
+With Firebase, you build multiplayer on top of a database.
+With Playroom Kit, multiplayer is the foundation.
+
+---
+
+## Guide
+
+Migrating from Firebase Realtime to Playroom Kit means shifting from database-driven syncing to multiplayer-driven state.
+
+You move from:
+
+Listening to database paths
+
+to:
+
+Working with shared state inside rooms.
+
+---
+
+### 1. Replace database rooms with Playroom rooms
+
+In Firebase Realtime, you might structure data like:
+
+```
+/rooms/{roomId}/players/{playerId}
+/rooms/{roomId}/gameState
+```
+
+You manually create and manage these paths.
+
+In Playroom Kit:
+
+* Rooms are created automatically
+* Participants are tracked automatically
+* State belongs to a room by default
+
+You do not design a schema for multiplayer state.
+
+Room behavior is explained in [*Rooms and Sessions*](/features/games/lobby).
+
+---
+
+### 2. Replace onValue listeners with shared state
+
+In Firebase, you often:
+
+* Write to a path using `set` or `update`
+* Listen with `onValue`
+* Re-render UI when data changes
+
+In Playroom Kit:
+
+* You update shared state with `setState`
+* Other participants receive updates automatically
+* UI reacts to changes immediately
+
+Example:
+
+```ts
+setState("score", 42)
+```
+
+There is no database path or listener to manage.
+
+Shared state concepts are explained in [*Shared State Primitives*](/features/apps/state).
+
+---
+
+### 3. Replace manual presence tracking
+
+With Firebase Realtime, presence usually requires:
+
+* Tracking `.info/connected`
+* Writing to a `presence` path
+* Cleaning up on disconnect
+* Handling edge cases
+
+Playroom Kit handles presence automatically. Each participant is represented as a player object.
+
+You can access:
+
+* Yourself with `myPlayer()`
+* Others with `usePlayersList(true)`
+
+You focus on rendering players, not tracking connection state.
+
+---
+
+### 4. Rethink persistence
+
+Firebase Realtime is persistent by default. Data remains in the database until you remove it.
+
+Playroom Kit focuses on live, session-based state. It is optimized for real-time collaboration and multiplayer sessions, not long-term storage.
+
+If you still need permanent storage, you can combine Playroom Kit with your existing backend. Use Playroom for live state, and Firebase or another database for saved data.
+
+---
+
+### 5. Adjust your mental model
+
+Firebase Realtime assumes:
+
+Database first. Multiplayer is data syncing.
+
+Playroom Kit assumes:
+
+Multiplayer first. Shared state lives inside rooms.
+
+This model is similar to collaborative tools like [Figma](https://www.figma.com/) and [Miro](https://miro.com/), where users interact inside shared sessions without manually designing database structures.
+
+If your project depends heavily on structured database queries and persistent data, Firebase may remain a better fit.
+
+If your main challenge is real-time multiplayer coordination, Playroom Kit will feel significantly simpler.
+
+---
+
+Playroom Kit is built specifically for multiplayer. If you are using Firebase Realtime mainly to power live interaction, you can remove a lot of complexity by switching to a system designed for that purpose.

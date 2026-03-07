@@ -1,0 +1,1004 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+ {/*
+
+* Metadata:
+* Primary keyword: "multiplayer car game lobby"
+* Secondary keywords: "React Three Fiber lobby", "Playroom Kit multiplayer", "3D car selection lobby", "real-time car selection sync", "multiplayer racing lobby"
+* AI crawl phrases: "bruno simons", "how to build multiplayer car lobby with React Three Fiber", "Playroom Kit car selection tutorial", "real-time car selection sync with Playroom Kit", "React Three Fiber racing lobby tutorial", "multiplayer car game lobby setup"
+* SEO tags: [multiplayer car game lobby, React Three Fiber, Playroom Kit, 3D car selection, real-time multiplayer, racing game lobby]
+  */}
+
+
+# Build a Multiplayer Car Lobby with React Three Fiber and Playroom Kit
+
+Learn how to build a 3D multiplayer car selection lobby for a racing game. You'll use React Three Fiber for 3D rendering, Playroom Kit for multiplayer matchmaking, and create a sleek garage environment where players can choose their cars.
+
+<br />
+<a href="https://r3f-playroom-lobby-car-prototype.vercel.app" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/wass08/r3f-vite-starter"><Button variant="outline">Get Starter Code</Button></a>
+<a href="https://github.com/wass08/r3f-playroom-lobby-car-prototype"><Button variant="outline">Get Final Code</Button></a>
+<br />
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/1-7PY08aRM0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Getting Started
+
+This tutorial shows you how to create a multiplayer car lobby where players can select their vehicles before entering a game. The lobby features a 3D garage environment with animated lights, player name editing using [`myPlayer`](/api-reference/js/myPlayer), car model switching with animations, and seamless multiplayer synchronization using [`usePlayersList`](/api-reference/react/usePlayersList) and [`useMultiplayerState`](/api-reference/react/useMultiplayerState).
+
+The application uses Playroom Kit to handle real-time multiplayer state, allowing players to see each other's selected cars and names in real-time. The game includes a physics-based driving mode where players can drive their selected cars around a map using on-screen joysticks via [`Joystick`](/api-reference/js/Joystick).
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Car Game Lobby". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Car Game Lobby". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Multiplayer Car Game Lobby".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains all the 3D assets, audio files, and basic React setup you'll need.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Initialize Playroom Kit with insertCoin &nbsp; <PromptStepCopyButton counter={1} text="Initialize Playroom Kit with insertCoin in main.jsx. Set skipLobby to true. Then render the App component inside React StrictMode." />
+
+Initialize Playroom Kit to handle multiplayer state and matchmaking using [`insertCoin`](/api-reference/js/insertCoin). This enables the application to connect players and synchronize game state across all clients.
+
+```jsx filename="main.jsx"
+import { insertCoin } from "playroomkit";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+insertCoin({
+  skipLobby: true,
+}).then(() =>
+  ReactDOM.createRoot(document.getElementById("root")).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  )
+);
+```
+
+---
+
+### Step 2: Set Up the Main App with Canvas and UI &nbsp; <PromptStepCopyButton counter={2} text="Update App.jsx with Canvas, UI component, Leva for debug controls, and EffectComposer with Bloom post-processing. Set camera position to [4.2, 1.5, 7.5] with fov 45 and background to #333." />
+
+Set up the main App component with React Three Fiber Canvas, post-processing effects, and the UI overlay. This creates the foundation for the 3D scene and user interface.
+
+```jsx filename="App.jsx"
+import { Canvas } from "@react-three/fiber";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
+import { Leva } from "leva";
+import { myPlayer } from "playroomkit";
+import { Experience } from "./components/Experience";
+import { UI } from "./components/UI";
+
+function App() {
+  const me = myPlayer();
+  return (
+    <>
+      <UI />
+      <Leva hidden />
+      <Canvas
+        shadows
+        camera={{ position: [4.2, 1.5, 7.5], fov: 45, near: 0.5 }}
+      >
+        <color attach="background" args={["#333"]} />
+        <Experience />
+        <EffectComposer>
+          <Bloom luminanceThreshold={1} intensity={1.22} />
+        </EffectComposer>
+      </Canvas>
+    </>
+  );
+}
+
+export default App;
+```
+
+---
+
+### Step 3: Create the Experience Component with Game State &nbsp; <PromptStepCopyButton counter={3} text="Create Experience.jsx that uses useMultiplayerState for gameState with default 'lobby'. Conditionally render Lobby component when gameState is 'lobby' and Game component when gameState is 'game'." />
+
+Create the Experience component that handles game state switching between lobby and game modes using [`useMultiplayerState`](/api-reference/react/useMultiplayerState). This component acts as the main coordinator for rendering different game phases.
+
+```jsx filename="Experience.jsx"
+import { useMultiplayerState } from "playroomkit";
+import { Game } from "./Game";
+import { Lobby } from "./Lobby";
+
+export const Experience = () => {
+  const [gameState] = useMultiplayerState("gameState", "lobby");
+  return (
+    <>
+      {gameState === "lobby" && <Lobby />}
+      {gameState === "game" && <Game />}
+    </>
+  );
+};
+```
+
+---
+
+### Step 4: Create the AudioManager Utility &nbsp; <PromptStepCopyButton counter={4} text="Create AudioManager.jsx in utils folder that exports an audios object with car_start Audio and a playAudio function that resets and plays the audio." />
+
+Create a simple audio manager utility to handle sound playback for car switching animations.
+
+```jsx filename="AudioManager.jsx"
+export const audios = {
+  car_start: new Audio("/audios/car_start.mp3"),
+};
+
+export const playAudio = (audio) => {
+  audio.currentTime = 0;
+  audio.play();
+};
+```
+
+---
+
+### Step 5: Create the Car Component &nbsp; <PromptStepCopyButton counter={5} text="Create Car.jsx that exports CAR_MODELS array with car names. Create Car component that loads GLB models from /models/cars/{model}.glb, applies material transformations (transparent windows, metallic paint, emissive lights), and supports rotation. Preload all car models." />
+
+Create the Car component that renders 3D car models with custom material properties. This component handles loading and displaying different car types with visual enhancements.
+
+```jsx filename="Car.jsx"
+import { Clone, useGLTF } from "@react-three/drei";
+import { useEffect } from "react";
+import { MeshStandardMaterial } from "three";
+import { degToRad } from "three/src/math/MathUtils";
+
+export const CAR_MODELS = [
+  "sedanSports",
+  "raceFuture",
+  "taxi",
+  "ambulance",
+  "police",
+  "truck",
+  "firetruck",
+];
+
+export const Car = ({ model = CAR_MODELS[0], ...props }) => {
+  const { scene } = useGLTF(`/models/cars/${model}.glb`);
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        if (child.material.name === "window") {
+          child.material.transparent = true;
+          child.material.opacity = 0.5;
+        }
+        if (
+          child.material.name.startsWith("paint") ||
+          child.material.name === "wheelInside"
+        ) {
+          child.material = new MeshStandardMaterial({
+            color: child.material.color,
+            metalness: 0.5,
+            roughness: 0.1,
+          });
+        }
+        if (child.material.name.startsWith("light")) {
+          child.material.emissive = child.material.color;
+          child.material.emissiveIntensity = 4;
+          child.material.toneMapped = false;
+        }
+      }
+    });
+  }, [scene]);
+  return (
+    <group {...props}>
+      <Clone
+        object={scene}
+        rotation-y={degToRad(180)}
+        castShadow
+      />
+    </group>
+  );
+};
+
+CAR_MODELS.forEach((model) => {
+  useGLTF.preload(`/models/cars/${model}.glb`);
+});
+```
+
+---
+
+### Step 6: Create the Lobby Component &nbsp; <PromptStepCopyButton counter={6} text="Create Lobby.jsx with 3D garage scene. Use useGLTF to load garage.glb model, usePlayersList to get all players, and Billboard/Text for player names. Add animated point lights, camera controls with auto-rotation, CarSwitcher component for car selection, and pink spotlight under local player's car. Implement name editing functionality." />
+
+Create the Lobby component that renders the 3D garage environment with player cars, name labels, and car switching functionality using [`usePlayersList`](/api-reference/react/usePlayersList), [`myPlayer`](/api-reference/js/myPlayer), and [`getState`](/api-reference/js/getState)/[`setState`](/api-reference/js/setState) for car selection state.
+
+```jsx filename="Lobby.jsx"
+import {
+  Billboard,
+  Box,
+  CameraControls,
+  Image,
+  PerspectiveCamera,
+  Text,
+  useGLTF,
+} from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useAtom } from "jotai";
+import { myPlayer, usePlayersList } from "playroomkit";
+import { useEffect, useRef, useState } from "react";
+import { MathUtils, Vector3 } from "three";
+import { degToRad } from "three/src/math/MathUtils";
+import { audios, playAudio } from "../utils/AudioManager";
+import { Car } from "./Car";
+import { NameEditingAtom } from "./UI";
+
+const CAR_SPACING = 2.5;
+
+export const Lobby = () => {
+  const [nameEditing, setNameEditing] = useAtom(NameEditingAtom);
+  const controls = useRef();
+  const cameraReference = useRef();
+  const me = myPlayer();
+  const players = usePlayersList(true);
+  players.sort((a, b) => a.id.localeCompare(b.id));
+
+  const { scene } = useGLTF("/models/garage.glb");
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+  }, [scene]);
+
+  const animatedLight = useRef();
+
+  useFrame(({ clock }) => {
+    animatedLight.current.position.x =
+      Math.sin(clock.getElapsedTime() * 0.5) * 2;
+
+    controls.current.camera.position.x +=
+      Math.cos(clock.getElapsedTime() * 0.5) * 0.25;
+    controls.current.camera.position.y +=
+      Math.sin(clock.getElapsedTime() * 1) * 0.125;
+  });
+
+  const shadowBias = -0.005;
+  const shadowMapSize = 2048;
+
+  const viewport = useThree((state) => state.viewport);
+  const adjustCamera = () => {
+    const distFactor =
+      10 /
+      viewport.getCurrentViewport(cameraReference.current, new Vector3(0, 0, 0))
+        .width;
+    controls.current.setLookAt(
+      4.2 * distFactor,
+      2 * distFactor,
+      7.5 * distFactor,
+      0,
+      0.15,
+      0,
+      true
+    );
+  };
+
+  useEffect(() => {
+    adjustCamera();
+  }, [players]);
+
+  useEffect(() => {
+    const onResize = () => {
+      console.log("on resize");
+      adjustCamera();
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  return (
+    <>
+      <PerspectiveCamera ref={cameraReference} position={[0, 1, 10]} />
+      <CameraControls
+        ref={controls}
+        mouseButtons={{
+          left: 0,
+          middle: 0,
+          right: 0,
+          wheel: 0,
+        }}
+        touches={{
+          one: 0,
+          two: 0,
+        }}
+      />
+      <directionalLight position={[6, 4, 6]} intensity={0.4} color="white" />
+      <group scale={0.66}>
+        <primitive object={scene} />
+        <group position={[5.5, 0.5, -1.2]}>
+          <pointLight
+            intensity={3}
+            distance={15}
+            decay={3}
+            color="#4124c9"
+          />
+          <Box scale={0.1} visible={false}>
+            <meshBasicMaterial color="white" />
+          </Box>
+        </group>
+        <group position={[-3, 3, -2]}>
+          <pointLight
+            intensity={3}
+            decay={3}
+            distance={6}
+            color="#a5adff"
+          />
+          <Box scale={0.1} visible={false}>
+            <meshBasicMaterial color="white" />
+          </Box>
+        </group>
+
+        <group position={[0, 2.5, 0.5]} ref={animatedLight}>
+          <pointLight
+            intensity={0.9}
+            decay={2}
+            distance={10}
+            castShadow
+            color="#f7d216"
+            shadow-bias={shadowBias}
+            shadow-mapSize-width={shadowMapSize}
+            shadow-mapSize-height={shadowMapSize}
+          />
+          <Box scale={0.1} visible={false}>
+            <meshBasicMaterial color="white" />
+          </Box>
+        </group>
+        {players.map((player, idx) => (
+          <group
+            position-x={
+              idx * CAR_SPACING - ((players.length - 1) * CAR_SPACING) / 2
+            }
+            key={player.id}
+            scale={0.8}
+          >
+            <Billboard position-y={2.1} position-x={0.5}>
+              <Text fontSize={0.34} anchorX={"right"}>
+                {player.state.name || player.state.profile.name}
+                <meshBasicMaterial color="white" />
+              </Text>
+              <Text
+                fontSize={0.34}
+                anchorX={"right"}
+                position-x={0.02}
+                position-y={-0.02}
+                position-z={-0.01}
+              >
+                {player.state.name || player.state.profile.name}
+                <meshBasicMaterial color="black" transparent opacity={0.8} />
+              </Text>
+              {player.id === me?.id && (
+                <>
+                  <Image
+                    onClick={() => setNameEditing(true)}
+                    position-x={0.2}
+                    scale={0.3}
+                    url="images/edit.png"
+                    transparent
+                  />
+                  <Image
+                    position-x={0.2 + 0.02}
+                    position-y={-0.02}
+                    position-z={-0.01}
+                    scale={0.3}
+                    url="images/edit.png"
+                    transparent
+                    color="black"
+                  />
+                </>
+              )}
+            </Billboard>
+            <group position-y={player.id === me?.id ? 0.15 : 0}>
+              <CarSwitcher player={player} />
+            </group>
+
+            {player.id === me?.id && (
+              <>
+                <pointLight
+                  position-x={1}
+                  position-y={2}
+                  intensity={2}
+                  distance={3}
+                />
+                <group rotation-x={degToRad(-90)} position-y={0.01}>
+                  <mesh receiveShadow>
+                    <circleGeometry args={[2.2, 64]} />
+                    <meshStandardMaterial
+                      color="pink"
+                      toneMapped={false}
+                      emissive={"pink"}
+                      emissiveIntensity={1.2}
+                    />
+                  </mesh>
+                </group>
+                <mesh position-y={0.1} receiveShadow>
+                  <cylinderGeometry args={[2, 2, 0.2, 64]} />
+                  <meshStandardMaterial color="#8572af" />
+                </mesh>
+              </>
+            )}
+          </group>
+        ))}
+      </group>
+    </>
+  );
+};
+
+const SWITCH_DURATION = 600;
+
+const CarSwitcher = ({ player }) => {
+  const changedCarAt = useRef(0);
+  const container = useRef();
+  const [carModel, setCurrentCarModel] = useState(player.getState("car"));
+  useFrame(() => {
+    const timeSinceChange = Date.now() - changedCarAt.current;
+    if (timeSinceChange < SWITCH_DURATION / 2) {
+      container.current.rotation.y +=
+        2 * (timeSinceChange / SWITCH_DURATION / 2);
+      container.current.scale.x =
+        container.current.scale.y =
+        container.current.scale.z =
+          1 - timeSinceChange / SWITCH_DURATION / 2;
+    } else if (timeSinceChange < SWITCH_DURATION) {
+      container.current.rotation.y +=
+        4 * (1 - timeSinceChange / SWITCH_DURATION);
+      container.current.scale.x =
+        container.current.scale.y =
+        container.current.scale.z =
+          timeSinceChange / SWITCH_DURATION;
+      if (container.current.rotation.y > Math.PI * 2) {
+        container.current.rotation.y -= Math.PI * 2;
+      }
+    }
+    if (timeSinceChange >= SWITCH_DURATION) {
+      container.current.rotation.y = MathUtils.lerp(
+        container.current.rotation.y,
+        Math.PI * 2,
+        0.1
+      );
+    }
+  }, []);
+  const newCar = player.getState("car");
+  if (newCar !== carModel) {
+    playAudio(audios.car_start);
+    changedCarAt.current = Date.now();
+    setTimeout(() => {
+      setCurrentCarModel(newCar);
+    }, SWITCH_DURATION / 2);
+  }
+  return (
+    <group ref={container}>
+      <Car model={carModel} />
+    </group>
+  );
+};
+
+useGLTF.preload("/models/garage.glb");
+```
+
+---
+
+### Step 7: Create the Game Component &nbsp; <PromptStepCopyButton counter={7} text="Create Game.jsx that sets up physics with Physics provider, Environment with Lightformer, and multiple colored point lights. Use onPlayerJoin to create Joystick controls for each player and render CarController components. Add fixed RigidBody for GameArea map and void sensor for respawning." />
+
+Create the Game component that sets up the physics world and renders all players' cars in the game arena using [`onPlayerJoin`](/api-reference/js/onPlayerJoin) and [`Joystick`](/api-reference/js/Joystick).
+
+```jsx filename="Game.jsx"
+import { Environment, Gltf, Lightformer } from "@react-three/drei";
+import { CuboidCollider, Physics, RigidBody } from "@react-three/rapier";
+import { Joystick, onPlayerJoin } from "playroomkit";
+import { useEffect, useState } from "react";
+import { CarController } from "./CarController";
+import { GameArea } from "./GameArea";
+
+export const Game = () => {
+  const [players, setPlayers] = useState([]);
+
+  useEffect(() => {
+    onPlayerJoin((state) => {
+      const controls = new Joystick(state, {
+        type: "angular",
+        buttons: [{ id: "Respawn", label: "Spawn" }],
+      });
+      const newPlayer = { state, controls };
+      setPlayers((players) => [...players, newPlayer]);
+      state.onQuit(() => {
+        setPlayers((players) => players.filter((p) => p.state.id !== state.id));
+      });
+    });
+  }, []);
+
+  return (
+    <group>
+      <ambientLight intensity={0.4} />
+      <Environment>
+        <Lightformer
+          position={[5, 5, 5]}
+          form="rect"
+          intensity={1}
+          color="white"
+          scale={[10, 10]}
+          target={[0, 0, 0]}
+        />
+      </Environment>
+      <pointLight position={[0, 5, 0]} intensity={2.5} distance={10} />
+      <pointLight
+        position={[5, 5, 0]}
+        intensity={10.5}
+        distance={10}
+        color="pink"
+      />
+      <pointLight
+        position={[-5, 5, 0]}
+        intensity={10.5}
+        distance={15}
+        color="blue"
+      />
+      <directionalLight position={[10, 10, 10]} intensity={0.4} />
+      <Physics>
+        {players.map(({ state, controls }) => (
+          <CarController key={state.id} state={state} controls={controls} />
+        ))}
+        <RigidBody type="fixed" colliders="hull" rotation-y={Math.PI}>
+          <GameArea />
+        </RigidBody>
+        <RigidBody
+          type="fixed"
+          sensor
+          colliders={false}
+          position-y={-5}
+          name="void"
+        >
+          <CuboidCollider args={[20, 3, 20]} />
+        </RigidBody>
+        <Gltf src="/models/map_road.glb" />
+      </Physics>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 8: Create the GameArea Component &nbsp; <PromptStepCopyButton counter={8} text="Create GameArea.jsx that loads map_buildings.glb model and adds a floor plane. Preload both map models." />
+
+Create the GameArea component that renders the game map with buildings and ground.
+
+```jsx filename="GameArea.jsx"
+import { Gltf, useGLTF } from "@react-three/drei";
+import { degToRad } from "three/src/math/MathUtils";
+
+export const GameArea = () => {
+  return (
+    <group>
+      <Gltf src="/models/map_buildings.glb" />
+      <mesh rotation-x={degToRad(-90)} position-y={0.05}>
+        <planeGeometry args={[18, 18]} />
+        <meshBasicMaterial />
+      </mesh>
+    </group>
+  );
+};
+
+useGLTF.preload("/models/map_buildings.glb");
+useGLTF.preload("/models/map_road.glb");
+```
+
+---
+
+### Step 9: Create the CarController Component &nbsp; <PromptStepCopyButton counter={9} text="Create CarController.jsx with physics-based car movement. Use RigidBody with hull colliders, implement joystick controls for steering and acceleration with different speeds per car model. Sync position/rotation to playroom state as host, interpolate from state for clients, add camera follow for local player, include respawn functionality when falling into void, and display player name above car." />
+
+Create the CarController component that handles physics-based car movement, player input, camera following, and multiplayer synchronization using [`isHost`](/api-reference/js/isHost), [`myPlayer`](/api-reference/js/myPlayer), [`setState`](/api-reference/js/setState), and [`getState`](/api-reference/js/getState).
+
+```jsx filename="CarController.jsx"
+import { Html, PerspectiveCamera } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { RigidBody, euler, quat, vec3 } from "@react-three/rapier";
+import { useControls } from "leva";
+import { isHost, myPlayer, usePlayerState } from "playroomkit";
+import { useEffect, useRef } from "react";
+import { Vector3 } from "three";
+import { randInt } from "three/src/math/MathUtils";
+import { Car } from "./Car";
+
+const UP = new Vector3(0, 1, 0);
+
+const CAR_SPEEDS = {
+  sedanSports: 4,
+  raceFuture: 2,
+  taxi: 5.5,
+  ambulance: 8.5,
+  police: 5.5,
+  truck: 4.8,
+  firetruck: 10,
+};
+
+export const CarController = ({ state, controls }) => {
+  const rb = useRef();
+  const me = myPlayer();
+  const { rotationSpeed, carSpeed } = useControls({
+    carSpeed: {
+      value: 3,
+      min: 0,
+      max: 10,
+      step: 0.1,
+    },
+    rotationSpeed: {
+      value: 3,
+      min: 0,
+      max: 10,
+      step: 0.01,
+    },
+  });
+
+  const lookAt = useRef(new Vector3(0, 0, 0));
+  useFrame(({ camera }, delta) => {
+    if (!rb.current) {
+      return;
+    }
+    if (me?.id === state.id) {
+      const targetLookAt = vec3(rb.current.translation());
+      lookAt.current.lerp(targetLookAt, 0.1);
+      camera.lookAt(lookAt.current);
+    }
+    const rotVel = rb.current.angvel();
+    if (controls.isJoystickPressed()) {
+      const angle = controls.angle();
+      const dir = angle > Math.PI / 2 ? 1 : -1;
+      rotVel.y = -dir * Math.sin(angle) * rotationSpeed;
+      const impulse = vec3({
+        x: 0,
+        y: 0,
+        z: (CAR_SPEEDS[carModel] || carSpeed) * delta * dir,
+      });
+      const eulerRot = euler().setFromQuaternion(quat(rb.current.rotation()));
+      impulse.applyEuler(eulerRot);
+      rb.current.applyImpulse(impulse, true);
+    }
+    rb.current.setAngvel(rotVel, true);
+    if (isHost()) {
+      state.setState("pos", rb.current.translation());
+      state.setState("rot", rb.current.rotation());
+    } else {
+      const pos = state.getState("pos");
+      if (pos) {
+        rb.current.setTranslation(pos);
+        rb.current.setRotation(state.getState("rot"));
+      }
+    }
+    if (controls.isPressed("Respawn")) {
+      respawn();
+    }
+  });
+  const respawn = () => {
+    if (isHost()) {
+      rb.current.setTranslation({
+        x: randInt(-2, 2) * 4,
+        y: 2,
+        z: randInt(-2, 2) * 4,
+      });
+      rb.current.setLinvel({ x: 0, y: 0, z: 0 });
+      rb.current.setRotation({ x: 0, y: 0, z: 0, w: 1 });
+      rb.current.setAngvel({ x: 0, y: 0, z: 0 });
+    }
+  };
+  const [carModel] = usePlayerState(state, "car");
+  useEffect(() => {
+    respawn();
+  }, []);
+  return (
+    <group>
+      <RigidBody
+        ref={rb}
+        colliders={"hull"}
+        key={carModel}
+        position={vec3(state.getState("pos"))}
+        rotation={euler().setFromQuaternion(quat(state.getState("rot")))}
+        onIntersectionEnter={(e) => {
+          if (e.other.rigidBodyObject.name === "void") {
+            respawn();
+          }
+        }}
+      >
+        <Html position-y={0.55}>
+          <h1 className="text-center whitespace-nowrap text-white drop-shadow-md backdrop-filter bg-slate-300 bg-opacity-30 backdrop-blur-lg rounded-md py-2 px-4 text-xl transform -translate-x-1/2">
+            {state.state.name || state.state.profile.name}
+          </h1>
+        </Html>
+        <Car model={carModel} scale={0.32} />
+        {me?.id === state.id && (
+          <PerspectiveCamera makeDefault position={[0, 1.5, -3]} near={1} />
+        )}
+      </RigidBody>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 10: Create the UI Component &nbsp; <PromptStepCopyButton counter={10} text="Create UI.jsx with car selector buttons at bottom, name editing modal, INVITE button to copy link to clipboard, and START/Online buttons for host to start game or find matches. Use useMultiplayerState for gameState, usePlayersList, and Jotai for name editing state." />
+
+Create the UI component that handles car selection, name editing, game state controls, and player interactions using [`isHost`](/api-reference/js/isHost), [`myPlayer`](/api-reference/js/myPlayer), [`useMultiplayerState`](/api-reference/react/useMultiplayerState), [`usePlayersList`](/api-reference/react/usePlayersList), and [`startMatchmaking`](/api-reference/js/startMatchmaking).
+
+```jsx filename="UI.jsx"
+import { atom, useAtom } from "jotai";
+import {
+  isHost,
+  myPlayer,
+  startMatchmaking,
+  useMultiplayerState,
+  usePlayersList,
+} from "playroomkit";
+import { useEffect, useState } from "react";
+import { CAR_MODELS } from "./Car";
+
+export const NameEditingAtom = atom(false);
+
+export const UI = () => {
+  const me = myPlayer();
+  const [gameState, setGameState] = useMultiplayerState("gameState", "lobby");
+  const [loadingSlide, setLoadingSlide] = useState(true);
+  const [nameEditing, setNameEditing] = useAtom(NameEditingAtom);
+  const [nameInput, setNameInput] = useState(
+    me?.getState("name") || me?.state.profile.name
+  );
+
+  const [invited, setInvited] = useState(false);
+
+  const invite = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setInvited(true);
+    setTimeout(() => setInvited(false), 2000);
+  };
+
+  useEffect(() => {
+    setLoadingSlide(true);
+    if (gameState !== "loading") {
+      const timeout = setTimeout(() => {
+        setLoadingSlide(false);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [gameState]);
+
+  usePlayersList(true);
+
+  const [loadingContent, setLoadingContent] = useState(0);
+  useEffect(() => {
+    if (loadingSlide) {
+      const interval = setInterval(() => {
+        setLoadingContent((prev) => (prev + 1) % CAR_MODELS.length);
+      }, 200);
+      return () => clearInterval(interval);
+    }
+  }, [loadingSlide]);
+
+  return (
+    <>
+      <div
+        className={`fixed z-30 top-0 left-0 right-0 h-screen bg-white flex items-center justify-center gap-1 text-5xl pointer-events-none transition-transform duration-500
+      ${loadingSlide ? "" : "translate-y-[100%]"}
+      `}
+      >
+        VROOM, VROOM
+        <img src={`images/cars/${CAR_MODELS[loadingContent]}.png`} />
+      </div>
+      <div
+        className={
+          "fixed z-10 bottom-4 left-1/2 flex flex-wrap justify-center items-center gap-2.5 -translate-x-1/2 w-full max-w-[75vw]"
+        }
+      >
+        {CAR_MODELS.map((model, idx) => (
+          <div
+            key={model}
+            className={`min-w-14 min-h-14 w-14 h-14 bg-white bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-full shadow-md cursor-pointer
+            ${
+              me?.getState("car") === model ||
+              (!me?.getState("car") && idx === 0)
+                ? "ring-4 ring-blue-500"
+                : ""
+            }
+            `}
+            onClick={() => me?.setState("car", model)}
+          >
+            <img
+              src={`/images/cars/${model}.png`}
+              alt={model}
+              className="w-full h-full"
+            />
+          </div>
+        ))}
+      </div>
+      {gameState === "lobby" && isHost() && (
+        <div className="fixed bottom-4 right-4 z-10 flex flex-col gap-2 items-end">
+          <button
+            className="px-4 py-2 bg-gray-100 text-black text-lg rounded-md"
+            onClick={() => {
+              setGameState("loading");
+              setTimeout(() => {
+                setGameState("game");
+              }, 500);
+            }}
+          >
+            Private
+          </button>
+          <button
+            className="px-8 py-2 bg-gray-100 text-black text-2xl rounded-md"
+            onClick={async () => {
+              setGameState("loading");
+              await startMatchmaking();
+              setGameState("game");
+            }}
+          >
+            Online
+          </button>
+        </div>
+      )}
+      <button
+        className="z-20 fixed top-4 right-4 px-8 py-2 bg-gray-100 text-black text-2xl rounded-md flex items-center gap-2"
+        onClick={invite}
+        disabled={invited}
+      >
+        {invited ? (
+          <>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"
+              />
+            </svg>
+            Link copied to clipboard
+          </>
+        ) : (
+          <>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+              />
+            </svg>
+            Invite
+          </>
+        )}
+      </button>
+      {nameEditing && (
+        <div className="fixed z-20 inset-0 flex items-center justify-center flex-col gap-2 bg-black bg-opacity-20 backdrop-blur-sm">
+          <input
+            autoFocus
+            className="p-3"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                me?.setState("name", nameInput);
+                setNameEditing(false);
+              }
+            }}
+          />
+          <div className="flex items-center gap-2">
+            <button
+              className="px-8 py-2 bg-red-400 text-white text-2xl rounded-md"
+              onClick={() => {
+                setNameEditing(false);
+              }}
+            >
+              ✗
+            </button>
+            <button
+              className="px-8 py-2 bg-green-400 text-white text-2xl rounded-md"
+              onClick={() => {
+                me?.setState("name", nameInput);
+                setNameEditing(false);
+              }}
+            >
+              ✓
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+```
+
+---
+
+## Improvements
+
+- Add more car models with different handling characteristics
+- Implement a countdown timer before game starts
+- Add obstacle course elements to the game arena
+- Create team-based game modes
+- Add nitro boost power-ups during gameplay
+- Implement a spectating mode for eliminated players

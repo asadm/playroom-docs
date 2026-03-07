@@ -1,0 +1,33 @@
+---
+title: startMatchmaking
+description: "Starts matchmaking manually if not passed in insertCoin."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# startMatchmaking
+
+Useful when you want to control when matchmaking starts.
+
+## Signature
+
+```ts
+function startMatchmaking(): Promise<void>
+```
+
+
+## Returns
+
+`Promise<void>`
+
+## Usage
+
+```ts
+// Insert coin the regular way
+await insertCoin({skipLobby: true});
+
+// Start matchmaking manually
+await startMatchmaking();
+
+```
