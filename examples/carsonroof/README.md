@@ -1,15 +1,15 @@
 # Car On Roof – Three.js + Cannon Sample
 
-This is a sample project that uses Three.js, Cannon and PlayroomKit to create an isometric car game. The car physics and model are from [Bruno Simon's website](https://bruno-simon.com/).
+This is a sample project that uses Three.js, Cannon and Playroom Kit to create an isometric car game. The car physics and model are from [Bruno Simon's website](https://bruno-simon.com/).
 
 **Note:** The code for loading model is in `src/carmodel.js`, this also applies basic materials to the model. You can also replace `loadCar` import with one in `src/carmodel_basic.js` to see a dummy car model with box and torus shape instead of the actual car model.
 
 ## What's Included
 
 - A basic car model with car physics
-- Uses PlayroomKit's [Joystick](https://docs.joinplayroom.com/multiplayer/joystick) component for touch controls
+- Uses Playroom Kit's [Joystick](https://docs.joinplayroom.com/multiplayer/joystick) component for touch controls
 - A simple isometric scene with a few spheres on the ground
-- Very basic networked physics using [PlayroomKit](https://docs.joinplayroom.com)
+- Very basic networked physics using [Playroom Kit](https://docs.joinplayroom.com)
 ## Demo
 
 You can see a demo of this project [here](https://carsonroof.joinplayroom.com).

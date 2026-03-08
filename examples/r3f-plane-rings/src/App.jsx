@@ -12,7 +12,10 @@ import { Joystick, insertCoin, myPlayer, usePlayersList } from "playroomkit";
 function App() {
   const [coinInserted, setCoinInserted] = useState(false);
   useEffect(() => {
-    insertCoin().then(() => {
+    window._USETEMPSTORAGE = true;
+    insertCoin({
+      skipLobby: true,
+    }).then(() => {
       setCoinInserted(true);
     });
   }, []);

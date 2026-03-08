@@ -1,0 +1,378 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import Image from "next/image";
+import CodePlayground from "../../components/CodePlayground";
+import { liveCursorsExampleFiles } from "../../code/live-cursors";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+ {/* * Metadata:
+ * Primary keyword: "live cursors"
+ * Secondary keywords: "real-time cursor tracking", "multiplayer cursors", "collaborative cursor sync", "Figma-like cursors", "presence indicators"
+ * AI crawl phrases: "how to build live cursors", "real-time cursor position sync", "multiplayer cursor tutorial", "Playroom Kit cursor tracking"
+ * SEO tags: [live cursors, real-time collaboration, multiplayer cursors, presence, cursor tracking] */}
+
+# Live Cursors
+
+Sync cursor positions in real time so everyone in the room sees where others are pointing. This is the same experience you see in tools like [Figma](https://www.figma.com/), [Miro](https://miro.com/), [Oasiz](https://oasiz.ai) and multiplayer canvases.
+
+Live cursors make collaboration feel alive. When someone moves their mouse, you instantly see it. When they stop, their cursor stays in place. When they leave, it disappears.
+
+In this guide, you'll learn how to build that experience using Playroom Kit's shared state system.
+
+<br />
+<a href="https://livecursors.playroom.gg" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/asadm/playroom-docs/tree/main/examples/live-cursors"><Button variant="outline">Get Final Code</Button></a>
+<br />
+<br />
+
+<CodePlayground
+files={liveCursorsExampleFiles}
+height="480px"
+previewUrls={[
+"https://livecursors.playroom.gg/",
+"https://livecursors.playroom.gg/",
+]}
+/>
+
+<Image src="/images/live-cursors.png" width={1080} height={1920} className="absolute -top-40 -z-10 opacity-20" />
+
+## Getting Started
+
+Live cursors are common in modern collaborative apps. If you have never noticed them before, open a shared design file in [Figma](https://www.figma.com/) or a board in [Miro](https://miro.com/). Move your mouse and watch how others can see it instantly.
+
+We are going to recreate that same behavior using [React](/integrations/react) and Playroom Kit.
+
+This guide assumes:
+
+- You already have a React app
+- Playroom Kit is installed
+- You want to add live cursors to your existing app
+
+Don't have an app yet? You can download the full example from GitHub, or create a fresh React app by following the React docs.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "live cursors" feature similar to the liveblocks Live Cursors example. The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "live cursors" feature similar to the liveblocks Live Cursors example. The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "live cursors" feature similar to the liveblocks Live Cursors example.
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains the basic React setup and Playroom Kit configuration you'll need.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the Vibe Coding System prompt. Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Setup Playroom Kit &nbsp; <PromptStepCopyButton counter={1} text="Initialize Playroom Kit with insertCoin in a useEffect hook. Connect to a room when the app starts and set up the basic page structure." />
+
+First, make sure Playroom Kit is installed and configured. If you haven't done that yet, follow the [Setup](/getting-started/setup) guide.
+
+Once that's done, you need to connect to a room when your app starts. Use [`insertCoin()`](/api-reference/js/insertCoin) to join or create a session.
+
+```tsx filename="page.tsx"
+"use client";
+
+import { useEffect } from "react";
+import { insertCoin, myPlayer, usePlayersList } from "playroomkit";
+
+import Cursor from "../components/Cursor";
+import styles from "./index.module.css";
+
+export default function Home() {
+  useEffect(() => {
+    insertCoin();
+  });
+
+  const players = usePlayersList(true);
+  const me = myPlayer();
+
+  return (
+    <main className={styles.container}>
+      <div className={styles.text}>Move your cursor to broadcast its position</div>
+    </main>
+  );
+}
+```
+
+---
+
+### Step 2: Get List of Players &nbsp; <PromptStepCopyButton counter={2} text="Use usePlayersList to get all players in the room and myPlayer to get the current player. Create a helper function to generate colors based on player IDs." />
+
+Now that we are connected to a room, we need two things: a list of everyone in the room and a way to access ourselves. Playroom Kit provides both through [`usePlayersList`](/api-reference/react/usePlayersList) and [`myPlayer`](/api-reference/js/myPlayer).
+
+```tsx filename="page.tsx"
+"use client";
+
+import { useEffect } from "react";
+import { insertCoin, myPlayer, usePlayersList } from "playroomkit";
+
+import Cursor from "../components/Cursor";
+import styles from "./index.module.css";
+
+type PlayerLite = { id: string; getState: (key: string) => any };
+
+const COLORS = [
+  "#E57373",
+  "#9575CD",
+  "#4FC3F7",
+  "#81C784",
+  "#cbb913",
+  "#FF8A65",
+  "#F06292",
+  "#7986CB",
+];
+
+const colorForId = (id: string) =>
+  COLORS[id.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % COLORS.length];
+
+export default function Home() {
+  useEffect(() => {
+    insertCoin();
+  });
+
+  const players = usePlayersList(true) as PlayerLite[];
+  const me = myPlayer();
+
+  return (
+    <main className={styles.container}>
+      <div className={styles.text}>Move your cursor to broadcast its position</div>
+    </main>
+  );
+}
+```
+
+---
+
+### Step 3: Create Cursor Component &nbsp; <PromptStepCopyButton counter={3} text="Create a Cursor component that renders an SVG cursor. Use absolute positioning with transform to position it at the given x, y coordinates and apply a scale factor." />
+
+Create a simple Cursor component that renders an SVG cursor with the given color and position.
+
+```tsx filename="Cursor.tsx"
+type Props = {
+  color: string;
+  x: number;
+  y: number;
+};
+
+export default function Cursor({ color, x, y }: Props) {
+  const SCALE = 2.5;
+
+  return (
+    <svg
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        transform: `translateX(${x}px) translateY(${y}px) scale(${SCALE})`,
+        transformOrigin: "0 0",
+      }}
+      width="24"
+      height="36"
+      viewBox="0 0 24 36"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
+```
+
+---
+
+### Step 4: Send Your Cursor Position &nbsp; <PromptStepCopyButton counter={4} text="Add onPointerMove handler to send cursor position to other players using setState with false for unreliable transport. Add onPointerLeave handler to clear the cursor when leaving the area." />
+
+Now we need to send our mouse position to everyone else. Every time the mouse moves, we store its position in our player state using [`setState`](/api-reference/js/setState) with the third parameter set to `false` for fast, low-latency updates. This is explained in [*Reliable vs. Unreliable State Changes*](/features/apps/state#reliable-vs-unreliable-state-changes).
+
+```tsx filename="page.tsx"
+  return (
+    <main
+      className={styles.container}
+      onPointerMove={(event) => {
+        if (me?.setState) me.setState("cursor", { x: Math.round(event.clientX), y: Math.round(event.clientY) }, false);
+      }}
+      onPointerLeave={() => {
+        if (me?.setState) me.setState("cursor", null, false);
+      }}
+    >
+      <div className={styles.text}>Move your cursor to broadcast its position</div>
+    </main>
+  );
+```
+
+---
+
+### Step 5: Render Other Players' Cursors &nbsp; <PromptStepCopyButton counter={5} text="Filter out the current player from the players list, then map over remaining players to render their cursors. Get each player's cursor position from their state and render the Cursor component with their color." />
+
+Now we render everyone else's cursor. Each player stores their cursor position under their state using [`setState`](/api-reference/js/setState), and we use [`getState`](/api-reference/js/getState) to retrieve their position and filter out ourselves before rendering.
+
+```tsx filename="page.tsx"
+  const myCursor = players.find((p) => p.id === me?.id)?.getState("cursor") as
+    | { x: number; y: number }
+    | null
+    | undefined;
+
+  const statusText = !me
+    ? "Waiting for Playroom to initialize..."
+    : myCursor
+    ? `${myCursor.x} × ${myCursor.y}`
+    : "Move your cursor to broadcast its position to other people in the room.";
+
+  return (
+    <main
+      className={styles.container}
+      onPointerMove={(event) => {
+        if (me?.setState) me.setState("cursor", { x: Math.round(event.clientX), y: Math.round(event.clientY) }, false);
+      }}
+      onPointerLeave={() => {
+        if (me?.setState) me.setState("cursor", null, false);
+      }}
+    >
+      <div className={styles.text}>{statusText}</div>
+
+      {players
+        .filter((player) => player.id !== me?.id)
+        .map((player) => {
+          const playerCursor = player.getState("cursor");
+          if (!playerCursor) return null;
+          return <Cursor key={`cursor-${player.id}`} color={colorForId(player.id)} x={playerCursor.x} y={playerCursor.y} />;
+        })}
+    </main>
+  );
+```
+
+---
+
+## Improvements
+
+Once you have the basic live cursors working, here are some ways to make the experience even better:
+
+- **Add cursor interpolation** – Use a library like [Framer Motion](https://www.framer.com/motion/) or a simple easing function to smooth cursor movement between position updates
+- **Show player names** – Display each player's name next to their cursor so you know who is who
+- **Add different cursor shapes** – Change the cursor icon based on what the user is doing (selecting, drawing, erasing)
+- **Implement cursor trails** – Create subtle trails or effects for more visual feedback
+- **Add [Lodash debounce](https://www.npmjs.com/package/lodash.debounce)** – Reduce the frequency of updates when the mouse stops moving to optimize performance
+
+## FAQ
+
+### How do live cursors work under the hood?
+
+Each player stores their cursor coordinates in their player state using `setState` with the unreliable transport flag. Other players subscribe to state changes through [`usePlayersList`](/api-reference/react/usePlayersList) and render cursors when the data updates.
+
+### Why use unreliable transport for cursor positions?
+
+Cursor positions update frequently (often 60+ times per second). Using [*Unreliable Transport*](/patterns/unreliable-transport) ensures updates arrive as fast as possible without retransmission delays. If a packet is lost, the next update will arrive milliseconds later anyway.
+
+### Can I show cursors for users who aren't moving?
+
+Yes. The cursor stays at its last known position until the user moves again or leaves. When they leave, their cursor automatically disappears.
+
+### How do I limit how many cursors I render?
+
+You can set a maximum by slicing the players array: `players.slice(0, 10)`. This is useful for rooms with hundreds of participants.
+
+### Does this work on mobile devices?
+
+Yes. Use `onTouchMove` instead of `onPointerMove` for mobile support. The same state management approach works across all platforms.
+
+### Can I customize cursor appearance per user?
+
+Absolutely. You can store additional data in player state like cursor color, name, avatar, or tool type, then render different cursor styles based on that data.
+
+### How do I handle users leaving the room?
+
+Playroom Kit automatically removes players from the [`usePlayersList`](/api-reference/react/usePlayersList) array when they disconnect. Cursors for disconnected players will stop rendering automatically.
+
+### What's the performance impact of live cursors?
+
+Minimal. Each cursor is just a positioned SVG element. Even with 50+ cursors, modern browsers handle rendering easily. The network impact is also low because updates are small (just x and y coordinates) and sent unreliably.
+
+### Can I build this without React?
+
+Yes. Playroom Kit works with any framework. The core [`insertCoin`](/api-reference/js/insertCoin) and player management APIs are framework-agnostic. You can use vanilla JavaScript, Vue, Svelte, or any other frontend library.
+
+### Is this the same approach Figma uses?
+
+Figma uses a similar concept but with more optimizations like viewport culling (only rendering cursors visible in your area) and WebSocket compression. For most applications, the approach in this guide is more than enough.
+
+---
+
+## Conclusion
+
+You just built a complete live cursors system using Playroom Kit. This is the same real-time collaboration pattern used by [Figma](https://www.figma.com/), [Miro](https://miro.com/), and modern multiplayer applications.
+
+The key takeaways:
+
+- Use [`myPlayer`](/api-reference/js/myPlayer) to access the current user
+- Use [`usePlayersList`](/api-reference/react/usePlayersList) to get everyone in the room
+- Store transient data like cursor positions with the unreliable transport flag for speed
+- Render other players' cursors by reading from their state
+
+From here, you can extend this pattern to build shared whiteboards, collaborative document editing, multiplayer games, and any other real-time experience. Playroom Kit handles the hard parts so you can focus on building.

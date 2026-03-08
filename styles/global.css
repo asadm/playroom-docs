@@ -1,5 +1,35 @@
-body{
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+@custom-variant dark (&:is(.dark *));
+
+/* When TOC is disabled (theme.toc: false), the nav is still in layout and reserves w-64. Collapse it so main content uses full width. */
+nav.nextra-toc:empty,
+nav.nextra-toc:not(:has(a[href])) {
+  display: none
+}
+
+/* Override Nextra theme: remove background from sidebar footer and nav blur */
+.nextra-nav-container-blur,
+.nextra-sidebar-footer {
+  background-color: transparent !important;
+}
+
+/* Dark mode only: black background (light mode keeps default) */
+html[class~="dark"] body {
   background-color: #000 !important;
+}
+
+/* Nextra 3 Cards: allow title content to wrap (override _truncate) */
+.nextra-card > span span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
 }
 
 :is(html[class~="dark"] .dark\:nx-bg-dark) {
@@ -10,4 +40,292 @@ body{
   --tw-shadow: 0 -12px 16px #000;
   --tw-shadow-colored: 0 -12px 16px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow);
+}
+html[class~="dark"] .invert-in-dark {
+  filter: invert(1);
+}
+
+/* Base */
+.nextra-code .line {
+  position: relative;
+  padding-left: 1.5em;
+}
+
+/* Diff Add (light mode) */
+.nextra-code .diff.add {
+  background-color: #f0fff4; /* very light green */
+}
+
+.nextra-code .diff.add::before {
+  content: "+";
+  position: absolute;
+  left: 0.5em;
+  color: #2da44e; /* GitHub-style green */
+  font-weight: 600;
+}
+
+/* Diff Remove (light mode) */
+.nextra-code .diff.remove {
+  background-color: #fff5f5; /* very light red */
+}
+
+.nextra-code .diff.remove::before {
+  content: "-";
+  position: absolute;
+  left: 0.5em;
+  color: #d1242f; /* GitHub-style red */
+  font-weight: 600;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .nextra-code .diff.add {
+    background-color: #0f2d1f;
+  }
+
+  .nextra-code .diff.add::before {
+    color: #3fb950;
+  }
+
+  .nextra-code .diff.remove {
+    background-color: #2d0f14;
+  }
+
+  .nextra-code .diff.remove::before {
+    color: #f85149;
+  }
+}
+
+/* Further tweaks */
+
+/* ---------------------------------------
+   Highlighted Lines
+---------------------------------------- */
+
+.nextra-code.has-highlighted .line.highlighted {
+  background: rgba(255, 215, 0, 0.12);
+  border-left: 3px solid rgba(255, 215, 0, 0.6);
+}
+
+/* ---------------------------------------
+   Focused Lines (dim others)
+---------------------------------------- */
+
+.nextra-code.has-focused .line {
+  opacity: 0.35;
+}
+
+.nextra-code.has-focused .line.focused {
+  opacity: 1;
+  background: rgba(100, 150, 255, 0.12);
+  border-left: 3px solid rgba(100, 150, 255, 0.7);
+}
+
+/* ---------------------------------------
+   Diff Styling
+---------------------------------------- */
+
+.nextra-code.has-diff .line.diff.add {
+  background: rgba(72, 187, 120, 0.15);
+  border-left: 3px solid rgba(72, 187, 120, 0.8);
+}
+
+.nextra-code.has-diff .line.diff.remove {
+  background: rgba(239, 68, 68, 0.15);
+  border-left: 3px solid rgba(239, 68, 68, 0.8);
+}
+
+/* Optional + / - indicators */
+.nextra-code.has-diff .line.diff.add::before,
+.nextra-code.has-diff .line.diff.remove::before {
+  position: absolute;
+  left: 0.25rem;
+  opacity: 0.6;
+  font-weight: bold;
+}
+
+.nextra-code.has-diff .line.diff.add::before {
+  content: "+";
+  color: #16a34a;
+}
+
+.nextra-code.has-diff .line.diff.remove::before {
+  content: "−";
+  color: #dc2626;
+}
+
+/* ---------------------------------------
+   Error / Warning / Info
+---------------------------------------- */
+
+.nextra-code .error {
+  background: rgba(239, 68, 68, 0.12);
+  border-left: 3px solid #ef4444;
+}
+
+.nextra-code .warning {
+  background: rgba(234, 179, 8, 0.12);
+  border-left: 3px solid #eab308;
+}
+
+.nextra-code .info {
+  background: rgba(59, 130, 246, 0.12);
+  border-left: 3px solid #3b82f6;
+}
+
+/* ---------------------------------------
+   Word Highlight
+---------------------------------------- */
+
+.nextra-code .highlighted-word {
+  background: rgba(255, 215, 0, 0.25);
+  padding: 0 2px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------
+   Meta Highlight (same as line.highlighted)
+---------------------------------------- */
+
+.nextra-code .highlighted {
+  background: rgba(255, 215, 0, 0.12) !important;
+  border-left: 3px solid rgba(255, 215, 0, 0.6);
+}
+
+/* ---------------------------------------
+   Accessibility Improvements
+---------------------------------------- */
+
+.nextra-code:focus {
+  outline: 2px solid rgba(100, 150, 255, 0.6);
+  outline-offset: 4px;
+}
+
+/* ---------------------------------------
+   Smooth appearance
+---------------------------------------- */
+
+.nextra-code .line {
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    @apply bg-background text-foreground;
+  }
 }

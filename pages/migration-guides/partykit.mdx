@@ -1,0 +1,173 @@
+## Migrating from PartyKit
+
+[PartyKit](https://partykit.io/) is a serverless platform built on top of Cloudflare Workers. You write small server functions that manage WebSocket connections, rooms, and real-time state. It is lightweight and flexible, especially for collaborative apps and small multiplayer games.
+
+If you enjoy writing server logic and want fine control over how messages flow between clients, PartyKit is a great tool.
+
+If you would rather not write or maintain any server code, Playroom Kit can simplify things.
+
+This guide explains the differences and how to migrate.
+
+---
+
+### Why Playroom Kit?
+
+PartyKit gives you a real-time backend environment. You still:
+
+* Write server-side logic
+* Handle WebSocket connections
+* Manage rooms manually
+* Broadcast messages yourself
+* Think about scaling and limits
+
+Playroom Kit removes the backend layer entirely.
+
+Instead of writing server functions, you work with shared state directly in the client. Rooms, presence, and synchronization are handled automatically.
+
+#### When Playroom Kit is a better fit
+
+Playroom Kit works best when:
+
+* You do not need custom server logic
+* Your app is mostly shared state and presence
+* You want multiplayer running in minutes
+* You want built-in lobby and room management
+* You are building a web-first experience
+
+If your app feels more like live collaboration than custom server orchestration, Playroom Kit will usually be faster to ship.
+
+#### When PartyKit is still the right choice
+
+PartyKit makes sense when:
+
+* You need custom server-side validation
+* You want to intercept and process every message
+* You need custom room lifecycle control
+* You require server-only secrets or logic
+* You prefer a server-authoritative architecture
+
+Playroom Kit is intentionally higher level. It trades flexibility for simplicity.
+
+---
+
+### Feature comparison
+
+| Feature                     | PartyKit              | Playroom Kit |
+| --------------------------- | --------------------- | ------------ |
+| Custom server code required | Yes                   | No           |
+| WebSocket handling          | Manual                | Automatic    |
+| Room management             | Manual                | Automatic    |
+| Built-in lobby UI           | No                    | Yes          |
+| Shared state primitives     | Manual implementation | Built-in     |
+| Infrastructure management   | Minimal but required  | None         |
+| Web-first focus             | Yes                   | Yes          |
+| Setup complexity            | Medium                | Very low     |
+
+PartyKit gives you a programmable real-time backend. Playroom Kit gives you multiplayer without writing one.
+
+---
+
+## Guide
+
+Migrating from PartyKit to Playroom Kit is mostly about removing server logic and replacing it with shared state.
+
+You move from:
+
+Custom message passing
+
+to:
+
+Automatic state synchronization
+
+---
+
+### 1. Remove your PartyKit server
+
+In a PartyKit setup:
+
+* You define a server file
+* Clients connect via WebSockets
+* You manually broadcast messages
+* You manage room state on the server
+
+With Playroom Kit:
+
+* You do not write or deploy a server
+* Multiplayer is initialized in the client
+* State updates sync automatically
+
+Instead of sending messages like:
+
+```ts
+room.broadcast({ type: "move", x, y })
+```
+
+You update shared values directly.
+
+Shared state is explained in [*Shared State Primitives*](/features/apps/state).
+
+---
+
+### 2. Replace message handlers with shared state
+
+In PartyKit, you often:
+
+* Listen for incoming messages
+* Update in-memory state
+* Broadcast updates to all clients
+
+In Playroom Kit:
+
+* You call `setState`
+* Other participants receive updates automatically
+* You render based on the latest shared data
+
+For example:
+
+```ts
+setState("position", { x: 100, y: 200 })
+```
+
+There is no manual broadcast step.
+
+If you need faster, non-critical updates such as cursor positions, you can use the pattern described in [*Unreliable Transport*](/features/apps/state#reliable-vs-unreliable-state-changes).
+
+---
+
+### 3. Replace manual room logic
+
+In PartyKit:
+
+* You define how rooms are created
+* You control how clients join
+* You manage cleanup
+
+In Playroom Kit:
+
+* Rooms are handled automatically
+* Participants are tracked for you
+* A lobby UI is available out of the box
+
+You can learn how this works in [*Rooms and Sessions*](/features/games/lobby).
+
+---
+
+### 4. Update your mental model
+
+PartyKit assumes:
+
+You control the server.
+
+Playroom Kit assumes:
+
+You control the UI and shared state.
+
+This model is common in collaborative tools like [Figma](https://www.figma.com/) and [Miro](https://miro.com/), where users interact with shared data without managing backend infrastructure.
+
+If your app relies heavily on custom server-side workflows, PartyKit is still a great choice.
+
+If your multiplayer layer is mostly synchronization, presence, and shared state, Playroom Kit will remove a lot of complexity.
+
+---
+
+Playroom Kit is built for speed and simplicity. If you do not need a programmable real-time backend, you probably do not need to run one.

@@ -192,7 +192,10 @@ function setupGame() {
   });
 }
 
+window._USETEMPSTORAGE = true;
 // Start game
-insertCoin().then(() => {
+insertCoin({
+  skipLobby: true,
+}).then(() => {
   setupGame();
 })

@@ -17,7 +17,7 @@ const App = () => {
     <div className="container" style={{ backgroundImage: `url(${currentBg})` }}>
       <h1>Discord + Playroom</h1>
       <p>Multiplayer Activity Kit</p>
-      <p className='btn3'><a href="https://docs.joinplayroom.com/components/discord" target="_blank">📕 Documentation</a></p>
+      <p className='btn3'><a href="https://docs.joinplayroom.com/components/games/discord" target="_blank">📕 Documentation</a></p>
       <div className='box'><h2>Shared State</h2>
         <p>Playroom lets you easily sync state between players. Try changing background and it will update for everyone.</p>
         <div className="btn-container">

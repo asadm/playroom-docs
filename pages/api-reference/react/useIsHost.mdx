@@ -1,0 +1,49 @@
+---
+title: useIsHost
+description: "Returns true if the current player is the host of the game."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/react-docs-api-full.ts` and run `npm run generate:react-docs` to regenerate. */}
+
+# useIsHost
+
+The host is the player who started the game. Another player can become host if the current host leaves the game, and this value changes automatically to reflect that.
+
+## Signature
+
+```ts
+function useIsHost(): boolean
+```
+
+
+## Returns
+
+`boolean`
+
+## Usage
+
+```ts
+import { useIsHost } from 'playroomkit'
+
+function GameControls() {
+  const isHost = useIsHost();
+
+  return (
+    <div>
+      {isHost ? (
+        <div>
+          <h3>Host Controls</h3>
+          <button>Start Game</button>
+          <button>Reset Game</button>
+        </div>
+      ) : (
+        <div>
+          <p>Waiting for host to start the game...</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+```

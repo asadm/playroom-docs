@@ -1,0 +1,35 @@
+---
+title: getState
+description: "Returns the current value of a given key in the global game state."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# getState
+
+Useful for reading important game state values, like the current score or winner.
+
+## Signature
+
+```ts
+function getState(key: string): any
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `key` | `string` | The state key to retrieve. |
+
+## Returns
+
+`any`
+
+## Usage
+
+```ts
+const winnerId = getState('winner');
+console.log(`Winner is ${winnerId}`);
+
+```

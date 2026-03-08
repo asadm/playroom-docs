@@ -1,0 +1,38 @@
+---
+title: waitForState
+description: "Returns a promise that resolves to the state value only when the game state has the given key set, to any truthy value."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# waitForState
+
+In other words, it waits until a game state is set. This is useful for waiting for the host to set the winner, for example.
+
+Optionally, you can pass a callback that will be called when the state is set.
+
+## Signature
+
+```ts
+function waitForState(stateKey: string, onStateSetCallback?: (value: any) => void): Promise<any>
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `stateKey` | `string` | The key to wait for. |
+| `onStateSetCallback?` | `(value: any) => void` | Optional callback invoked when the state is set. |
+
+## Returns
+
+`Promise<any>`
+
+## Usage
+
+```ts
+const winner = await waitForState('winner');
+console.log(`Winner: ${winner}`);
+
+```

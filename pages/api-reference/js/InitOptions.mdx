@@ -1,0 +1,30 @@
+---
+title: InitOptions
+description: "Options for initializing a Playroom session."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# InitOptions
+
+## Properties
+
+| Name | Type | Description |
+|------|------|-------------|
+| `gameId` | `string` | The ID of the game from the Playroom developer portal. |
+| `streamMode?` | `boolean` | If true, Playroom will start in stream mode. |
+| `liveMode?` | `string` | If set to 'tiktok', Playroom will start in TikTok Live mode. |
+| `allowGamepads?` | `boolean` | If true, Playroom will let players play game using gamepads connected to the stream device itself. This requires streamMode to also be true. The gamepads need to be connected to the device where stream screen is running. No phones are required in this mode but are optionally allowed as an alternative controller if there aren't enough physical gamepads in the room. Players who join via phone in this mode see an on-screen Joystick. |
+| `baseUrl?` | `string` | The base URL used for generating room link that host shares with other players. Defaults to current page URL. |
+| `avatars?` | `string[]` | An array of URLs to images that players can pick as their avatar. This will override the default avatars system that Playroom provides. |
+| `enableBots?` | `boolean` | If true, Playroom initializes a bot using the provided botOptions. |
+| `botOptions?` | `BotOptions` | An object containing parameters for bot instantiation and configuration. |
+| `roomCode?` | `string` | Override the room to join. If this is not set, a random room code is assigned. Do note that if the URL has room #r= param, that is used instead of this. |
+| `skipLobby?` | `boolean` | Skips the Playroom lobby screen. Useful if you implement your own lobby. |
+| `reconnectGracePeriod?` | `number` | If set, Playroom will wait for the given number of milliseconds for the player to reconnect to the room after a disconnect. If the player reconnects within the grace period, the player's state is restored. If the player does not reconnect within the grace period, the player is removed from the room and onQuit fires for the player. |
+| `maxPlayersPerRoom?` | `number` | If set, Playroom will set a maximum limit for the number of players per room. If the room is full and a new player attempts to join, the Playroom will display a default modal with a message stating that the "room is full", and the insertCoin method will throw an error with a message code `ROOM_LIMIT_EXCEEDED`. If the room is full, skipLobby is set to true, and a new player is attempting to join the room, Playroom will skip the default modal but will throw an error. |
+| `defaultStates?` | `Record<string, any>` | An object containing default game states. These states are set when the room is created. |
+| `defaultPlayerStates?` | `Record<string, any>` | An object containing default player states. These states are set for all players when they join the room. |
+| `matchmaking?` | `boolean | MatchmakingOptions` | An object containing matchmaking options or just true to enable with default options. |
+| `discord?` | `boolean` | Enable Discord mode. See Discord Mode for more information. |

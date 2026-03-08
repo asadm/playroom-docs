@@ -1,0 +1,983 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+ {/*
+
+* Metadata:
+* Primary keyword: "multiplayer shooter game"
+* Secondary keywords: "React Three Fiber multiplayer", "Playroom Kit tutorial", "real-time 3D shooter", "browser FPS game", "React multiplayer game development"
+* AI crawl phrases: "how to build multiplayer shooter game with React Three Fiber", "Playroom Kit shooter tutorial", "real-time 3D multiplayer game with React", "sync bullets and players with Playroom Kit", "React Three Fiber FPS tutorial"
+* SEO tags: [multiplayer shooter game, React Three Fiber, Playroom Kit, real-time multiplayer, 3D browser game, FPS tutorial]
+  */}
+
+
+# Build a Multiplayer Shooter Game with React Three Fiber and Playroom Kit
+
+Learn how to build a real-time multiplayer mobile shooter game from scratch using React Three Fiber for 3D rendering and Playroom Kit for seamless multiplayer functionality without requiring a custom backend server.
+
+<br />
+<a href="https://r3f-playroom-multiplayer-u4.vm.elestio.app/" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/wass08/r3f-vite-starter"><Button variant={"outline"}>Get Starter Code</Button></a>
+<a href="https://github.com/wass08/r3f-playroom-multiplayer-shooter-game"><Button variant={"outline"}>Get Final Code</Button></a>
+<br />
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nQI8UNe6cfA?si=auFI3du1bNlHx2nM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Getting Started
+
+This tutorial shows you how to build a multiplayer shooter game where players can join, move around using a virtual joystick, shoot at each other, and see real-time stats like kills and deaths. The game runs entirely in the browser using Playroom Kit's infrastructure via [`insertCoin`](/api-reference/js/insertCoin), which handles matchmaking, state synchronization, and networking automatically.
+
+The final game features a 3D arena map with player characters that can move, jump, shoot bullets, take damage, and respawn. Players see a leaderboard with real-time kill/death stats using [`usePlayersList`](/api-reference/react/usePlayersList), and the host controls game logic like spawning and damage calculation using [`isHost`](/api-reference/js/isHost).
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Shooter Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Multiplayer Shooter Game". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Multiplayer Shooter Game".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains a basic React Three Fiber setup with a rotating cube and minimal dependencies.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Install Dependencies &nbsp; <PromptStepCopyButton counter={1} text="Install the required dependencies for multiplayer and physics: playroomkit for multiplayer, @react-three/rapier for physics, three-stdlib for utilities, and @react-three/postprocessing for visual effects. Also install tailwindcss, postcss, and autoprefixer for styling." />
+
+First, install all the necessary dependencies that enable multiplayer networking, 3D physics, and visual effects.
+
+```bash
+npm install playroomkit @react-three/rapier @react-three/postprocessing three-stdlib
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+---
+
+### Step 2: Configure Tailwind CSS &nbsp; <PromptStepCopyButton counter={2} text="Configure tailwind.config.js to scan src files for classes. Update index.css to include Tailwind directives for base, components, and utilities, and set root dimensions to full viewport." />
+
+Set up Tailwind CSS by configuring the content paths and adding the required directives to your CSS file.
+
+```js filename="tailwind.config.js"
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+```css filename="src/index.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+}
+```
+
+---
+
+### Step 3: Update App.jsx with Canvas, Physics & Post-Processing &nbsp; <PromptStepCopyButton counter={3} text="Update App.jsx to include Canvas with shadows, camera position [0, 30, 0], fov 30. Add Physics from rapier, SoftShadows, PerformanceMonitor for detecting low-end devices, and EffectComposer with Bloom for visual effects. Use Suspense for async loading and Loader from drei." />
+
+Set up the main App component with React Three Fiber's Canvas, physics engine, performance monitoring, and post-processing effects.
+
+```jsx filename="src/App.jsx"
+import { Loader, PerformanceMonitor, SoftShadows } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
+import { Physics } from "@react-three/rapier";
+import { Suspense, useState } from "react";
+import { Experience } from "./components/Experience";
+import { Leaderboard } from "./components/Leaderboard";
+
+function App() {
+  const [downgradedPerformance, setDowngradedPerformance] = useState(false);
+  return (
+    <>
+      <Loader />
+      <Leaderboard />
+      <Canvas
+        shadows
+        camera={{ position: [0, 30, 0], fov: 30, near: 2 }}
+        dpr={[1, 1.5]}
+      >
+        <color attach="background" args={["#242424"]} />
+        <SoftShadows size={42} />
+
+        <PerformanceMonitor
+          onDecline={(fps) => {
+            setDowngradedPerformance(true);
+          }}
+        />
+        <Suspense>
+          <Physics>
+            <Experience downgradedPerformance={downgradedPerformance} />
+          </Physics>
+        </Suspense>
+        {!downgradedPerformance && (
+          <EffectComposer disableNormalPass>
+            <Bloom luminanceThreshold={1} intensity={1.5} mipmapBlur />
+          </EffectComposer>
+        )}
+      </Canvas>
+    </>
+  );
+}
+
+export default App;
+```
+
+---
+
+### Step 4: Create Map Component &nbsp; <PromptStepCopyButton counter={4} text="Create Map.jsx that loads the 3D map from models/map.glb using useGLTF. Wrap it in a RigidBody with type fixed and colliders trimesh for physics. Enable shadows on all meshes in the map." />
+
+Create the Map component that loads the 3D arena environment with physics colliders.
+
+```jsx filename="src/components/Map.jsx"
+import { useGLTF } from "@react-three/drei";
+import { RigidBody } from "@react-three/rapier";
+import { useEffect } from "react";
+
+export const Map = () => {
+  const map = useGLTF("models/map.glb");
+  useEffect(() => {
+    map.scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+  });
+  return (
+    <>
+      <RigidBody colliders="trimesh" type="fixed">
+        <primitive object={map.scene} />
+      </RigidBody>
+    </>
+  );
+};
+useGLTF.preload("models/map.glb");
+```
+
+---
+
+### Step 5: Create CharacterSoldier Component &nbsp; <PromptStepCopyButton counter={5} text="Create CharacterSoldier.jsx that loads the GLB character model using useGLTF and useAnimations. Clone the scene with SkeletonUtils. Create a MeshStandardMaterial with player color. Implement useEffect to switch weapons (hide/show) and apply color to Body and Head meshes. Add animations based on the animation prop." />
+
+Create the CharacterSoldier component that renders a 3D soldier character with customizable color, weapon selection, and animations.
+
+```jsx filename="src/components/CharacterSoldier.jsx"
+import { useAnimations, useGLTF } from "@react-three/drei";
+import { useGraph } from "@react-three/fiber";
+import React, { useEffect, useMemo, useRef } from "react";
+import { Color, LoopOnce, MeshStandardMaterial } from "three";
+import { SkeletonUtils } from "three-stdlib";
+
+const WEAPONS = [
+  "GrenadeLauncher",
+  "AK",
+  "Knife_1",
+  "Knife_2",
+  "Pistol",
+  "Revolver",
+  "Revolver_Small",
+  "RocketLauncher",
+  "ShortCannon",
+  "SMG",
+  "Shotgun",
+  "Shovel",
+  "Sniper",
+  "Sniper_2",
+];
+
+export function CharacterSoldier({
+  color = "black",
+  animation = "Idle",
+  weapon = "AK",
+  ...props
+}) {
+  const group = useRef();
+  const { scene, materials, animations } = useGLTF(
+    "/models/Character_Soldier.gltf"
+  );
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
+  const { actions } = useAnimations(animations, group);
+
+  if (actions["Death"]) {
+    actions["Death"].loop = LoopOnce;
+    actions["Death"].clampWhenFinished = true;
+  }
+
+  useEffect(() => {
+    actions[animation].reset().fadeIn(0.2).play();
+    return () => actions[animation]?.fadeOut(0.2);
+  }, [animation]);
+
+  const playerColorMaterial = useMemo(
+    () =>
+      new MeshStandardMaterial({
+        color: new Color(color),
+      }),
+    [color]
+  );
+
+  useEffect(() => {
+    WEAPONS.forEach((wp) => {
+      const isCurrentWeapon = wp === weapon;
+      nodes[wp].visible = isCurrentWeapon;
+    });
+
+    nodes.Body.traverse((child) => {
+      if (child.isMesh && child.material.name === "Character_Main") {
+        child.material = playerColorMaterial;
+      }
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+    nodes.Head.traverse((child) => {
+      if (child.isMesh && child.material.name === "Character_Main") {
+        child.material = playerColorMaterial;
+      }
+    });
+    clone.traverse((child) => {
+      if (child.isMesh && child.material.name === "Character_Main") {
+        child.material = playerColorMaterial;
+      }
+      if (child.isMesh) {
+        child.castShadow = true;
+      }
+    });
+  }, [nodes, clone]);
+
+  return (
+    <group {...props} dispose={null} ref={group}>
+      <group name="Scene">
+        <group name="CharacterArmature">
+          <primitive object={nodes.Root} />
+          <group name="Body_1">
+            <skinnedMesh
+              name="Cube004"
+              geometry={nodes.Cube004.geometry}
+              material={materials.Skin}
+              skeleton={nodes.Cube004.skeleton}
+              castShadow
+            />
+            <skinnedMesh
+              name="Cube004_1"
+              geometry={nodes.Cube004_1.geometry}
+              material={materials.DarkGrey}
+              skeleton={nodes.Cube004_1.skeleton}
+              castShadow
+            />
+            <skinnedMesh
+              name="Cube004_2"
+              geometry={nodes.Cube004_2.geometry}
+              material={materials.Pants}
+              skeleton={nodes.Cube004_2.skeleton}
+              castShadow
+            />
+            <skinnedMesh
+              name="Cube004_3"
+              geometry={nodes.Cube004_3.geometry}
+              material={playerColorMaterial}
+              skeleton={nodes.Cube004_3.skeleton}
+              castShadow
+            />
+            <skinnedMesh
+              name="Cube004_4"
+              geometry={nodes.Cube004_4.geometry}
+              material={materials.Black}
+              skeleton={nodes.Cube004_4.skeleton}
+              castShadow
+            />
+          </group>
+        </group>
+      </group>
+    </group>
+  );
+}
+
+useGLTF.preload("/models/Character_Soldier.gltf");
+```
+
+---
+
+### Step 6: Create Bullet Component &nbsp; <PromptStepCopyButton counter={6} text="Create Bullet.jsx that creates a physics bullet using RigidBody with gravityScale 0. On mount, play rifle audio and apply velocity based on angle. Set up onIntersectionEnter to detect hits on players/walls. Mark bullet with userData type bullet, player ID, and damage 10. Use boxGeometry for visual representation with hotpink color." />
+
+Create the Bullet component that handles projectile physics, shooting sounds, and collision detection.
+
+```jsx filename="src/components/Bullet.jsx"
+import { RigidBody, vec3 } from "@react-three/rapier";
+import { isHost } from "playroomkit";
+import { useEffect, useRef } from "react";
+import { MeshBasicMaterial } from "three";
+import { WEAPON_OFFSET } from "./CharacterController";
+
+const BULLET_SPEED = 20;
+
+const bulletMaterial = new MeshBasicMaterial({
+  color: "hotpink",
+  toneMapped: false,
+});
+
+bulletMaterial.color.multiplyScalar(42);
+
+export const Bullet = ({ player, angle, position, onHit }) => {
+  const rigidbody = useRef();
+
+  useEffect(() => {
+    const audio = new Audio("/audios/rifle.mp3");
+    audio.play();
+    const velocity = {
+      x: Math.sin(angle) * BULLET_SPEED,
+      y: 0,
+      z: Math.cos(angle) * BULLET_SPEED,
+    };
+
+    rigidbody.current.setLinvel(velocity, true);
+  }, []);
+
+  return (
+    <group position={[position.x, position.y, position.z]} rotation-y={angle}>
+      <group
+        position-x={WEAPON_OFFSET.x}
+        position-y={WEAPON_OFFSET.y}
+        position-z={WEAPON_OFFSET.z}
+      >
+        <RigidBody
+          ref={rigidbody}
+          gravityScale={0}
+          onIntersectionEnter={(e) => {
+            if (isHost() && e.other.rigidBody.userData?.type !== "bullet") {
+              rigidbody.current.setEnabled(false);
+              onHit(vec3(rigidbody.current.translation()));
+            }
+          }}
+          sensor
+          userData={{
+            type: "bullet",
+            player,
+            damage: 10,
+          }}
+        >
+          <mesh position-z={0.25} material={bulletMaterial} castShadow>
+            <boxGeometry args={[0.05, 0.05, 0.5]} />
+          </mesh>
+        </RigidBody>
+      </group>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 7: Create BulletHit Component &nbsp; <PromptStepCopyButton counter={7} text="Create BulletHit.jsx using Instances for performance. Create AnimatedBox component using useFrame to animate scale down and lerp position. Generate 100 random box instances with random targets and speeds. On mount, set timeout to call onEnded after 500ms (only for host). Use red color with toneMapped false for bloom effect." />
+
+Create the BulletHit component that displays particle explosion effects when bullets hit surfaces.
+
+```jsx filename="src/components/BulletHit.jsx"
+import { Instance, Instances } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { isHost } from "playroomkit";
+import { useEffect, useMemo, useRef } from "react";
+import { Color, MathUtils, Vector3 } from "three";
+
+const bulletHitcolor = new Color("red");
+bulletHitcolor.multiplyScalar(12);
+
+const AnimatedBox = ({ scale, target, speed }) => {
+  const ref = useRef();
+  useFrame((_, delta) => {
+    if (ref.current.scale.x > 0) {
+      ref.current.scale.x =
+        ref.current.scale.y =
+        ref.current.scale.z -=
+          speed * delta;
+    }
+    ref.current.position.lerp(target, speed);
+  });
+  return <Instance ref={ref} scale={scale} position={[0, 0, 0]} />;
+};
+
+export const BulletHit = ({ nb = 100, position, onEnded }) => {
+  const boxes = useMemo(
+    () =>
+      Array.from({ length: nb }, () => ({
+        target: new Vector3(
+          MathUtils.randFloat(-0.6, 0.6),
+          MathUtils.randFloat(-0.6, 0.6),
+          MathUtils.randFloat(-0.6, 0.6)
+        ),
+        scale: 0.1,
+        speed: MathUtils.randFloat(0.1, 0.3),
+      })),
+    [nb]
+  );
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isHost()) {
+        onEnded();
+      }
+    }, 500);
+  }, []);
+
+  return (
+    <group position={[position.x, position.y, position.z]}>
+      <Instances>
+        <boxGeometry />
+        <meshStandardMaterial toneMapped={false} color={bulletHitcolor} />
+        {boxes.map((box, i) => (
+          <AnimatedBox key={i} {...box} />
+        ))}
+      </Instances>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 8: Create Leaderboard Component &nbsp; <PromptStepCopyButton counter={8} text="Create Leaderboard.jsx using usePlayersList from playroomkit to get all players. Map through players and display their photo, name, kills and deaths. Add fullscreen toggle button. Style with Tailwind using backdrop-blur and rounded corners. Position fixed at top of screen." />
+
+Create the Leaderboard component that displays real-time player statistics.
+
+```jsx filename="src/components/Leaderboard.jsx"
+import { usePlayersList } from "playroomkit";
+
+export const Leaderboard = () => {
+  const players = usePlayersList(true);
+  return (
+    <>
+      <div className="fixed top-0 left-0 right-0 p-4 flex z-10 gap-4">
+        {players.map((player) => (
+          <div
+            key={player.id}
+            className={`bg-white bg-opacity-60 backdrop-blur-sm flex items-center rounded-lg gap-2 p-2 min-w-[140px]`}
+          >
+            <img
+              src={player.state.profile?.photo || ""}
+              className="w-10 h-10 border-2 rounded-full"
+              style={{
+                borderColor: player.state.profile?.color,
+              }}
+            />
+            <div className="flex-grow">
+              <h2 className={`font-bold text-sm`}>
+                {player.state.profile?.name}
+              </h2>
+              <div className="flex text-sm items-center gap-4">
+                <p>🔫 {player.state.kills}</p>
+                <p>💀 {player.state.deaths}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button
+        className="fixed top-4 right-4 z-10 text-white"
+        onClick={() => {
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          } else {
+            document.documentElement.requestFullscreen();
+          }
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
+          />
+        </svg>
+      </button>
+    </>
+  );
+};
+```
+
+---
+
+### Step 9: Create CharacterController Component &nbsp; <PromptStepCopyButton counter={9} text="Create CharacterController.jsx with RigidBody and CapsuleCollider. Implement joystick controls for movement and fire button. Handle player spawning at random spawn points on the map. Add camera follow using CameraControls for userPlayer. Implement health/death system: when health reaches 0, play dead audio, increment deaths, disable body, respawn after 2 seconds. Sync position via playroom state. Add PlayerInfo Billboard with name and health bar. Add Crosshair for the local player. Use directional light following player for shadows." />
+
+Create the CharacterController component that handles player movement, shooting, health, respawning, and camera controls.
+
+```jsx filename="src/components/CharacterController.jsx"
+import { Billboard, CameraControls, Text } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { CapsuleCollider, RigidBody, vec3 } from "@react-three/rapier";
+import { isHost } from "playroomkit";
+import { useEffect, useRef, useState } from "react";
+import { CharacterSoldier } from "./CharacterSoldier";
+
+const MOVEMENT_SPEED = 202;
+const FIRE_RATE = 380;
+
+export const WEAPON_OFFSET = {
+  x: -0.2,
+  y: 1.4,
+  z: 0.8,
+};
+
+export const CharacterController = ({
+  state,
+  joystick,
+  userPlayer,
+  onKilled,
+  onFire,
+  downgradedPerformance,
+  ...props
+}) => {
+  const group = useRef();
+  const character = useRef();
+  const rigidbody = useRef();
+  const [animation, setAnimation] = useState("Idle");
+  const [weapon, setWeapon] = useState("AK");
+  const lastShoot = useRef(0);
+
+  const scene = useThree((state) => state.scene);
+  const spawnRandomly = () => {
+    const spawns = [];
+    for (let i = 0; i < 1000; i++) {
+      const spawn = scene.getObjectByName(`spawn_${i}`);
+      if (spawn) {
+        spawns.push(spawn);
+      } else {
+        break;
+      }
+    }
+    const spawnPos = spawns[Math.floor(Math.random() * spawns.length)].position;
+    rigidbody.current.setTranslation(spawnPos);
+  };
+
+  useEffect(() => {
+    if (isHost()) {
+      spawnRandomly();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (state.state.dead) {
+      const audio = new Audio("/audios/dead.mp3");
+      audio.volume = 0.5;
+      audio.play();
+    }
+  }, [state.state.dead]);
+
+  useEffect(() => {
+    if (state.state.health < 100) {
+      const audio = new Audio("/audios/hurt.mp3");
+      audio.volume = 0.4;
+      audio.play();
+    }
+  }, [state.state.health]);
+
+  useFrame((_, delta) => {
+    if (controls.current) {
+      const cameraDistanceY = window.innerWidth < 1024 ? 16 : 20;
+      const cameraDistanceZ = window.innerWidth < 1024 ? 12 : 16;
+      const playerWorldPos = vec3(rigidbody.current.translation());
+      controls.current.setLookAt(
+        playerWorldPos.x,
+        playerWorldPos.y + (state.state.dead ? 12 : cameraDistanceY),
+        playerWorldPos.z + (state.state.dead ? 2 : cameraDistanceZ),
+        playerWorldPos.x,
+        playerWorldPos.y + 1.5,
+        playerWorldPos.z,
+        true
+      );
+    }
+
+    if (state.state.dead) {
+      setAnimation("Death");
+      return;
+    }
+
+    const angle = joystick.angle();
+    if (joystick.isJoystickPressed() && angle) {
+      setAnimation("Run");
+      character.current.rotation.y = angle;
+
+      const impulse = {
+        x: Math.sin(angle) * MOVEMENT_SPEED * delta,
+        y: 0,
+        z: Math.cos(angle) * MOVEMENT_SPEED * delta,
+      };
+
+      rigidbody.current.applyImpulse(impulse, true);
+    } else {
+      setAnimation("Idle");
+    }
+
+    if (joystick.isPressed("fire")) {
+      setAnimation(
+        joystick.isJoystickPressed() && angle ? "Run_Shoot" : "Idle_Shoot"
+      );
+      if (isHost()) {
+        if (Date.now() - lastShoot.current > FIRE_RATE) {
+          lastShoot.current = Date.now();
+          const newBullet = {
+            id: state.id + "-" + +new Date(),
+            position: vec3(rigidbody.current.translation()),
+            angle,
+            player: state.id,
+          };
+          onFire(newBullet);
+        }
+      }
+    }
+
+    if (isHost()) {
+      state.setState("pos", rigidbody.current.translation());
+    } else {
+      const pos = state.getState("pos");
+      if (pos) {
+        rigidbody.current.setTranslation(pos);
+      }
+    }
+  });
+
+  const controls = useRef();
+  const directionalLight = useRef();
+
+  useEffect(() => {
+    if (character.current && userPlayer) {
+      directionalLight.current.target = character.current;
+    }
+  }, [character.current]);
+
+  return (
+    <group {...props} ref={group}>
+      {userPlayer && <CameraControls ref={controls} />}
+      <RigidBody
+        ref={rigidbody}
+        colliders={false}
+        linearDamping={12}
+        lockRotations
+        type={isHost() ? "dynamic" : "kinematicPosition"}
+        onIntersectionEnter={({ other }) => {
+          if (
+            isHost() &&
+            other.rigidBody.userData.type === "bullet" &&
+            state.state.health > 0
+          ) {
+            const newHealth =
+              state.state.health - other.rigidBody.userData.damage;
+            if (newHealth <= 0) {
+              state.setState("deaths", state.state.deaths + 1);
+              state.setState("dead", true);
+              state.setState("health", 0);
+              rigidbody.current.setEnabled(false);
+              setTimeout(() => {
+                spawnRandomly();
+                rigidbody.current.setEnabled(true);
+                state.setState("health", 100);
+                state.setState("dead", false);
+              }, 2000);
+              onKilled(state.id, other.rigidBody.userData.player);
+            } else {
+              state.setState("health", newHealth);
+            }
+          }
+        }}
+      >
+        <PlayerInfo state={state.state} />
+        <group ref={character}>
+          <CharacterSoldier
+            color={state.state.profile?.color}
+            animation={animation}
+            weapon={weapon}
+          />
+          {userPlayer && (
+            <Crosshair
+              position={[WEAPON_OFFSET.x, WEAPON_OFFSET.y, WEAPON_OFFSET.z]}
+            />
+          )}
+        </group>
+        {userPlayer && (
+          <directionalLight
+            ref={directionalLight}
+            position={[25, 18, -25]}
+            intensity={0.3}
+            castShadow={!downgradedPerformance}
+            shadow-camera-near={0}
+            shadow-camera-far={100}
+            shadow-camera-left={-20}
+            shadow-camera-right={20}
+            shadow-camera-top={20}
+            shadow-camera-bottom={-20}
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
+            shadow-bias={-0.0001}
+          />
+        )}
+        <CapsuleCollider args={[0.7, 0.6]} position={[0, 1.28, 0]} />
+      </RigidBody>
+    </group>
+  );
+};
+
+const PlayerInfo = ({ state }) => {
+  const health = state.health;
+  const name = state.profile.name;
+  return (
+    <Billboard position-y={2.5}>
+      <Text position-y={0.36} fontSize={0.4}>
+        {name}
+        <meshBasicMaterial color={state.profile.color} />
+      </Text>
+      <mesh position-z={-0.1}>
+        <planeGeometry args={[1, 0.2]} />
+        <meshBasicMaterial color="black" transparent opacity={0.5} />
+      </mesh>
+      <mesh scale-x={health / 100} position-x={-0.5 * (1 - health / 100)}>
+        <planeGeometry args={[1, 0.2]} />
+        <meshBasicMaterial color="red" />
+      </mesh>
+    </Billboard>
+  );
+};
+
+const Crosshair = (props) => {
+  return (
+    <group {...props}>
+      <mesh position-z={1}>
+        <boxGeometry args={[0.05, 0.05, 0.05]} />
+        <meshBasicMaterial color="black" transparent opacity={0.9} />
+      </mesh>
+      <mesh position-z={2}>
+        <boxGeometry args={[0.05, 0.05, 0.05]} />
+        <meshBasicMaterial color="black" transparent opacity={0.85} />
+      </mesh>
+      <mesh position-z={3}>
+        <boxGeometry args={[0.05, 0.05, 0.05]} />
+        <meshBasicMaterial color="black" transparent opacity={0.8} />
+      </mesh>
+      <mesh position-z={4.5}>
+        <boxGeometry args={[0.05, 0.05, 0.05]} />
+        <meshBasicMaterial color="black" opacity={0.7} transparent />
+      </mesh>
+      <mesh position-z={6.5}>
+        <boxGeometry args={[0.05, 0.05, 0.05]} />
+        <meshBasicMaterial color="black" opacity={0.6} transparent />
+      </mesh>
+      <mesh position-z={9}>
+        <boxGeometry args={[0.05, 0.05, 0.05]} />
+        <meshBasicMaterial color="black" opacity={0.2} transparent />
+      </mesh>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 10: Create Experience Component &nbsp; <PromptStepCopyButton counter={10} text="Create Experience.jsx that calls insertCoin() on mount to initialize Playroom. Use onPlayerJoin to create Joystick controls for each player. Set initial health, deaths, kills states. Manage players array with onQuit handler. Use useMultiplayerState for bullets and hits arrays. Implement onFire, onHit, onHitEnded handlers. Create onKilled function to increment killer's kills. Render Map, CharacterControllers for each player, Bullets from network or host, BulletHits, and Environment sunset preset." />
+
+Create the Experience component that initializes Playroom Kit using [`insertCoin`](/api-reference/js/insertCoin), manages multiplayer state using [`onPlayerJoin`](/api-reference/js/onPlayerJoin), [`Joystick`](/api-reference/js/Joystick), [`myPlayer`](/api-reference/js/myPlayer), [`isHost`](/api-reference/js/isHost), and [`useMultiplayerState`](/api-reference/react/useMultiplayerState).
+
+```jsx filename="src/components/Experience.jsx"
+import { Environment } from "@react-three/drei";
+import {
+  Joystick,
+  insertCoin,
+  isHost,
+  myPlayer,
+  onPlayerJoin,
+  useMultiplayerState,
+} from "playroomkit";
+import { useEffect, useState } from "react";
+import { Bullet } from "./Bullet";
+import { BulletHit } from "./BulletHit";
+import { CharacterController } from "./CharacterController";
+import { Map } from "./Map";
+
+export const Experience = ({ downgradedPerformance = false }) => {
+  const [players, setPlayers] = useState([]);
+  const start = async () => {
+    await insertCoin();
+
+    onPlayerJoin((state) => {
+      const joystick = new Joystick(state, {
+        type: "angular",
+        buttons: [{ id: "fire", label: "Fire" }],
+      });
+      const newPlayer = { state, joystick };
+      state.setState("health", 100);
+      state.setState("deaths", 0);
+      state.setState("kills", 0);
+      setPlayers((players) => [...players, newPlayer]);
+      state.onQuit(() => {
+        setPlayers((players) => players.filter((p) => p.state.id !== state.id));
+      });
+    });
+  };
+
+  useEffect(() => {
+    start();
+  }, []);
+
+  const [bullets, setBullets] = useState([]);
+  const [hits, setHits] = useState([]);
+
+  const [networkBullets, setNetworkBullets] = useMultiplayerState(
+    "bullets",
+    []
+  );
+  const [networkHits, setNetworkHits] = useMultiplayerState("hits", []);
+
+  const onFire = (bullet) => {
+    setBullets((bullets) => [...bullets, bullet]);
+  };
+
+  const onHit = (bulletId, position) => {
+    setBullets((bullets) => bullets.filter((bullet) => bullet.id !== bulletId));
+    setHits((hits) => [...hits, { id: bulletId, position }]);
+  };
+
+  const onHitEnded = (hitId) => {
+    setHits((hits) => hits.filter((h) => h.id !== hitId));
+  };
+
+  useEffect(() => {
+    setNetworkBullets(bullets);
+  }, [bullets]);
+
+  useEffect(() => {
+    setNetworkHits(hits);
+  }, [hits]);
+
+  const onKilled = (_victim, killer) => {
+    const killerState = players.find((p) => p.state.id === killer).state;
+    killerState.setState("kills", killerState.state.kills + 1);
+  };
+
+  return (
+    <>
+      <Map />
+      {players.map(({ state, joystick }, index) => (
+        <CharacterController
+          key={state.id}
+          state={state}
+          userPlayer={state.id === myPlayer()?.id}
+          joystick={joystick}
+          onKilled={onKilled}
+          onFire={onFire}
+          downgradedPerformance={downgradedPerformance}
+        />
+      ))}
+      {(isHost() ? bullets : networkBullets).map((bullet) => (
+        <Bullet
+          key={bullet.id}
+          {...bullet}
+          onHit={(position) => onHit(bullet.id, position)}
+        />
+      ))}
+      {(isHost() ? hits : networkHits).map((hit) => (
+        <BulletHit key={hit.id} {...hit} onEnded={() => onHitEnded(hit.id)} />
+      ))}
+      <Environment preset="sunset" />
+    </>
+  );
+};
+```
+
+---
+
+## Improvements
+
+- Add different game modes like team-based deathmatch or capture the flag
+- Implement weapon switching with different damage and fire rates
+- Add power-ups and health pickups on the map
+- Create more particle effects and visual feedback for hits
+- Add a spectator mode for eliminated players
+- Implement map voting and rotation system

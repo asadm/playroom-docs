@@ -1,0 +1,52 @@
+---
+title: usePlayersState
+description: "This will give you a list of all players and their state values for a given key. The list will be updated as players state change. This is useful for displaying a list of players and their state values like scores."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/react-docs-api-full.ts` and run `npm run generate:react-docs` to regenerate. */}
+
+# usePlayersState
+
+The return value is an array of objects with the following shape: - `player`: PlayerState - `state`: `any`
+
+## Signature
+
+```ts
+function usePlayersState<T = any>(key: string): { player: PlayerState; state: T; }[]
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `key` | `string` | The key of the player state to get for all players. |
+
+## Returns
+
+`{ player: PlayerState; state: T; }[]`
+
+## Usage
+
+```ts
+import { usePlayersState } from 'playroomkit'
+
+function Leaderboard() {
+  const players = usePlayersState('score');
+  // players = [{player: PlayerState, state: 10}, {player: PlayerState, state: 20}]
+
+  const sortedPlayers = players.sort((a, b) => b.state - a.state);
+
+  return (
+    <div>
+      <h3>Leaderboard</h3>
+      {sortedPlayers.map(({ player, state: score }, index) => (
+        <div key={player.id}>
+          {index + 1}. {player.getProfile().name}: {score} points
+        </div>
+      ))}
+    </div>
+  );
+}
+
+```

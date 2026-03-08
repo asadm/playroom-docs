@@ -7,7 +7,7 @@ using SimpleJSON;
 
 namespace Playroom
 {
-    public class PlayroomKit
+    public class Playroom Kit
     {
         private static bool isPlayRoomInitialized;
 
@@ -136,7 +136,7 @@ namespace Playroom
         {
             if (!isPlayRoomInitialized)
             {
-                Debug.LogError("PlayroomKit is not loaded!. Please make sure to call InsertCoin first.");
+                Debug.LogError("Playroom Kit is not loaded!. Please make sure to call InsertCoin first.");
             }
             else
             {
@@ -165,7 +165,7 @@ namespace Playroom
         public static Dictionary<string, Player> GetPlayers()
         {
             if (!isPlayRoomInitialized)
-                Debug.LogError("PlayroomKit is not loaded!. Please make sure to call InsertCoin first.");
+                Debug.LogError("Playroom Kit is not loaded!. Please make sure to call InsertCoin first.");
 
             return Players;
         }
@@ -175,7 +175,7 @@ namespace Playroom
             if (!isPlayRoomInitialized)
             {
                 Debug.LogError(IsRunningInBrowser()
-                    ? "PlayroomKit is not loaded!. Please make sure to call InsertCoin first."
+                    ? "Playroom Kit is not loaded!. Please make sure to call InsertCoin first."
                     : "[Mock Mode] Playroom not initialized yet! Please call InsertCoin.");
                 return default;
             }
@@ -876,7 +876,7 @@ namespace Playroom
             public void OnQuit(Action<string> callback)
             {
                 if (!isPlayRoomInitialized)
-                    Debug.LogError("PlayroomKit is not loaded!. Please make sure to call InsertCoin first.");
+                    Debug.LogError("Playroom Kit is not loaded!. Please make sure to call InsertCoin first.");
                 else
                     OnQuitCallbacks.Add(callback);
             }

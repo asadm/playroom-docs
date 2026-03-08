@@ -49,7 +49,7 @@ func onPlayerJoin(args):
 		remove_child(player)
 	state.onQuit(bridgeToJS(onQuitCb))
 
-# https://docs.joinplayroom.com/components/joystick
+# https://docs.joinplayroom.com/components/games/joystick
 func addJoystickToPlayer(state):
 	# A dpad + jump button joystick
 	var joystickOptions = JavaScriptBridge.create_object("Object")

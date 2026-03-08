@@ -1,59 +1,86 @@
-import { Card, Cards } from 'nextra-theme-docs'
+import { Cards } from 'nextra/components'
+
+## Web
 
 <Cards>
-  <Card
-    icon={<img src="/images/logos/r3f.png" style={{width: "32px", marginTop: '20px'}}></img>}
-    title="React Three Fiber"
-    href="/usage/r3f"
+  <Cards.Card
+    icon={<img src="/images/logos/angular.svg" style={{width: "32px"}} alt="Angular" />}
+    title="Angular"
+    href="/frameworks/web/angular"
   />
-  <Card
-    icon={<img src="/images/logos/threejs.svg" style={{width: "32px", marginTop: '20px'}}></img>}
-    title="Three.js"
-    href="/usage/threejs"
+  <Cards.Card
+    icon={<span className="invert-in-dark"><img src="/images/logos/nextjs.svg" style={{width: "32px"}} alt="Next.js" /></span>}
+    title="Next.js"
+    href="/frameworks/web/nextjs"
   />
-  <Card
-    icon={ <img src="/images/logos/react.svg" style={{width: "32px", marginTop: '20px'}}></img>}
+  <Cards.Card
+    icon={ <img src="/images/logos/react.svg" style={{width: "32px"}} alt="React" />}
     title="React"
-    href="/usage/react"
+    href="/frameworks/web/react"
   />
-  <Card
-    icon={ <img src="/images/logos/godot.svg" style={{width: "32px", marginTop: '20px'}}></img>}
-    title="Godot"
-    href="/usage/godot"
+  <Cards.Card
+    icon={<img src="/images/logos/r3f.png" style={{width: "32px"}} alt="React Three Fiber" />}
+    title="React Three Fiber"
+    href="/frameworks/web/r3f"
   />
-   <Card
-    icon={ <img src="/images/logos/phaser.png" style={{width: "32px", marginTop: '20px'}}></img>}
-    title="Phaser"
-    href="/usage/phaser"
+  <Cards.Card
+    icon={<span className="invert-in-dark"><img src="/images/logos/remix.svg" style={{width: "32px"}} alt="Remix" /></span>}
+    title="Remix"
+    href="/frameworks/web/remix"
   />
-  <Card
-    icon={ <img src="/images/logos/playcanvas.png" style={{width: "32px", marginTop: '20px'}}></img>}
-    title="PlayCanvas"
-    href="/usage/playcanvas"
+  <Cards.Card
+    icon={<img src="/images/logos/vue.svg" style={{width: "32px"}} alt="Vue.js" />}
+    title="Vue.js"
+    href="/frameworks/web/vue"
   />
-  <Card
-    icon={ <img src="/images/logos/unity.svg" style={{width: "32px", marginTop: '20px'}}></img>}
-    title="Unity"
-    href="/usage/unity"
-  />
-  <Card
-    icon={ <img src="/images/logos/cocos.png" style={{width: "32px", marginTop: '20px'}}></img>}
+</Cards>
+
+## Games
+
+<Cards>
+  <Cards.Card
+    icon={ <img src="/images/logos/cocos.png" style={{width: "32px"}} alt="Cocos Creator" />}
     title="Cocos Creator"
-    href="/usage/cocos"
+    href="/frameworks/games/cocos"
   />
-  <Card
-    icon={ <img src="/images/logos/kaboom.png" style={{width: "32px", marginTop: '20px'}}></img>}
+  <Cards.Card
+    icon={ <img src="/images/logos/godot.svg" style={{width: "32px"}} alt="Godot" />}
+    title="Godot"
+    href="/frameworks/games/godot"
+  />
+  <Cards.Card
+    icon={ <img src="/images/logos/kaboom.png" style={{width: "32px"}} alt="Kaboom" />}
     title="Kaboom"
-    href="/usage/kaboom"
+    href="/frameworks/games/kaplay"
   />
-  <Card
-    icon={ <img src="/images/logos/spline.svg" style={{width: "32px", marginTop: '20px'}}></img>}
-    title="Spline"
-    href="/usage/spline"
+  <Cards.Card
+    icon={ <img src="/images/logos/phaser.png" style={{width: "32px"}} alt="Phaser" />}
+    title="Phaser"
+    href="/frameworks/games/phaser"
   />
-  <Card
-    icon={ <img src="/images/logos/pixijs.png" style={{width: "32px", marginTop: '20px'}}></img>}
+  <Cards.Card
+    icon={ <img src="/images/logos/pixijs.png" style={{width: "32px"}} alt="PixiJS" />}
     title="PixiJS"
-    href="/usage/pixijs"
+    href="/frameworks/games/pixijs"
+  />
+  <Cards.Card
+    icon={ <img src="/images/logos/playcanvas.png" style={{width: "32px"}} alt="PlayCanvas" />}
+    title="PlayCanvas"
+    href="/frameworks/games/playcanvas"
+  />
+  <Cards.Card
+    icon={ <img src="/images/logos/spline.svg" style={{width: "32px"}} alt="Spline" />}
+    title="Spline"
+    href="/frameworks/games/spline"
+  />
+  <Cards.Card
+    icon={<img className="invert-in-dark" src="/images/logos/threejs.svg" style={{width: "32px"}} alt="Three.js" />}
+    title="Three.js"
+    href="/frameworks/games/threejs"
+  />
+  <Cards.Card
+    icon={ <img className="invert-in-dark" src="/images/logos/unity.svg" style={{width: "32px"}} alt="Unity" />}
+    title="Unity"
+    href="/frameworks/games/unity"
   />
 </Cards>

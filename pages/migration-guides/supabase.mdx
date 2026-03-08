@@ -1,0 +1,186 @@
+## Migrating from Supabase
+
+[Supabase Realtime](https://supabase.com/docs/guides/realtime) lets you subscribe to Postgres changes over WebSockets. When rows are inserted, updated, or deleted, connected clients receive live updates. It is commonly used for chat, dashboards, collaborative tools, and simple multiplayer features.
+
+If you are currently using Supabase Realtime for live syncing, this guide explains when it makes sense to move to Playroom Kit and what changes when you do.
+
+---
+
+### Why Playroom Kit?
+
+Supabase Realtime is database-driven. Your real-time layer is built on top of Postgres tables.
+
+That means you usually:
+
+* Design tables for rooms and players
+* Listen to row changes
+* Handle presence manually
+* Clean up disconnected users
+* Manage permissions with RLS policies
+* Think about database writes and performance
+
+Playroom Kit is multiplayer-driven.
+
+Instead of listening to database changes, you work with shared state inside rooms. Rooms, participants, and synchronization are built in.
+
+#### When Playroom Kit is a better fit
+
+Playroom Kit works best when:
+
+* You are building real-time multiplayer features
+* You do not need every state update persisted in Postgres
+* You want built-in rooms and presence
+* You want a lobby UI included
+* You are building a web-first collaborative app or game
+
+If your main goal is live interaction between users, Playroom removes a lot of database complexity.
+
+#### When Supabase Realtime is still the right choice
+
+Supabase Realtime makes sense when:
+
+* You rely heavily on Postgres as your source of truth
+* You need all changes persisted immediately
+* You use Row Level Security for access control
+* Real-time updates are just one feature of a larger backend
+* You prefer a database-first architecture
+
+Playroom Kit focuses on live sessions. It is not a general-purpose database.
+
+---
+
+### Feature comparison
+
+| Feature                         | Supabase Realtime | Playroom Kit  |
+| ------------------------------- | ----------------- | ------------- |
+| Built on Postgres               | Yes               | No            |
+| Requires schema design          | Yes               | No            |
+| Built-in multiplayer rooms      | No                | Yes           |
+| Built-in lobby UI               | No                | Yes           |
+| Presence tracking               | Manual setup      | Built-in      |
+| Automatic session lifecycle     | No                | Yes           |
+| Optimized for multiplayer games | Not specifically  | Yes           |
+| Persistent by default           | Yes               | Session-based |
+
+With Supabase Realtime, real-time updates come from database changes.
+With Playroom Kit, real-time updates come from shared multiplayer state.
+
+---
+
+## Guide
+
+Migrating from Supabase Realtime to Playroom Kit means shifting from database subscriptions to room-based shared state.
+
+You move from:
+
+Subscribing to Postgres changes
+
+to:
+
+Working directly with multiplayer sessions.
+
+---
+
+### 1. Replace table-based rooms with Playroom rooms
+
+In Supabase Realtime, you might structure tables like:
+
+```
+rooms
+players
+game_state
+```
+
+Clients subscribe to changes in those tables and update UI accordingly.
+
+In Playroom Kit:
+
+* Rooms are created automatically
+* Participants are tracked automatically
+* Shared state lives inside the room session
+
+You no longer need a database schema for live multiplayer state.
+
+Room behavior is explained in [*Rooms and Sessions*](/features/games/lobby).
+
+---
+
+### 2. Replace database subscriptions with shared state
+
+In Supabase Realtime, you typically:
+
+* Subscribe to `INSERT` or `UPDATE` events
+* Update UI when rows change
+* Write new rows for state changes
+
+In Playroom Kit:
+
+* You call `setState`
+* Other participants receive updates instantly
+* You render based on the latest state
+
+Example:
+
+```ts
+setState("position", { x: 120, y: 80 })
+```
+
+There is no row update or subscription to manage.
+
+Shared state concepts are explained in [*Shared State Primitives*](/features/apps/state).
+
+---
+
+### 3. Replace manual presence logic
+
+With Supabase, presence usually requires:
+
+* Tracking connected users in a table
+* Handling disconnect cleanup
+* Managing edge cases when clients close unexpectedly
+
+Playroom Kit tracks participants automatically. Each connected user becomes a player object inside the room.
+
+You can access:
+
+* Yourself with `myPlayer()`
+* Others with `usePlayersList(true)`
+
+You focus on rendering multiplayer behavior instead of maintaining presence tables.
+
+---
+
+### 4. Separate persistence from live state
+
+Supabase Realtime is tied directly to your database. Every change can be persisted automatically.
+
+Playroom Kit is session-based. It is optimized for fast, live collaboration, not long-term storage.
+
+If you still need persistence, you can combine both systems:
+
+* Use Playroom Kit for live multiplayer state
+* Use Supabase Postgres for saving long-term data
+
+This hybrid model keeps your multiplayer layer simple while preserving database reliability.
+
+---
+
+### 5. Adjust your mental model
+
+Supabase Realtime assumes:
+
+Database first. Real-time is an extension of data storage.
+
+Playroom Kit assumes:
+
+Multiplayer first. Shared state lives inside rooms.
+
+This is similar to tools like [Figma](https://www.figma.com/) and [Miro](https://miro.com/), where users interact inside shared sessions without directly managing database tables.
+
+If your product is deeply database-driven, Supabase Realtime remains a strong choice.
+
+If your core challenge is live multiplayer interaction, Playroom Kit will feel significantly lighter and easier to reason about.
+
+---
+
+Playroom Kit is built specifically for multiplayer sessions. If you are using Supabase Realtime mainly to power live interaction, you can remove a large amount of schema and subscription complexity by switching to a multiplayer-native model.

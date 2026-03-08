@@ -1,0 +1,65 @@
+import styles from "./index.module.css";
+import { Callout } from "nextra/components";
+
+# Types of experiences
+
+Playroom Kit supports a variety of **collaborative multi-user** setups. Participants can be in the same room, remote, or a mix. Choose the modes you want your app to support and the engine or library that fits. Playroom Kit is web-based and works across all of these as a single kit.
+
+## Collaborative Apps
+
+<div className={styles.halfhalf}>
+<div>
+
+Build real-time collaborative applications where multiple users interact together. Perfect for whiteboards, design tools, document editors, virtual workspaces, and any app that benefits from live presence and shared experiences.
+
+**Examples:** Shared cursors, collaborative drawing, co-editing, real-time presentations
+
+</div>
+<img src="/images/m2.png" width="400" height="400" alt="Collaborative Apps" />
+</div>
+
+## Mobile Games
+<div className={styles.halfhalf}>
+<div>
+
+Playroom Kit is widely used to build casual mobile games. By default, many of our components are designed to be flexible and work across all devices. This means that you don't need to do anything special to enable it. Just follow the steps described [here](https://docs.joinplayroom.com/multiplayer#steps) and ship your game on Appstore or Playstore.
+
+Example: [Death by AI](https://deathbyai.gg/) (mobile and web).
+</div>
+  <img src="/images/m1.png" width="400" height="400" alt="Mobile Games" />
+</div>
+
+## Web & Embeddable Games
+<div className={styles.halfhalf}>
+<div>
+
+ Browser and desktop. Ship on any domain or on platforms like Poki, Discord, YouTube, CrazyGames, and Itch.io. Plug your engine’s input into Playroom Kit and go.
+
+ Example: [Ready Room](https://readyroom.dev).
+</div>
+<img src="/images/m5.png" width="400" height="400" alt="Web & Embeddable Games" />
+</div>
+
+## Big screen (stream mode)
+
+<div className={styles.halfhalf}>
+<div>
+  One screen is the main view; participants join from phones as controllers. Enable [Stream mode](/features/games/stream): main screen shows a QR code or room code; phones join and control.
+
+Example: [Gogogo Party](https://gogogo.gg).
+
+</div>
+<img src="/images/m2.png" width="400" height="400" alt="Big screen (stream mode)" />
+</div>
+
+## Big screen with gamepads
+
+<div className={styles.halfhalf}>
+<div>
+Playroom Kit also lets you make games that are played on a central screen with physical game controllers that are connected to PC via Bluetooth/USB.
+
+If you run out of controllers, more players may also join the game on their mobile devices. Players on phones see on-screen [Joystick controls](/features/games/joystick) to play the game. The API remains unchanged for both types of controllers, so, as a developer, you don't have to worry about the type of controller being used.
+
+</div>
+<img src="/images/m4.png" width="400" height="400" alt="Big screen with gamepads" />
+</div>

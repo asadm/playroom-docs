@@ -1,0 +1,30 @@
+---
+title: addBot
+description: "Adds a bot to the room."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# addBot
+
+Equivalent to pressing the "Add Bot" button in the lobby. Returns a promise that resolves to an instance of the class you provided in `botOptions.botClass` parameter in `insertCoin`.
+
+## Signature
+
+```ts
+function addBot(): Promise<Bot>
+```
+
+
+## Returns
+
+`Promise<Bot>`
+
+## Usage
+
+```ts
+const bot = await addBot();
+console.log(`Bot ${bot.id} added`);
+
+```

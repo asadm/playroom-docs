@@ -1,0 +1,942 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+{/*
+
+* Metadata:
+* Primary keyword: "discord multiplayer game"
+* Secondary keywords: "React Three Fiber activity", "Playroom Kit discord integration", "real-time 3D game in discord", "discord embedded app game", "multiplayer browser game for discord"
+* AI crawl phrases: "build discord multiplayer game with react three fiber", "playroom kit discord activity tutorial", "real-time game inside discord voice channel", "3d multiplayer game discord sdk", "fall guys clone discord activity"
+* SEO tags: [discord multiplayer game, discord activity, react three fiber, playroom kit, real-time multiplayer, 3d browser game]
+  */}
+
+# Build a Fall Guys Hexagon Clone with React Three Fiber and Discord
+
+Learn how to build a multiplayer Fall Guys-style hexagon elimination game that runs as a Discord Activity. You'll use React Three Fiber for 3D rendering, Playroom Kit for multiplayer, and the Discord Embedded App SDK.
+
+<br />
+<a href="https://wawa-guys-final.vercel.app" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/wass08/wawa-guys-starter"><Button variant={"outline"}>Get Starter Code</Button></a>
+<a href="https://github.com/wass08/wawa-guys-final"><Button variant={"outline"}>Get Final Code</Button></a>
+<br />
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_yx2fh8KEak?si=3p-hHbPKasbU_1tI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Getting Started
+
+This tutorial shows you how to build a hexagon elimination game inspired by Fall Guys. Players spawn on a grid of hexagon tiles across multiple floors, and must avoid falling through eliminated tiles. The game uses Discord's Embedded App SDK to run directly in Discord, making it easy to play with friends in a voice channel.
+
+The game features real-time multiplayer synchronization using [`useMultiplayerState`](/api-reference/react/useMultiplayerState), physics-based character movement, dynamic hexagon elimination via [`RPC`](/api-reference/js/RPC), and a winner podium celebration. All game state is managed through Playroom Kit, which handles the multiplayer networking without requiring a custom backend server.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Fall Guys Clone". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Fall Guys Clone". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Fall Guys Clone".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains all the 3D assets, audio files, and basic React setup you'll need.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Initialize Playroom Kit with Discord Integration &nbsp; <PromptStepCopyButton counter={1} text="Initialize Playroom Kit with insertCoin in main.jsx. Set skipLobby to true, use gameId 'Nrkxf84kYcXG6I3RY6sJ', and enable discord: true. Then render the App component inside React StrictMode." />
+
+Initialize Playroom Kit to handle multiplayer state and Discord authentication using [`insertCoin`](/api-reference/js/insertCoin) with the `discord: true` option. This enables the game to run as a Discord Activity with automatic proxying and authentication.
+
+```jsx filename="main.jsx"
+import { insertCoin } from "playroomkit";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+insertCoin({
+  skipLobby: true,
+  gameId: "Nrkxf84kYcXG6I3RY6sJ",
+  discord: true,
+}).then(() =>
+  ReactDOM.createRoot(document.getElementById("root")).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  )
+);
+```
+
+---
+
+### Step 2: Set Up the Main App with Canvas and Providers &nbsp; <PromptStepCopyButton counter={2} text="Update App.jsx with KeyboardControls for movement (WASD/arrows), Physics from rapier, and wrap Canvas with AudioManagerProvider and GameStateProvider. Set camera position to [0, 16, 10] with fov 42 and background to #041c0b." />
+
+Set up the main App component with React Three Fiber Canvas, physics, keyboard controls, and context providers for game state and audio.
+
+```jsx filename="App.jsx"
+import { Canvas } from "@react-three/fiber";
+import { Physics } from "@react-three/rapier";
+import { Experience } from "./components/Experience";
+
+import { KeyboardControls } from "@react-three/drei";
+import { useMemo } from "react";
+import { UI } from "./components/UI";
+import { AudioManagerProvider } from "./hooks/useAudioManager";
+import { GameStateProvider } from "./hooks/useGameState";
+
+export const Controls = {
+  forward: "forward",
+  back: "back",
+  left: "left",
+  right: "right",
+  jump: "jump",
+};
+
+function App() {
+  const map = useMemo(
+    () => [
+      { name: Controls.forward, keys: ["ArrowUp", "KeyW"] },
+      { name: Controls.back, keys: ["ArrowDown", "KeyS"] },
+      { name: Controls.left, keys: ["ArrowLeft", "KeyA"] },
+      { name: Controls.right, keys: ["ArrowRight", "KeyD"] },
+      { name: Controls.jump, keys: ["Space"] },
+    ],
+    []
+  );
+  return (
+    <KeyboardControls map={map}>
+      <AudioManagerProvider>
+        <GameStateProvider>
+          <Canvas shadows camera={{ position: [0, 16, 10], fov: 42 }}>
+            <color attach="background" args={["#041c0b"]} />
+            <Physics>
+              <Experience />
+            </Physics>
+          </Canvas>
+          <UI />
+        </GameStateProvider>
+      </AudioManagerProvider>
+    </KeyboardControls>
+  );
+}
+
+export default App;
+```
+
+---
+
+### Step 3: Create the Experience Component &nbsp; <PromptStepCopyButton counter={3} text="Create Experience.jsx that renders the 3D environment. Use Environment with medieval_cafe_1k.hdr, OrbitControls, conditionally render GameArena when not in lobby, CharacterController for each player, and Podium for winner stage. Get current player with myPlayer and adjust camera during countdown." />
+
+Create the Experience component that handles the 3D environment, camera controls, player rendering, and game stage management. Use [`myPlayer`](/api-reference/js/myPlayer) to get the current player.
+
+```jsx filename="Experience.jsx"
+import { Environment, OrbitControls } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
+import { myPlayer } from "playroomkit";
+import { useEffect } from "react";
+import { useGameState } from "../hooks/useGameState";
+import { CharacterController } from "./CharacterController";
+import { GameArena } from "./GameArena";
+import { Podium } from "./Podium";
+
+export const Experience = () => {
+  const { players, stage } = useGameState();
+  const me = myPlayer();
+  const camera = useThree((state) => state.camera);
+  const firstNonDeadPlayer = players.find((p) => !p.state.getState("dead"));
+
+  useEffect(() => {
+    if (stage === "countdown") {
+      camera.position.set(0, 50, -50);
+    }
+  }, [stage]);
+
+  return (
+    <>
+      <OrbitControls />
+      <Environment files={"hdrs/medieval_cafe_1k.hdr"} />
+      {stage === "winner" ? (
+        <Podium />
+      ) : (
+        <>
+          {stage !== "lobby" && <GameArena />}
+          {players.map(({ state, controls }) => (
+            <CharacterController
+              key={state.id}
+              state={state}
+              controls={controls}
+              player={me.id === state.id}
+              firstNonDeadPlayer={firstNonDeadPlayer?.state.id === state.id}
+              position-y={2}
+            />
+          ))}
+        </>
+      )}
+    </>
+  );
+};
+```
+
+---
+
+### Step 4: Create the GameArena Component &nbsp; <PromptStepCopyButton counter={4} text="Create GameArena.jsx that renders a grid of hexagon tiles across 5 floors with colors (red, blue, green, yellow, purple). Use 7 rows and 7 columns with HEX_X_SPACING = 2.25, HEX_Z_SPACING = 1.95, and FLOOR_HEIGHT = 10. Implement RPC to sync hexagon hits across all players." />
+
+Create the GameArena component that renders the hexagon tiles in a grid pattern with multiple floors. Use [`RPC`](/api-reference/js/RPC) to synchronize hexagon hits across all players.
+
+```jsx filename="GameArena.jsx"
+import { RPC } from "playroomkit";
+import { useState } from "react";
+import { Hexagon } from "./Hexagon";
+
+export const HEX_X_SPACING = 2.25;
+export const HEX_Z_SPACING = 1.95;
+export const NB_ROWS = 7;
+export const NB_COLUMNS = 7;
+export const FLOOR_HEIGHT = 10;
+export const FLOORS = [
+  { color: "red" },
+  { color: "blue" },
+  { color: "green" },
+  { color: "yellow" },
+  { color: "purple" },
+];
+
+export const GameArena = () => {
+  const [hexagonHit, setHexagonHit] = useState({});
+  RPC.register("hexagonHit", (data) => {
+    setHexagonHit((prev) => ({
+      ...prev,
+      [data.hexagonKey]: true,
+    }));
+  });
+
+  return (
+    <group
+      position-x={-((NB_COLUMNS - 1) / 2) * HEX_X_SPACING}
+      position-z={-((NB_ROWS - 1) / 2) * HEX_Z_SPACING}
+    >
+      {FLOORS.map((floor, floorIndex) => (
+        <group key={floorIndex} position-y={floorIndex * -FLOOR_HEIGHT}>
+          {[...Array(NB_ROWS)].map((_, rowIndex) => (
+            <group
+              key={rowIndex}
+              position-z={rowIndex * HEX_Z_SPACING}
+              position-x={rowIndex % 2 ? HEX_X_SPACING / 2 : 0}
+            >
+              {[...Array(NB_COLUMNS)].map((_, columnIndex) => (
+                <Hexagon
+                  key={columnIndex}
+                  position-x={columnIndex * HEX_X_SPACING}
+                  color={floor.color}
+                  onHit={() => {
+                    const hexagonKey = `${floorIndex}-${rowIndex}-${columnIndex}`;
+                    setHexagonHit((prev) => ({
+                      ...prev,
+                      [hexagonKey]: true,
+                    }));
+                    RPC.call("hexagonHit", { hexagonKey }, RPC.Mode.ALL);
+                  }}
+                  hit={hexagonHit[`${floorIndex}-${rowIndex}-${columnIndex}`]}
+                />
+              ))}
+            </group>
+          ))}
+        </group>
+      ))}
+    </group>
+  );
+};
+```
+
+---
+
+### Step 5: Create the Hexagon Component &nbsp; <PromptStepCopyButton counter={5} text="Create Hexagon.jsx that loads the GLB model as a fixed RigidBody with hull collider. When a player collides, trigger onHit and fade opacity over time. After 600ms, play random Pop sound (Pop1-Pop5) and disable the hexagon. Use useAudioManager for sounds." />
+
+Create the Hexagon component that renders a physical hexagon tile that detects collisions and plays audio when hit.
+
+```jsx filename="Hexagon.jsx"
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { RigidBody } from "@react-three/rapier";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Color } from "three";
+import { MathUtils, randFloat, randInt } from "three/src/math/MathUtils.js";
+import { useAudioManager } from "../hooks/useAudioManager";
+
+const TIME_AFTER_HIT = 600;
+
+export function Hexagon({ color, onHit, hit, ...props }) {
+  const { playAudio } = useAudioManager();
+  const { nodes, materials } = useGLTF("/models/hexagon.glb", "draco/gltf/");
+  const hexagonMaterial = useRef();
+
+  const [disabled, setDisabled] = useState(false);
+  const randomizedColor = useMemo(() => {
+    const alteredColor = new Color(color);
+    alteredColor.multiplyScalar(randFloat(0.5, 1.2));
+    return alteredColor;
+  }, [color]);
+
+  useFrame((_, delta) => {
+    if (hit && !disabled) {
+      hexagonMaterial.current.opacity = MathUtils.lerp(
+        hexagonMaterial.current.opacity,
+        0,
+        delta * 1.2
+      );
+    }
+  });
+
+  useEffect(() => {
+    if (hit) {
+      setTimeout(() => {
+        setDisabled(true);
+        playAudio(`Pop${randInt(1, 5)}`);
+      }, TIME_AFTER_HIT);
+    }
+  }, [hit]);
+
+  if (disabled) {
+    return null;
+  }
+
+  return (
+    <RigidBody
+      {...props}
+      type={"fixed"}
+      name="hexagon"
+      colliders="hull"
+      onCollisionEnter={(e) => {
+        if (e.other.rigidBodyObject.name === "player") {
+          onHit();
+        }
+      }}
+    >
+      <mesh geometry={nodes.Hexagon.geometry} material={materials.hexagon}>
+        <meshStandardMaterial
+          ref={hexagonMaterial}
+          {...materials.hexagon}
+          color={hit ? "orange" : randomizedColor}
+          transparent
+        />
+      </mesh>
+    </RigidBody>
+  );
+}
+
+useGLTF.preload("/models/hexagon.glb", "draco/gltf/");
+```
+
+---
+
+### Step 6: Create the Character Component &nbsp; <PromptStepCopyButton counter={6} text="Create Character.jsx that loads the GLB character model with animations. Use useAnimations to play the specified animation, useGLTF to load the model, and SkeletonUtils to clone the scene. Add a Text component above the character displaying the player's name that faces the camera. Apply the color prop to body, hand, and leg meshes." />
+
+Create the Character component that renders a 3D character model with animations and name labels.
+
+```jsx filename="Character.jsx"
+import { Text, useAnimations, useGLTF } from "@react-three/drei";
+import { useFrame, useGraph } from "@react-three/fiber";
+import React, { useEffect, useMemo, useRef } from "react";
+import { SkeletonUtils } from "three-stdlib";
+
+export function Character({
+  animation = "wave",
+  color = "yellow",
+  name = "Player",
+  ...props
+}) {
+  const group = useRef();
+  const { scene, animations } = useGLTF("/models/character.glb", "draco/gltf/");
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes, materials } = useGraph(clone);
+  const { actions } = useAnimations(animations, group);
+  useEffect(() => {
+    actions[animation]?.reset().fadeIn(0.1).play();
+    return () => actions[animation]?.fadeOut(0.1);
+  }, [animation]);
+
+  const textRef = useRef();
+
+  useFrame(({ camera }) => {
+    if (textRef.current) {
+      textRef.current.lookAt(camera.position);
+    }
+  });
+
+  return (
+    <group ref={group} {...props} dispose={null}>
+      <group ref={textRef}>
+        <Text
+          position-y={2.8}
+          fontSize={0.5}
+          anchorX="center"
+          anchorY="middle"
+          font="fonts/PaytoneOne-Regular.ttf"
+        >
+          {name}
+          <meshBasicMaterial color="white" />
+        </Text>
+        <Text
+          position-y={2.78}
+          position-x={0.02}
+          position-z={-0.02}
+          fontSize={0.5}
+          anchorX="center"
+          anchorY="middle"
+          font="fonts/PaytoneOne-Regular.ttf"
+        >
+          {name}
+          <meshBasicMaterial color="black" />
+        </Text>
+      </group>
+      <group name="Scene">
+        <group name="fall_guys">
+          <primitive object={nodes._rootJoint} />
+          <skinnedMesh
+            name="body"
+            geometry={nodes.body.geometry}
+            skeleton={nodes.body.skeleton}
+          >
+            <meshStandardMaterial {...materials.Material_0} color={color} />
+          </skinnedMesh>
+          <skinnedMesh
+            name="eye"
+            geometry={nodes.eye.geometry}
+            material={nodes.eye.material}
+            skeleton={nodes.eye.skeleton}
+          >
+            <meshStandardMaterial {...materials.Material_2} color={"white"} />
+          </skinnedMesh>
+          <skinnedMesh
+            name="hand-"
+            geometry={nodes["hand-"].geometry}
+            skeleton={nodes["hand-"].skeleton}
+          >
+            <meshStandardMaterial {...materials.Material_0} color={color} />
+          </skinnedMesh>
+          <skinnedMesh
+            name="leg"
+            geometry={nodes.leg.geometry}
+            skeleton={nodes.leg.skeleton}
+          >
+            <meshStandardMaterial {...materials.Material_0} color={color} />
+          </skinnedMesh>
+        </group>
+      </group>
+    </group>
+  );
+}
+
+useGLTF.preload("/models/character.glb", "draco/gltf/");
+```
+
+---
+
+### Step 7: Create the CharacterController Component &nbsp; <PromptStepCopyButton counter={7} text="Create CharacterController.jsx that handles player movement using keyboard controls and joystick. Use RigidBody from rapier with CapsuleCollider. Implement WASD/arrow keys movement and Space for jump. Sync position/rotation to playroom state, handle camera follow for local player, detect when player falls below all floors and mark as dead, play animations based on movement (idle, run, jump_up, fall), and apply gravity only during game stage." />
+
+Create the CharacterController component that handles player movement, physics, input handling, and game logic like death detection. Use [`setState`](/api-reference/js/setState) to sync position, rotation, and animation state to other players.
+
+```jsx filename="CharacterController.jsx"
+import { useKeyboardControls } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import {
+  CapsuleCollider,
+  RigidBody,
+  euler,
+  quat,
+  vec3,
+} from "@react-three/rapier";
+import { setState } from "playroomkit";
+import { useRef, useState } from "react";
+import { Vector3 } from "three";
+import { Controls } from "../App";
+import { useAudioManager } from "../hooks/useAudioManager";
+import { useGameState } from "../hooks/useGameState";
+import { Character } from "./Character";
+import { FLOORS, FLOOR_HEIGHT } from "./GameArena";
+
+const MOVEMENT_SPEED = 4.2;
+const JUMP_FORCE = 8;
+const ROTATION_SPEED = 2.5;
+const vel = new Vector3();
+
+export const CharacterController = ({
+  player = false,
+  firstNonDeadPlayer = false,
+  controls,
+  state,
+  ...props
+}) => {
+  const { playAudio } = useAudioManager();
+  const isDead = state.getState("dead");
+  const [animation, setAnimation] = useState("idle");
+  const { stage } = useGameState();
+  const [, get] = useKeyboardControls();
+  const rb = useRef();
+  const inTheAir = useRef(true);
+  const landed = useRef(false);
+  const cameraPosition = useRef();
+  const cameraLookAt = useRef();
+
+  useFrame(({ camera }) => {
+    if (stage === "lobby") {
+      return;
+    }
+    if ((player && !isDead) || firstNonDeadPlayer) {
+      const rbPosition = vec3(rb.current.translation());
+      if (!cameraLookAt.current) {
+        cameraLookAt.current = rbPosition;
+      }
+      cameraLookAt.current.lerp(rbPosition, 0.05);
+      camera.lookAt(cameraLookAt.current);
+      const worldPos = rbPosition;
+      cameraPosition.current.getWorldPosition(worldPos);
+      camera.position.lerp(worldPos, 0.05);
+    }
+
+    if (stage !== "game") {
+      return;
+    }
+
+    if (!player) {
+      const pos = state.getState("pos");
+      if (pos) {
+        rb.current.setTranslation(pos);
+      }
+      const rot = state.getState("rot");
+      if (rot) {
+        rb.current.setRotation(rot);
+      }
+      const anim = state.getState("animation");
+      setAnimation(anim);
+      return;
+    }
+
+    const rotVel = { x: 0, y: 0, z: 0 };
+    const curVel = rb.current.linvel();
+    vel.x = 0;
+    vel.y = 0;
+    vel.z = 0;
+
+    const angle = controls.angle();
+    const joystickX = Math.sin(angle);
+    const joystickY = Math.cos(angle);
+
+    if (get()[Controls.forward] || (controls.isJoystickPressed() && joystickY < -0.1)) {
+      vel.z += MOVEMENT_SPEED;
+    }
+    if (get()[Controls.back] || (controls.isJoystickPressed() && joystickY > 0.1)) {
+      vel.z -= MOVEMENT_SPEED;
+    }
+    if (get()[Controls.left] || (controls.isJoystickPressed() && joystickX < -0.1)) {
+      rotVel.y += ROTATION_SPEED;
+    }
+    if (get()[Controls.right] || (controls.isJoystickPressed() && joystickX > 0.1)) {
+      rotVel.y -= ROTATION_SPEED;
+    }
+
+    rb.current.setAngvel(rotVel);
+    const eulerRot = euler().setFromQuaternion(quat(rb.current.rotation()));
+    vel.applyEuler(eulerRot);
+
+    if ((get()[Controls.jump] || controls.isPressed("Jump")) && !inTheAir.current && landed.current) {
+      vel.y += JUMP_FORCE;
+      inTheAir.current = true;
+      landed.current = false;
+    } else {
+      vel.y = curVel.y;
+    }
+
+    if (Math.abs(vel.y) > 1) {
+      inTheAir.current = true;
+      landed.current = false;
+    } else {
+      inTheAir.current = false;
+    }
+
+    rb.current.setLinvel(vel);
+    state.setState("pos", rb.current.translation());
+    state.setState("rot", rb.current.rotation());
+
+    const movement = Math.abs(vel.x) + Math.abs(vel.z);
+    if (inTheAir.current && vel.y > 2) {
+      setAnimation("jump_up");
+      state.setState("animation", "jump_up");
+    } else if (inTheAir.current && vel.y < -5) {
+      setAnimation("fall");
+      state.setState("animation", "fall");
+    } else if (movement > 1 || inTheAir.current) {
+      setAnimation("run");
+      state.setState("animation", "run");
+    } else {
+      setAnimation("idle");
+      state.setState("animation", "idle");
+    }
+
+    if (rb.current.translation().y < -FLOOR_HEIGHT * FLOORS.length && !state.getState("dead")) {
+      state.setState("dead", true);
+      setState("lastDead", state.state.profile, true);
+      playAudio("Dead", true);
+    }
+  });
+
+  const startingPos = state.getState("startingPos");
+  if (isDead || !startingPos) {
+    return null;
+  }
+
+  return (
+    <RigidBody
+      {...props}
+      position-x={startingPos.x}
+      position-z={startingPos.z}
+      colliders={false}
+      canSleep={false}
+      enabledRotations={[false, true, false]}
+      ref={rb}
+      onCollisionEnter={(e) => {
+        if (e.other.rigidBodyObject.name === "hexagon") {
+          inTheAir.current = false;
+          landed.current = true;
+          const curVel = rb.current.linvel();
+          curVel.y = 0;
+          rb.current.setLinvel(curVel);
+        }
+      }}
+      gravityScale={stage === "game" ? 2.5 : 0}
+      name={player ? "player" : "other"}
+    >
+      <group ref={cameraPosition} position={[0, 8, -16]}></group>
+      <Character
+        scale={0.42}
+        color={state.state.profile.color}
+        name={state.state.profile.name}
+        position-y={0.2}
+        animation={animation}
+      />
+      <CapsuleCollider args={[0.1, 0.38]} position={[0, 0.68, 0]} />
+    </RigidBody>
+  );
+};
+```
+
+---
+
+### Step 8: Create the UI Component &nbsp; <PromptStepCopyButton counter={8} text="Update UI.jsx to display game interface. Show player avatars with names at top (grayscale if dead), display timer when >= 0, show logo, display START button for host in lobby with INVITE button to open Discord invite dialog, and add audio toggle button. Use Tailwind CSS." />
+
+Create the UI component that displays the game HUD, player list, timer, lobby controls, and audio toggle. Use [`openDiscordInviteDialog`](/api-reference/js/openDiscordInviteDialog) to open Discord invite dialog.
+
+```jsx filename="UI.jsx"
+import { openDiscordInviteDialog } from "playroomkit";
+import { useAudioManager } from "../hooks/useAudioManager";
+import { useGameState } from "../hooks/useGameState";
+
+export const UI = () => {
+  const { audioEnabled, setAudioEnabled } = useAudioManager();
+  const { timer, startGame, host, stage, players } = useGameState();
+
+  return (
+    <main
+      className={`fixed z-10 inset-0 pointer-events-none grid place-content-center
+      ${stage === "lobby" ? "bg-black/40" : "bg-transparent"} transition-colors duration-1000`}
+    >
+      <div className="absolute top-28 left-4 md:top-4 md:-translate-x-1/2 md:left-1/2 flex flex-col md:flex-row gap-4">
+        {players.map((p) => (
+          <div key={p.state.id} className="flex flex-col items-center">
+            <img
+              className={`w-12 h-12 rounded-full ${p.state.getState("dead") ? "filter grayscale" : ""}`}
+              src={p.state.state.profile.photo}
+            />
+            <p className="text-white max-w-20 truncate">{p.state.state.profile.name}</p>
+          </div>
+        ))}
+      </div>
+      {timer >= 0 && (
+        <h2 className="absolute right-4 top-4 text-5xl text-white font-black">{timer}</h2>
+      )}
+      <img src="images/logo.png" className="absolute top-4 left-4 w-28" />
+      {stage === "lobby" && (
+        <>
+          {host ? (
+            <button
+              className="pointer-events-auto bg-gradient-to-br from-orange-500 to-yellow-500 hover:opacity-80 transition-all duration-200 px-12 py-4 rounded-lg font-black text-xl text-white drop-shadow-lg"
+              onClick={startGame}
+            >
+              START
+            </button>
+          ) : (
+            <p className="italic text-white">Waiting for the host to start the game...</p>
+          )}
+          <button
+            className="mt-4 pointer-events-auto bg-gradient-to-br from-orange-500 to-yellow-500 hover:opacity-80 transition-all duration-200 px-12 py-4 rounded-lg font-black text-xl text-white drop-shadow-lg"
+            onClick={openDiscordInviteDialog}
+          >
+            INVITE
+          </button>
+        </>
+      )}
+      <button
+        className="absolute top-1/2 right-4 -translate-y-1/2 pointer-events-auto"
+        onClick={() => setAudioEnabled(!audioEnabled)}
+      >
+        {audioEnabled ? (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 fill-white stroke-white">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 fill-white stroke-white">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+          </svg>
+        )}
+      </button>
+    </main>
+  );
+};
+```
+
+---
+
+### Step 9: Create the Podium Component &nbsp; <PromptStepCopyButton counter={9} text="Create Podium.jsx to display the winner. Use getState from playroomkit to get the last dead player as fallback. Position camera to view winner, play Kids Cheering audio, and render Character on white Box platform. Reset camera on unmount." />
+
+Create the Podium component that displays the winner of the game with celebration effects. Use [`getState`](/api-reference/js/getState) to retrieve the last dead player as a fallback winner.
+
+```jsx filename="Podium.jsx"
+import { Box } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
+import { getState } from "playroomkit";
+import { useEffect } from "react";
+import { useAudioManager } from "../hooks/useAudioManager";
+import { useGameState } from "../hooks/useGameState";
+import { Character } from "./Character";
+
+export const Podium = () => {
+  const { winner } = useGameState();
+  const winnerProfile = winner || getState("lastDead");
+  const camera = useThree((state) => state.camera);
+  const { playAudio } = useAudioManager();
+  useEffect(() => {
+    camera.position.set(5, 4, 12);
+    camera.lookAt(0, 2, 0);
+    playAudio("Kids Cheering", true);
+    return () => {
+      camera.position.set(0, 16, 10);
+      camera.lookAt(0, 0, 0);
+    };
+  }, []);
+  return (
+    <group>
+      <Character
+        name={winnerProfile?.name}
+        color={winnerProfile?.color}
+        position-y={0.5}
+      />
+      <Box scale-x={4} scale-z={2}>
+        <meshStandardMaterial color="white" />
+      </Box>
+    </group>
+  );
+};
+```
+
+---
+
+### Step 10: Create the useGameState Hook &nbsp; <PromptStepCopyButton counter={10} text="Create useGameState.jsx to manage multiplayer game state. Use useMultiplayerState for winner, stage, and timer. Implement onPlayerJoin to create Joystick controls for each player, assign random starting positions within arena bounds, handle player quit, manage game stage transitions (lobby -> countdown -> game -> winner -> lobby), handle countdown timer, detect winner when players fall, and provide stage, timer, players, host, startGame, and winner to context." />
+
+Create the useGameState hook that manages game state, player management, game stages, and timers. Use [`useMultiplayerState`](/api-reference/react/useMultiplayerState) for synchronized state, [`onPlayerJoin`](/api-reference/js/onPlayerJoin) to handle new players, [`Joystick`](/api-reference/js/Joystick) for controller input, and [`isHost`](/api-reference/js/isHost) to determine the host player.
+
+```jsx filename="useGameState.jsx"
+import {
+  Joystick,
+  isHost,
+  onPlayerJoin,
+  useMultiplayerState,
+} from "playroomkit";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { randFloat } from "three/src/math/MathUtils.js";
+import {
+  HEX_X_SPACING,
+  HEX_Z_SPACING,
+  NB_COLUMNS,
+  NB_ROWS,
+} from "../components/GameArena";
+
+const GameStateContext = createContext();
+
+const NEXT_STAGE = {
+  lobby: "countdown",
+  countdown: "game",
+  game: "winner",
+  winner: "lobby",
+};
+
+const TIMER_STAGE = {
+  lobby: -1,
+  countdown: 3,
+  game: 0,
+  winner: 5,
+};
+
+export const GameStateProvider = ({ children }) => {
+  const [winner, setWinner] = useMultiplayerState("winner", null);
+  const [stage, setStage] = useMultiplayerState("gameStage", "lobby");
+  const [timer, setTimer] = useMultiplayerState("timer", TIMER_STAGE.lobby);
+  const [players, setPlayers] = useState([]);
+  const [soloGame, setSoloGame] = useState(false);
+
+  const host = isHost();
+  const isInit = useRef(false);
+  useEffect(() => {
+    if (isInit.current) {
+      return;
+    }
+    isInit.current = true;
+    onPlayerJoin((state) => {
+      const controls = new Joystick(state, {
+        type: "angular",
+        buttons: [{ id: "Jump", label: "Jump" }],
+      });
+      const newPlayer = { state, controls };
+
+      if (host) {
+        state.setState("dead", stage === "game");
+        state.setState("startingPos", {
+          x: randFloat((-(NB_COLUMNS - 1) * HEX_X_SPACING) / 2, ((NB_COLUMNS - 1) * HEX_X_SPACING) / 2),
+          z: randFloat((-(NB_ROWS - 1) * HEX_Z_SPACING) / 2, ((NB_ROWS - 1) * HEX_Z_SPACING) / 2),
+        });
+      }
+
+      setPlayers((players) => [...players, newPlayer]);
+      state.onQuit(() => {
+        setPlayers((players) => players.filter((p) => p.state.id !== state.id));
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!host) {
+      return;
+    }
+    if (stage === "lobby") {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      let newTime = stage === "game" ? timer + 1 : timer - 1;
+      if (newTime === 0) {
+        const nextStage = NEXT_STAGE[stage];
+        if (nextStage === "lobby" || nextStage === "countdown") {
+          players.forEach((p) => {
+            p.state.setState("dead", false);
+            p.state.setState("pos", null);
+            p.state.setState("rot", null);
+          });
+        }
+        setStage(nextStage, true);
+        newTime = TIMER_STAGE[nextStage];
+      } else if (stage === "game") {
+        const playersAlive = players.filter((p) => !p.state.getState("dead"));
+        if (playersAlive.length < (soloGame ? 1 : 2)) {
+          setStage("winner", true);
+          setWinner(playersAlive[0]?.state.state.profile, true);
+          newTime = TIMER_STAGE.winner;
+        }
+      }
+      setTimer(newTime, true);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [host, timer, stage, soloGame]);
+
+  const startGame = () => {
+    setStage("countdown");
+    setTimer(TIMER_STAGE.countdown);
+    setSoloGame(players.length === 1);
+  };
+
+  return (
+    <GameStateContext.Provider value={{ stage, timer, players, host, startGame, winner }}>
+      {children}
+    </GameStateContext.Provider>
+  );
+};
+
+export const useGameState = () => {
+  const context = useContext(GameStateContext);
+  if (!context) {
+    throw new Error("useGameState must be used within a GameStateProvider");
+  }
+  return context;
+};
+```
+
+---
+
+## Improvements
+
+- Add more game modes like team-based gameplay or time trials
+- Implement power-ups and obstacles on the hexagon tiles
+- Add particle effects and more elaborate animations for elimination
+- Create custom character skins and cosmetic items
+- Add a spectator mode for players who have been eliminated

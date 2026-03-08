@@ -1,0 +1,9 @@
+# Robots.txt for Playroom Kit Documentation
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://docs.joinplayroom.com/sitemap.xml
+
+# LLM-optimized documentation
+# llms.txt: https://docs.joinplayroom.com/api/llms.txt

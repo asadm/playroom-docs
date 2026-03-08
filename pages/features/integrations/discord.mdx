@@ -1,0 +1,157 @@
+import Preview from '../../../components/preview'
+import { Callout } from 'nextra/components'
+
+<img src="/images/disc.png" style={{width: "100%", marginTop: '20px'}} alt="Discord Activity" />
+
+# Make Multiplayer Games for Discord Activities
+<Callout emoji="👷🏼‍♀️">
+  Discord mode is in public preview. Please report any issues or feedback to us on our [Discord](https://discord.gg/4htrbfJPnj) server.
+</Callout>
+
+Discord has opened up activities for third-party developers - [Learn more: Discord Embedded SDK](https://discord.com/developers/docs/activities/overview)
+
+While the Discord SDK facilitates the integration with Activities, developers are responsible for maintaining their own multiplayer game servers. Additionally, an authentication server is necessary to generate Discord authentication tokens for players.
+
+Playroom Kit provides deep integration to manage this for you and lets you use Playroom Kit's state sync and other features for your games. You can also host your game on Playroom's Hosting; our ultra-fast CDN.
+
+**Benefits of using Playroom Kit with Discord SDK:**
+
+- 🤼 Puts all players from the same activity in the same room automatically
+- 🔒 Handles user authentication for you, you get user's Discord profile directly without doing OAuth dance
+- 🔄 Provides a shared room state and player states for each player, state syncs in realtime across all players
+- 🎭 Player profile from Discord is available in Playroom Kit's shared state
+- 🔗 API to show Discord invite dialog from your game
+- ✨ You also get all of Playroom Kit's advanced features like persistence, RPCs, Bots and more
+
+## Video Tutorial
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_yx2fh8KEak?si=3p-hHbPKasbU_1tI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+## Setting up
+
+<img src="/images/disc-preview.png" style={{maxHeight: "500px", marginTop: '40px;'}} alt="Discord Activity Preview" />
+
+#### Create a Game on Playroom Dev Portal and Connect Discord
+Create a game project on [Playroom Dev Portal](https://dev.joinplayroom.com), click on **Discord Activity** tab and follow the instructions to connect your Discord application.
+
+#### Enable Discord in your Game
+
+In your game, add `gameId` and `discord` fields to your `insertCoin` call like this:
+
+```js copy
+import { insertCoin, getState, setState, onPlayerJoin } from 'playroomkit'
+// Show popup and ask user permissions for their discord information
+await insertCoin({
+  gameId: "<id from playroom portal>",
+  discord: true
+});
+
+// Print current player's server name and avatar url
+console.log(me().getProfile())
+
+// Players of this activity session are now in same room now! Set shared state
+setState("topScore", 42)
+
+// Called for each player joining the same activity session
+onPlayerJoin((playerState)=>{
+  // Print player's Discord name and avatar url
+  console.log(playerState.getProfile()) // {name: "username", photo: "https://cdn.discord...."}
+})
+
+// On some other player
+const topScore = getState("topScore")
+```
+
+## Running your Game
+### Testing Locally
+You can run your game locally and open it in browser to test. Playroom Kit will mock the Discord auth and user profile for you.
+
+You can also load it in Discord app using a tunnel like `cloudflared`. See [how to load my activity into Discord](https://discord.com/developers/docs/activities/building-an-activity#step-4-running-your-app-locally-in-discord).
+
+### Hosting on Playroom
+
+You can host your game on Playroom's Hosting and paste the public URL in Discord's `URL Mapping` settings.
+
+<Callout type="info" emoji="💡">
+Check [Making a Multiplayer Game](/multiplayer) to learn how Playroom works or check [Discord App example](https://github.com/asadm/playroom-docs/tree/main/examples/react-discord-simple).
+</Callout>
+
+
+### Inviting Other Players
+
+When a player starts your game, you may want to encourage them to invite their other Discord friends. You can trigger Discord invite dialog from your game by calling `openDiscordInviteDialog()` method like this:
+
+```js copy
+import { openDiscordInviteDialog } from 'playroomkit'
+
+// ... after game started
+
+openDiscordInviteDialog()
+```
+
+This will show a dialog to the player to invite their friends to the activity, like this:
+
+<img src="/images/discordinvite.jpg" style={{maxHeight: "500px", marginTop: '20px'}} alt="Discord Invite Dialog" />
+
+When the invited player joins, they will be in the same game room as the player who invited them.
+
+<Callout type="info" emoji="💡">
+Be sure to add the other player as an <b>App Tester</b> in your Discord application settings to allow them to join your unpublished activity.
+</Callout>
+
+### Persistent Server Data
+
+Playroom lets you save any game data that you don't want cleared when the game is closed like top score, etc. The data is specific to that Discord server (also known as guild) and can be accessed, updated and deleted by any activity session in the same Discord server. Here is an example:
+
+```js copy
+import { insertCoin, getDiscordServerData, setDiscordServerData } from 'playroomkit'
+
+// Show popup and ask user permissions for their discord information
+await insertCoin({
+  gameId: "<id from playroom portal>",
+  discord: true,
+});
+
+// Save top score stats to the leaderboard, that is specific to this Discord server
+await setDiscordServerData("leaderboard", {topScore: 42, topPlayer: "Alice"})
+
+// Get leaderboard stats
+const leaderboard = await getDiscordServerData("leaderboard") // {topScore: 42, topPlayer: "Alice"}
+```
+
+#### API for Persistent Server Data
+
+##### Store data
+
+```javascript copy
+await setDiscordServerData('somekey', {foo: 'bar'});
+```
+
+##### Retrieve data for current server
+
+```javascript copy
+const data = await getDiscordServerData('somekey'); // {foo: 'bar'}
+```
+
+##### Delete data for current server
+
+```javascript copy
+await setDiscordServerData('somekey', undefined);
+```
+
+##### Insert data into an array
+  
+  ```javascript copy
+  await insertDiscordServerData('somekey', 'value1');
+  await insertDiscordServerData('somekey', 'value2');
+  // getting the data
+  const data = await getDiscordServerData('somekey'); // ['value1', 'value2']
+  ```
+
+### Calling Other Discord Commands
+
+You can get the Discord client by calling `getDiscordClient()` and then call any of the [SDK Commands](https://discord.com/developers/docs/developer-tools/embedded-app-sdk#sdk-commands) directly. 
+
+You can get current user's access token by calling `getDiscordAccessToken()`. This can be useful in doing HTTP API calls on behalf of current user.
+
+You can get Discord SDK by calling `getDiscordSDK()`, as an alternative to importing it directly.

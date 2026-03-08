@@ -1,0 +1,52 @@
+---
+title: call
+description: "Call a remote procedure call (RPC) with the given name and data."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# call
+
+The `mode` parameter can be used to specify the mode of the RPC call. The default mode is `RPC.Mode.ALL`.
+
+RPCs can be triggered in three different modes:
+
+- `RPC.Mode.HOST`: The RPC is triggered on the host only.
+
+- `RPC.Mode.ALL`: The RPC is triggered on all clients (including the host and the caller).
+
+- `RPC.Mode.OTHERS`: The RPC is triggered on all clients except the caller.
+
+## Signature
+
+```ts
+function call(name: string, data: any, mode?: Mode, callbackOnResponse?: (data: any) => void): Promise<any>
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | `string` | The RPC name to call. |
+| `data` | `any` | Data to send to other players. |
+| `mode?` | `Mode` | Mode of the RPC. Defaults to RPC.Mode.ALL. |
+| `callbackOnResponse?` | `(data: any) => void` | Optional callback for the response. |
+
+## Returns
+
+`Promise<any>`
+
+## Usage
+
+```ts
+// Trigger an RPC on the host only
+RPC.call('playTurn', { thing: 'rock' }, RPC.Mode.HOST);
+
+// Trigger an RPC on all clients (including the host and the caller)
+RPC.call('playTurn', { thing: 'rock' }, RPC.Mode.ALL);
+
+// Trigger an RPC on all clients except the caller
+RPC.call('playTurn', { thing: 'rock' }, RPC.Mode.OTHERS);
+
+```

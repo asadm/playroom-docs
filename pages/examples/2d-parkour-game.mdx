@@ -1,0 +1,664 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import CodePlayground from "../../components/CodePlayground";
+import { Parkour } from "../../code/2d-parkour";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+ {/* * Metadata:
+ * Primary keyword: "multiplayer 2D platformer"
+ * Secondary keywords: "Phaser 3 multiplayer", "real-time platformer sync", "Playroom Kit arcade physics", "host authoritative 2D game", "multiplayer parkour game"
+ * AI crawl phrases: "build multiplayer 2d game with phaser and playroom kit", "real-time platformer multiplayer tutorial", "phaser 3 multiplayer state sync", "host controlled physics 2d multiplayer"
+ * SEO tags: [multiplayer 2D platformer, Phaser 3 multiplayer, real-time sync, Playroom Kit, arcade physics, multiplayer parkour]
+ */}
+
+# Build a 2D Parkour Game with Phaser 3 and Playroom Kit
+
+Learn how to build a multiplayer 2D parkour game where players navigate through platformer levels. You'll use Phaser 3 for 2D game rendering and Playroom Kit for real-time multiplayer functionality.
+
+<br />
+<a href="https://2dparkour.joinplayroom.com" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/asadm/playroom-docs/tree/main/examples/2dparkour"><Button variant="outline">Get Final Code</Button></a>
+<br />
+<br />
+
+<CodePlayground
+files={Parkour}
+height="480px"
+previewUrls={[
+"https://2dparkour.joinplayroom.com",
+"https://2dparkour.joinplayroom.com",
+]}
+/>
+
+## Getting Started
+
+This tutorial shows you how to create a 2D platformer parkour game that works as a multiplayer experience. Players can move, jump, and perform wall jumps to navigate through tilemap-based levels. The game runs directly in the browser and synchronizes player positions across all connected devices using Playroom Kit's state management via [`setState`](/api-reference/js/setState) and [`getState`](/api-reference/js/getState).
+
+The game features arcade physics with gravity, wall sliding mechanics, and joystick controls for mobile compatibility. Playroom Kit handles the multiplayer networking, player state synchronization, and provides the host-authoritative model using [`isHost`](/api-reference/js/isHost) to prevent cheating.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and Phaser 3. Your task is to help me build a "2D Parkour Game". The application should be created using Phaser 3 as the game framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and Phaser 3. Your task is to help me build a "2D Parkour Game". The application should be created using Phaser 3 as the game framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and Phaser 3.
+Your task is to help me build a "2D Parkour Game".
+The application should be created using Phaser 3 as the game framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step. The starter code contains the game assets (hero sprite, tile images) and a pre-built level tilemap in JSON format.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Set Up the HTML Entry Point &nbsp; <PromptStepCopyButton counter={1} text="Create index.html with a container div and import src/game.js as a module. Add basic CSS to center the game canvas with black background." />
+
+Set up the HTML file that will host the Phaser game canvas. This is the entry point that loads the game JavaScript module.
+
+```jsx filename="index.html"
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style type="text/css">
+    body {
+      background: #000000;
+      padding: 0px;
+      margin: 0px;
+      display: flex;
+      align-items: center;
+      /* height: 100vh; */
+      overflow: hidden;
+      justify-content: center;
+    }
+  </style>
+  <script type="module" src="./src/game.js"></script>
+</head>
+
+<body>
+  <div id="container"></div>
+</body>
+
+</html>
+```
+
+---
+
+### Step 2: Initialize Playroom Kit &nbsp; <PromptStepCopyButton counter={2} text="In game.js, import insertCoin from playroomkit and call it to initialize the multiplayer session. Wrap the Phaser game creation inside the insertCoin promise." />
+
+Initialize Playroom Kit to handle multiplayer state and player connections using [`insertCoin`](/api-reference/js/insertCoin). This enables the game to support multiple players with synchronized state.
+
+```jsx filename="src/game.js"
+import Phaser from "phaser";
+import Player from "./player";
+import { onPlayerJoin, insertCoin, isHost, myPlayer, Joystick } from "playroomkit";
+import ColorReplacePipelinePlugin from 'phaser3-rex-plugins/plugins/colorreplacepipeline-plugin.js';
+
+class PlayGame extends Phaser.Scene {
+  constructor() {
+    super("PlayGame");
+  }
+
+  preload() {
+    this.load.image("tile", "/tile.png");
+    this.load.image("hero", "/hero.png");
+    this.load.tilemapTiledJSON("level", "/level.json");
+  }
+
+  create() {
+    // setting background color
+    this.cameras.main.setBackgroundColor(gameOptions.bgColor);
+
+    // creatin of "level" tilemap
+    this.map = this.make.tilemap({ key: "level", tileWidth: 64, tileHeight: 64 });
+
+    // adding tiles (actually one tile) to tilemap
+    this.tileset = this.map.addTilesetImage("tileset01", "tile");
+
+    // which layer should we render? That's right, "layer01"
+    this.layer = this.map.createLayer("layer01", this.tileset, 0, 0);
+
+    this.layer.setCollisionBetween(0, 1, true);
+
+    // loading level tilemap
+    this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+
+    // players and their controllers
+    this.players = [];
+
+    onPlayerJoin(async (player) => {
+      const joystick = new Joystick(player, {
+        type: "dpad",
+        buttons: [
+          { id: "jump", label: "JUMP" }
+        ]
+      });
+      const hero = new Player(
+        this,
+        this.layer,
+        this.cameras.main.width / 2 + (this.players.length * 20),
+        440,
+        player.getProfile().color.hex,
+        joystick);
+
+      this.players.push({ player, hero, joystick });
+      player.onQuit(() => {
+        this.players = this.players.filter(({ player: _player }) => _player !== player);
+        hero.destroy();
+      });
+    });
+  }
+
+  update() {
+    this.players.forEach(({ player, hero }) => {
+      if (isHost()) {
+        hero.update();
+        player.setState('pos', hero.pos());
+      }
+      else {
+        const pos = player.getState('pos');
+        if (pos) {
+          hero.setPos(pos.x, pos.y);
+        }
+      }
+    });
+  }
+}
+
+var gameOptions = {
+  // width of the game, in pixels
+  gameWidth: 14 * 32,
+  // height of the game, in pixels
+  gameHeight: 23 * 32,
+  // background color
+  bgColor: 0xF7DEB5
+}
+
+// Phaser 3 game configuration
+const config = {
+  type: Phaser.AUTO,
+  width: gameOptions.gameWidth,
+  height: gameOptions.gameHeight,
+  parent: "container",
+  scene: [PlayGame],
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 900 },
+      debug: false
+    }
+  },
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  plugins: {
+    global: [{
+      key: 'rexColorReplacePipeline',
+      plugin: ColorReplacePipelinePlugin,
+      start: true
+    },
+    ]
+  }
+};
+
+insertCoin().then(() => {
+  // creating a new Phaser 3 game instance
+  const game = new Phaser.Game(config);
+});
+```
+
+---
+
+### Step 3: Configure Phaser with Arcade Physics &nbsp; <PromptStepCopyButton counter={3} text="Set up the Phaser config with arcade physics (gravity y: 900), FIT scale mode, and include the rexColorReplacePipeline plugin for player color customization." />
+
+Configure the Phaser 3 game with arcade physics for platformer mechanics, including gravity and collision detection.
+
+```jsx filename="src/game.js"
+// Phaser 3 game configuration
+const config = {
+  type: Phaser.AUTO,
+  width: gameOptions.gameWidth,
+  height: gameOptions.gameHeight,
+  parent: "container",
+  scene: [PlayGame],
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 900 },
+      debug: false
+    }
+  },
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  plugins: {
+    global: [{
+      key: 'rexColorReplacePipeline',
+      plugin: ColorReplacePipelinePlugin,
+      start: true
+    },
+    ]
+  }
+};
+```
+
+---
+
+### Step 4: Create the PlayGame Scene &nbsp; <PromptStepCopyButton counter={4} text="Create the PlayGame scene class with preload (load tile, hero, level.json), create (setup tilemap, physics world), and update (handle player sync) methods." />
+
+Create the main game scene that handles level loading, physics setup, and the game loop for updating player positions.
+
+```jsx filename="src/game.js"
+class PlayGame extends Phaser.Scene {
+  constructor() {
+    super("PlayGame");
+  }
+
+  preload() {
+    this.load.image("tile", "/tile.png");
+    this.load.image("hero", "/hero.png");
+    this.load.tilemapTiledJSON("level", "/level.json");
+  }
+
+  create() {
+    // setting background color
+    this.cameras.main.setBackgroundColor(gameOptions.bgColor);
+
+    // creatin of "level" tilemap
+    this.map = this.make.tilemap({ key: "level", tileWidth: 64, tileHeight: 64 });
+
+    // adding tiles (actually one tile) to tilemap
+    this.tileset = this.map.addTilesetImage("tileset01", "tile");
+
+    // which layer should we render? That's right, "layer01"
+    this.layer = this.map.createLayer("layer01", this.tileset, 0, 0);
+
+    this.layer.setCollisionBetween(0, 1, true);
+
+    // loading level tilemap
+    this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+
+    // players and their controllers
+    this.players = [];
+
+    onPlayerJoin(async (player) => {
+      const joystick = new Joystick(player, {
+        type: "dpad",
+        buttons: [
+          { id: "jump", label: "JUMP" }
+        ]
+      });
+      const hero = new Player(
+        this,
+        this.layer,
+        this.cameras.main.width / 2 + (this.players.length * 20),
+        440,
+        player.getProfile().color.hex,
+        joystick);
+
+      this.players.push({ player, hero, joystick });
+      player.onQuit(() => {
+        this.players = this.players.filter(({ player: _player }) => _player !== player);
+        hero.destroy();
+      });
+    });
+  }
+
+  update() {
+    this.players.forEach(({ player, hero }) => {
+      if (isHost()) {
+        hero.update();
+        player.setState('pos', hero.pos());
+      }
+      else {
+        const pos = player.getState('pos');
+        if (pos) {
+          hero.setPos(pos.x, pos.y);
+        }
+      }
+    });
+  }
+}
+
+var gameOptions = {
+  // width of the game, in pixels
+  gameWidth: 14 * 32,
+  // height of the game, in pixels
+  gameHeight: 23 * 32,
+  // background color
+  bgColor: 0xF7DEB5
+}
+```
+
+---
+
+### Step 5: Implement Multiplayer Player Joining &nbsp; <PromptStepCopyButton counter={5} text="Use onPlayerJoin from playroomkit to create Joystick controls for each player, instantiate a Player with their color, and handle player quit events." />
+
+Handle multiplayer player connections using [`onPlayerJoin`](/api-reference/js/onPlayerJoin) by creating [`Joystick`](/api-reference/js/Joystick) controls and Player instances for each joined player.
+
+```jsx filename="src/game.js"
+    onPlayerJoin(async (player) => {
+      const joystick = new Joystick(player, {
+        type: "dpad",
+        buttons: [
+          { id: "jump", label: "JUMP" }
+        ]
+      });
+      const hero = new Player(
+        this,
+        this.layer,
+        this.cameras.main.width / 2 + (this.players.length * 20),
+        440,
+        player.getProfile().color.hex,
+        joystick);
+
+      this.players.push({ player, hero, joystick });
+      player.onQuit(() => {
+        this.players = this.players.filter(({ player: _player }) => _player !== player);
+        hero.destroy();
+      });
+    });
+```
+
+---
+
+### Step 6: Implement Host-Authoritative Movement &nbsp; <PromptStepCopyButton counter={6} text="In the update loop, the host updates player physics and syncs position to all players using player.setState. Non-host players receive position updates from the host." />
+
+Implement the host-authoritative multiplayer model using [`isHost`](/api-reference/js/isHost) where the host calculates physics and synchronizes player positions to all other clients using [`setState`](/api-reference/js/setState) and [`getState`](/api-reference/js/getState).
+
+```jsx filename="src/game.js"
+  update() {
+    this.players.forEach(({ player, hero }) => {
+      if (isHost()) {
+        hero.update();
+        player.setState('pos', hero.pos());
+      }
+      else {
+        const pos = player.getState('pos');
+        if (pos) {
+          hero.setPos(pos.x, pos.y);
+        }
+      }
+    });
+  }
+```
+
+---
+
+### Step 7: Create the Player Class &nbsp; <PromptStepCopyButton counter={7} text="Create player.js with a Player class that loads the hero sprite, sets up physics with collision, handles joystick input for movement, jumping, and wall jumps. Configure player speed, jump force, wall drag, and acceleration." />
+
+Create the Player class that handles all player physics, movement, jumping, and wall jump mechanics.
+
+```jsx filename="src/player.js"
+var playerOptions = {
+  // player horizontal speed
+  playerSpeed: 300,
+
+  // player force
+  playerJump: 300,
+
+  playerWallDragMaxVelocity: 50,
+
+  // allow how many jumps (>1 for mid air jumps)
+  playerMaxJumps: 1,
+
+  // should be below acceleration. 
+  // You can disable "slippery floor" setting by giving ridiculously high value
+  playerDrag: 700,// 9999,
+
+  playerAcceleration: 1500
+}
+export default class Player {
+  constructor(scene, layerTiles, x, y, playerColor, joystick) {
+    this.scene = scene;
+    this.layer = layerTiles;
+
+    this.joystick = joystick;
+    this.jumpKeyIsDown = false;
+    this.jumpKeyDownAt = 0;
+
+    // adding the hero sprite and replace it's color with playerColor
+    this.hero = scene.physics.add.sprite(x, y, "hero");
+    scene.plugins.get('rexColorReplacePipeline').add(this.hero, {
+      originalColor: 0x2B2FDA,
+      newColor: playerColor,
+      epsilon: 0.4
+    });
+    // this.hero = scene.add.rectangle(x, y, 20, 20, playerColor);
+    
+    scene.physics.add.existing(this.hero);
+
+    // scene.physics.world.addCollider(this.hero, scene.layer);
+    scene.physics.add.collider(this.hero, scene.layer);
+    // scene.physics.add.collider(this.hero, scene.layer, null, null, this);
+
+    // setting hero anchor point
+    this.hero.setOrigin(0.5);
+
+    this.hero.body.setCollideWorldBounds(true);
+
+    // Set player minimum and maximum movement speed
+    this.hero.body.setMaxVelocity(playerOptions.playerSpeed, playerOptions.playerSpeed * 10);
+
+    // Add drag to the player that slows them down when they are not accelerating
+    this.hero.body.setDrag(playerOptions.playerDrag, 0);
+
+    // the hero can jump
+    this.canJump = true;
+
+    // hero is in a jump
+    this.jumping = false;
+
+    // the hero is not on the wall
+    this.onWall = false;
+  }
+
+  handleJump() {
+    // the hero can jump when:
+    // canJump is true AND the hero is on the ground (blocked.down)
+    // OR
+    // the hero is on the wall
+    if (this.canJump || this.onWall) {
+      // applying jump force
+      this.hero.body.setVelocityY(-playerOptions.playerJump);
+
+      // is the hero on a wall and this isn't the first jump (jump from ground to wall)
+      // if yes then push to opposite direction
+      if (this.onWall && !this.isFirstJump) {
+        // flip horizontally the hero
+        this.hero.flipX = !this.hero.flipX;
+
+        // change the horizontal velocity too. This way the hero will jump off the wall
+        this.hero.body.setVelocityX(playerOptions.playerSpeed * (this.hero.flipX ? -1 : 1));
+      }
+
+      // hero is not on the wall anymore
+      this.onWall = false;
+    }
+  }
+
+  pos(){
+    return { x: this.hero.body.x, y: this.hero.body.y };
+  }
+
+  setPos(x, y) {
+    this.hero.body.x = x;
+    this.hero.body.y = y;
+  }
+
+  body(){
+    return this.hero.body;
+  }
+
+  destroy(){
+    this.hero.destroy();
+  }
+
+  update() {
+    // hero on the ground
+    if (this.hero.body.blocked.down) {
+      // hero can jump
+      this.canJump = true;
+
+      // hero not on the wall
+      this.onWall = false;
+    }
+
+    // hero NOT on the ground and touching a wall on the right
+    if (this.hero.body.blocked.right && !this.hero.body.blocked.down) {
+      // hero on a wall
+      this.onWall = true;
+
+      // drag on wall only if key pressed and going downwards.
+      if (this.rightInputIsActive() && this.hero.body.velocity.y > playerOptions.playerWallDragMaxVelocity) {
+        this.hero.body.setVelocityY(playerOptions.playerWallDragMaxVelocity);
+      }
+    }
+
+    if (this.hero.body.blocked.left && !this.hero.body.blocked.down) {
+      this.onWall = true;
+
+      // drag on wall only if key pressed and going downwards.
+      if (this.leftInputIsActive() && this.hero.body.velocity.y > playerOptions.playerWallDragMaxVelocity) {
+        this.hero.body.setVelocityY(playerOptions.playerWallDragMaxVelocity);
+      }
+    }
+
+    if (this.hero.body.blocked.down || this.onWall) {
+      // set total jumps allowed
+      this.jumps = playerOptions.playerMaxJumps;
+      this.jumping = false;
+    } else if (!this.jumping) {
+      this.jumps = 0;
+    }
+
+    if (this.leftInputIsActive()) {
+      // If the LEFT key is down, set the player velocity to move left
+      this.hero.body.setAccelerationX(-playerOptions.playerAcceleration);
+      this.hero.flipX = true;
+    } else if (this.rightInputIsActive()) {
+      // If the RIGHT key is down, set the player velocity to move right
+      this.hero.body.setAccelerationX(playerOptions.playerAcceleration);
+      this.hero.flipX = false;
+    } else {
+      this.hero.body.setAccelerationX(0);
+    }
+
+    if ((this.onWall || this.jumps > 0) && this.spaceInputIsActive(150)) {
+      if (this.hero.body.blocked.down)
+        this.isFirstJump = true;
+      this.handleJump();
+      this.jumping = true;
+    }
+
+    if (this.spaceInputReleased()) {
+      this.isFirstJump = false;
+    }
+
+    if (this.jumping && this.spaceInputReleased()) {
+      this.jumps--;
+      this.jumping = false;
+    }
+  }
+
+  spaceInputIsActive(duration) {
+    if (!this.jumpKeyIsDown && this.joystick.isPressed("jump")) {
+      this.jumpKeyIsDown = true;
+      this.jumpKeyDownAt = Date.now();
+    }
+    return this.jumpKeyIsDown && ((Date.now() - this.jumpKeyDownAt) < duration);
+  }
+
+  spaceInputReleased() {
+    if (!this.joystick.isPressed("jump")) {
+      this.jumpKeyIsDown = false;
+      return true;
+    }
+    return false;
+  }
+
+  rightInputIsActive() {
+    return this.joystick.dpad().x === "right";
+  }
+
+  leftInputIsActive() {
+    return this.joystick.dpad().x === "left";
+  }
+}
+```
+
+---
+
+## Improvements
+
+- Add more levels with increasing difficulty
+- Implement collectible coins or power-ups
+- Add enemy AI characters that players must avoid
+- Create a timer-based scoring system for completing levels
+- Add death/respawn mechanics when falling off the map

@@ -1,0 +1,25 @@
+---
+title: Bot
+description: "Represents a bot or automated player."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# Bot
+
+The `Bot` interface represents an automated player. The `Bot` and its derived classes will have methods and properties similar to a PlayerState object.
+
+**Note:** The behavior of a bot, particularly its decision-making and interactions, will heavily depend on its implementation and the given `botClass`. Ensure the bot's behaviors align with the game's requirements and player expectations.
+
+## Properties
+
+| Name | Type | Description |
+|------|------|-------------|
+| `id` | `string` | Unique bot ID. |
+| `getProfile` | `() => PlayerProfile` | Returns the bot's profile. |
+| `getState` | `(key: string) => any` | Returns a specific state value for the bot. |
+| `setState` | `(key: string, value: any, reliable?: boolean) => void` | Sets a specific state value for the bot. |
+| `onQuit` | `(callback: (player: PlayerState) => void) => () => void` | Registers a callback when the bot quits. Returns unsubscribe function. |
+| `kick` | `() => Promise<void>` | Kicks the bot from the room. Only host can call. |
+| `isBot` | `() => boolean` | Returns true if this entity is a bot. |

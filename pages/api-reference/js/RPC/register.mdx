@@ -1,0 +1,33 @@
+---
+title: register
+description: "Register a callback that will be called when a remote procedure call (RPC) with the given name is received from a player. The callback will be called with the data sent by the other player and the PlayerState object of the caller."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# register
+
+## Signature
+
+```ts
+function register(name: string, callback: (data: any, sender: PlayerState) => Promise<any>): void
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | `string` | The RPC name to listen for. |
+| `callback` | `(data: any, sender: PlayerState) => Promise<any>` | Function called with data and the sender's PlayerState. Must return a Promise. |
+
+
+## Usage
+
+```ts
+RPC.register('playTurn', async (data, sender) => {
+  console.log(`${sender.id} played!`);
+  return 'ok';
+});
+
+```

@@ -1,0 +1,33 @@
+---
+title: setState
+description: "Sets a value in the global game state."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# setState
+
+If `reliable` is true, the state is synced reliably via WebSockets. If false, state is synced faster via WebRTC but less reliably.
+
+## Signature
+
+```ts
+function setState(key: string, value: any, reliable?: boolean): void
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `key` | `string` | The state key to set. |
+| `value` | `any` | The value to set for the key. |
+| `reliable?` | `boolean` | Whether the update should be reliably synced to all players. Defaults to true. |
+
+
+## Usage
+
+```ts
+setState('winner', 'player1');
+
+```

@@ -1,0 +1,53 @@
+---
+title: usePlayerState
+description: "Use this hook to listen and update a value in a player's state."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/react-docs-api-full.ts` and run `npm run generate:react-docs` to regenerate. */}
+
+# usePlayerState
+
+The return value is an array with two values: - `state`: `any` - `setState`: `(value: any, reliable?: boolean) => void`
+
+If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner.
+
+If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
+
+## Signature
+
+```ts
+function usePlayerState<T = any>(player: PlayerState, key: string, defaultValue: T): [T, (value: T, reliable?: boolean) => void]
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `player` | `PlayerState` | The player state object to listen and update. |
+| `key` | `string` | The key of the player state to listen and update. |
+| `defaultValue` | `T` | The default value for the player state if it doesn't exist yet. |
+
+## Returns
+
+`[T, (value: T, reliable?: boolean) => void]`
+
+## Usage
+
+```ts
+import { usePlayerState } from 'playroomkit'
+
+function PlayerComponent({ player }) {
+  const [score, setScore] = usePlayerState(player, 'score', 0);
+
+  return (
+    <div>
+      <p>Player {player.id} Score: {score}</p>
+      <button onClick={() => setScore(score + 1)}>
+        Add Point
+      </button>
+    </div>
+  );
+}
+
+```

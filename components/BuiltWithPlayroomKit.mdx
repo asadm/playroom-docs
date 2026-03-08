@@ -1,0 +1,48 @@
+import Link from 'next/link'
+
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 not-prose">
+
+  {[
+    {
+      title: "Death by AI",
+      href: "https://deathbyai.gg/",
+      image: "/images/showcase/death-by-ai.png"
+    },
+    {
+      title: "Banana of Doom",
+      href: "https://bananaofdoom.gg/",
+      image: "/images/showcase/banana-of-doom.jpg"
+    },
+    {
+      title: "Oasiz",
+      href: "https://www.oasiz.ai/landing",
+      image: "/images/showcase/oasiz.webp"
+    },
+    // {
+    //   title: "Vibe",
+    //   href: "/usage/nextjs",
+    //   image: "/images/showcase/nextjs.jpg"
+    // },
+  ].map((item) => (
+    <Link key={item.title} href={item.href} className="group relative rounded-2xl overflow-hidden h-64 block">
+      
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+        style={{ backgroundImage: `url(${item.image})` }}
+      />
+
+      {/* Dark overlay + gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+
+      {/* Content */}
+      <div className="relative h-full flex items-end p-6">
+        <h3 className="text-white text-2xl font-semibold tracking-tight">
+          {item.title}
+        </h3>
+      </div>
+
+    </Link>
+  ))}
+
+</div>

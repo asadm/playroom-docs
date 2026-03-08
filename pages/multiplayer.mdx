@@ -1,85 +1,77 @@
-# Making a Multiplayer Game
+# Adding real-time collaboration
 
 <video src="/images/2.mp4" style={{width: "100%", marginTop: '20px'}} playsInline autoPlay muted loop>
 </video>
 
-Whether you're developing a new game or transitioning an existing one to a multiplayer format, Playroom simplifies the process with low-code integration. Here's a general outline of the steps involved:
-
+Whether you're building a new collaborative app or adding real-time sync to an existing one, Playroom Kit keeps integration low-code. Here's the outline:
 
 ## Steps
-import { Steps } from 'nextra-theme-docs'
+import { Steps } from 'nextra/components'
 
 <Steps>
-### Add Playroom
-Add Playroom to your game. See [Setup](/setup) for ways to do this.
+### Add Playroom Kit
+Add Playroom Kit to your app. See [Get started](/setup) for install options.
 
 ### Insert Coin!
-Tell Playroom to start! Playroom Kit will automatically handle room creation, joining and also let players pick their names, colors and avatars. Once host taps "Launch", your game will start.
+Tell Playroom Kit to start. Playroom Kit handles room creation, joining, and lets participants pick names, colors, and avatars. When the host taps "Launch", your app runs.
 
 ```js
-// Show Playroom lobby UI, Playroom will handle players joining etc and wait for host to tap "Launch"
+// Show Playroom Kit lobby UI; Playroom Kit handles joining and waits for host to tap "Launch"
 await insertCoin();
 
-// Players are in this room! (your game code below)
-startGame(); 
+// Everyone is in the room (your app code below)
+startApp();
 ```
 
-### Set game state you want to sync
-Playroom will sync state across all players. This can be anything like time left, physics objects, etc. Ideally only the **host** should set the game state. Other players should then receive the game state from the host and update their game accordingly.
+### Set shared state you want to sync
+Playroom Kit syncs state across all participants. Use it for anything: time left, positions, UI state. Ideally only the **host** sets shared room state; others read it and update their view.
 
 ```js
-// On one player
+// On one participant (e.g. host)
 setState("timeLeft", 60);
 
-// On other players
+// On others
 const timeLeft = getState("timeLeft");
 ```
 
-### Handle players joining and quitting
-When a player joins, you probably need to add a player sprite to the game. When a player quits, you need to remove the player sprite from the game.
-In Playroom Kit, you can use the `onPlayerJoin` and `onQuit` callbacks to handle this:
+### Handle participants joining and leaving
+When someone joins, you may add a representation (sprite, cursor, avatar). When they leave, remove it. Use `onPlayerJoin` and `onQuit`:
 
 ```js
 onPlayerJoin(playerState => {
-  // PlayerState is this player's multiplayer state along with it's profile.
-  // Probably add a player sprite to the game here.
+  // playerState = this participant's state + profile
+  // e.g. add a representation here
   playerState.onQuit(() => {
-    // Handle player quitting. Maybe remove player sprite?
+    // Handle participant leaving (e.g. remove representation)
   });
 });
 ```
 
-### Pass player input to Playroom
-Input can be anything like joystick data, button presses etc. Save current input to current player's state. Host will read input state and update the game state. No network code needed!
+### Send participant input to Playroom Kit
+Input can be joystick data, button presses, cursor position, etc. Store it on the current participant's state. Host reads input and updates shared state. No custom network code.
 
 ```js
 joystick.on("move", (e, data) => {
-  // Set current player's input state to Playroom.
   myPlayer().setState("input", data.direction);
 });
 ```
 
-### Pass your game state to Playroom
-Things like player position, health, score etc. Ideally only the **host** should set the game state. Other players will only receive the game state from the host and update their game accordingly.
+### Write shared state from the host
+Things like positions, scores, or app state. Ideally only the **host** sets shared state; others receive it and update their view.
 
 ```js
 // Host only
-updatePlayer(player) {
-  const input = player.state.getState("input")
-  // ...
-  // Update player position based on player input
-  // ...
-  player.state.setState("position", {
-    x: newX,
-    y: newY,
-  });
+updateParticipant(player) {
+  const input = player.state.getState("input");
+  // ... compute new position ...
+  player.state.setState("position", { x: newX, y: newY });
 }
 ```
 </Steps>
 
-## Demo #1
+## Demo
 
-Below is a **live preview** of a simple flying plane game adapted from [this code by Codrops](https://github.com/yakudoo/TheAviator).
+Below is a **live preview** of a simple shared 3D experience (adapted from [this code by Codrops](https://github.com/yakudoo/TheAviator)).
 
 import Preview from '../components/preview'
 

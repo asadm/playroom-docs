@@ -1,0 +1,51 @@
+# Using Vue.js with Playroom Kit
+
+[Vue.js](https://vuejs.org/) is a progressive framework for building UIs and single-page apps. Playroom Kit adds real-time collaboration—shared state, rooms, and participants—without a custom backend.
+
+Playroom Kit runs in the browser. Use **onMounted** (or similar) to initialize the connection so it only runs on the client after your app is ready.
+
+## Setup
+
+1. Install Playroom Kit in your Vue project:
+
+```sh npm2yarn copy
+npm install playroomkit
+```
+
+2. Use Playroom Kit in a component with **client-side only** init (e.g. in `onMounted`):
+
+```vue copy
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+import { insertCoin, onPlayerJoin, myPlayer } from 'playroomkit'
+
+const ready = ref(false)
+let unsubscribe = null
+
+onMounted(async () => {
+  await insertCoin()
+  ready.value = true
+
+  unsubscribe = onPlayerJoin((state) => {
+    // Handle new player
+    return () => { /* cleanup on quit */ }
+  })
+})
+
+onUnmounted(() => {
+  unsubscribe?.()
+})
+</script>
+
+<template>
+  <div v-if="!ready">Loading...</div>
+  <div v-else><!-- Your multiplayer UI --></div>
+</template>
+```
+
+3. For shared state, use `myPlayer().setState(key, value)` and `playerState.getState(key)`. You can wrap these in `reactive()` or `ref()` if you need them to drive Vue templates.
+
+## Learn more
+
+- [API](/api-reference)
+- [Features](/components)

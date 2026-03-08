@@ -1,0 +1,170 @@
+## Migrating from Hathora
+
+[Hathora](https://hathora.dev/) is a multiplayer hosting platform. You write your own game server, package it into a container, and deploy it to their cloud. Hathora runs your server in different regions and handles scaling.
+
+If you need a fully authoritative backend, Hathora is a strong choice.
+
+If you do not need custom server logic, Playroom Kit can simplify your architecture dramatically.
+
+This guide explains when it makes sense to migrate and what changes when you move to Playroom Kit.
+
+---
+
+### Why Playroom Kit?
+
+Hathora focuses on infrastructure. It gives you the environment to run your server. You are still responsible for:
+
+* Writing your WebSocket or TCP server
+* Managing rooms and lobbies
+* Handling matchmaking
+* Syncing game state between players
+* Deploying updates safely
+* Scaling across regions
+
+Playroom Kit removes that entire layer.
+
+Instead of building and hosting a custom backend, you work directly with shared state in the client. Rooms, participants, and synchronization are handled automatically.
+
+#### When Playroom Kit is a better fit
+
+Playroom Kit works best when:
+
+* You do not need authoritative server validation
+* Your game logic can run on clients
+* You want to ship quickly
+* You do not want to manage backend infrastructure
+* You are building a web-based multiplayer game
+
+Because there is no custom server code:
+
+1. You can drop Playroom Kit into your game and get multiplayer running quickly.
+2. Scaling is handled for you. You do not need to deploy containers to multiple regions.
+3. You avoid backend maintenance and DevOps work.
+
+If your multiplayer layer looks more like shared state than server-controlled simulation, Playroom Kit is usually simpler.
+
+#### When Hathora is still the right choice
+
+Hathora makes sense when:
+
+* You require an authoritative server
+* You need strict anti-cheat validation
+* Your game simulation must run server-side
+* You need custom networking protocols
+* You want full control over your backend runtime
+
+Playroom Kit is not designed to replace custom authoritative architectures. It is designed to remove complexity when you do not need them.
+
+---
+
+### Feature comparison
+
+| Feature                       | Hathora        | Playroom Kit |
+| ----------------------------- | -------------- | ------------ |
+| Custom server code required   | Yes            | No           |
+| Authoritative backend support | Yes            | No           |
+| Infrastructure management     | Required       | Not required |
+| Built-in rooms                | No             | Yes          |
+| Built-in lobby UI             | No             | Yes          |
+| Web-first multiplayer         | Possible       | Yes          |
+| Deployment complexity         | Higher         | Very low     |
+| DevOps overhead               | Medium to high | Minimal      |
+
+With Hathora, you control everything. With Playroom Kit, you give up low-level control in exchange for speed and simplicity.
+
+---
+
+## Guide
+
+Migrating from Hathora to Playroom Kit is less about code conversion and more about changing your architecture.
+
+You move from a server-authoritative model to a shared client model.
+
+---
+
+### 1. Remove your custom game server
+
+In a Hathora setup:
+
+* You maintain a backend server
+* Players connect through WebSockets
+* The server controls state and validates actions
+
+With Playroom Kit:
+
+* There is no custom server
+* You initialize multiplayer directly in the client
+* State is synchronized automatically
+
+Instead of sending messages to your own backend, you update shared state values.
+
+You can learn how shared state works in [*Shared State Primitives*](/features/apps/state).
+
+---
+
+### 2. Replace server-controlled state with shared state
+
+In a Hathora architecture, your server might look like:
+
+* Receive player input
+* Validate
+* Update game state
+* Broadcast new state to all players
+
+In Playroom Kit:
+
+* Each client updates shared values
+* Other participants receive updates automatically
+* You render based on the latest state
+
+For example:
+
+```ts
+setState("score", 10)
+```
+
+This update is automatically synchronized to everyone in the room.
+
+If your game requires fast but non-critical updates, you can also explore [*Unreliable Transport*](/features/apps/state#reliable-vs-unreliable-state-changes).
+
+---
+
+### 3. Replace matchmaking and room management
+
+With Hathora:
+
+* You create and assign servers
+* You manage room IDs
+* You handle lobby flows yourself
+
+With Playroom Kit:
+
+* Rooms are handled automatically
+* Players join through a simple initialization flow
+* A lobby UI is available out of the box
+
+Room behavior is explained in [*Rooms and Sessions*](/features/games/lobby).
+
+---
+
+### 4. Adjust your mental model
+
+This is the biggest shift.
+
+Hathora assumes:
+
+Server controls everything.
+
+Playroom Kit assumes:
+
+Clients coordinate through shared state.
+
+For many casual multiplayer games, collaborative apps, and web-based experiences, this model is enough. It is the same pattern used in tools like [Figma](https://www.figma.com/) or [Miro](https://miro.com/), where users see updates instantly without managing servers themselves.
+
+If your gameplay requires strict server-side authority, stay with Hathora.
+
+If your multiplayer layer is mostly synchronization and presence, Playroom Kit will feel dramatically simpler.
+
+---
+
+Playroom Kit is not about replacing powerful backend platforms. It is about removing them when you do not need them.

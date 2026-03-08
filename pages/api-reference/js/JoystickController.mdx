@@ -1,0 +1,19 @@
+---
+title: JoystickController
+description: "Joystick controller for a player."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/dummy-api-full.ts` and run `npm run generate:js-docs` to regenerate. */}
+
+# JoystickController
+
+## Properties
+
+| Name | Type | Description |
+|------|------|-------------|
+| `isPressed` | `(id: string) => boolean` | Returns true if the button with the given ID is pressed. |
+| `isJoystickPressed` | `() => boolean` | Returns true if the joystick itself is pressed. |
+| `angle` | `() => number` | Returns the angle of the joystick in radians. |
+| `dpad` | `() => { x: string; y: string; }` | Returns the direction of the joystick as a string. |
+| `destroy` | `() => void` | Destroy and remove the Joystick and its UI. |

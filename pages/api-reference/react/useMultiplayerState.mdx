@@ -1,0 +1,84 @@
+---
+title: useMultiplayerState
+description: "Use this hook to listen and update a value in the Playroom state. The value will be synced across all players."
+---
+
+{/* AUTO-GENERATED FILE. DO NOT EDIT. */}
+{/* Edit `data/react-docs-api-full.ts` and run `npm run generate:react-docs` to regenerate. */}
+
+# useMultiplayerState
+
+The return value is an array with two values: - `state`: `any` - `setState`: `(value: any, reliable?: boolean) => void`
+
+If `reliable` is `true`, the state is synced reliably to all players via Websockets. This is useful for game state that is critical to the game, like the winner.
+
+If `reliable` is `false`, the state is synced via WebRTC, which is faster but less reliable. This is useful for game state that is not critical to the game, like the player's current position (you can always rely on next position update).
+
+## Signature
+
+```ts
+function useMultiplayerState<T = any>(key: string, defaultValue: T): [T, (value: T, reliable?: boolean) => void]
+```
+
+## Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `key` | `string` | The key of the state to listen and update. |
+| `defaultValue` | `T` | The default value for the state if it doesn't exist yet. |
+
+## Returns
+
+`[T, (value: T, reliable?: boolean) => void]`
+
+## Usage
+
+**Example 1**
+
+```ts
+import { useMultiplayerState } from 'playroomkit'
+
+function GameComponent() {
+  const [count, setCount] = useMultiplayerState('count', 0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>
+        Increment
+      </button>
+    </div>
+  );
+}
+
+```
+
+**Example 2**
+
+Critical game state - use reliable updates:
+
+```ts
+function GameComponent() {
+  // Critical game state - use reliable updates
+  const [winner, setWinner] = useMultiplayerState('winner', null);
+
+  // Player position - use non-reliable updates for better performance
+  const [position, setPosition] = useMultiplayerState('position', { x: 0, y: 0 });
+
+  const handleWin = () => {
+    setWinner('player1', true); // Reliable update
+  };
+
+  const handleMove = (newPosition) => {
+    setPosition(newPosition, false); // Non-reliable update
+  };
+
+  return (
+    <div>
+      {winner && <p>Winner: {winner}</p>}
+      <p>Position: {position.x}, {position.y}</p>
+    </div>
+  );
+}
+
+```

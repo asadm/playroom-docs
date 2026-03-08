@@ -1,0 +1,435 @@
+import { useState } from 'react';
+import { Callout } from 'nextra/components';
+import { PromptStepCopyButton } from '../../components/PromptStepCopyButton';
+import {Button} from "../../components/ui/button";
+import CodePlayground from "../../components/CodePlayground";
+import { collaborativeTextEditorExampleFiles } from "../../code/collaborative-text-editor";
+import ElectricBorder from '../../components/ElectricBorder';
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt';
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton';
+
+ {/*
+
+* Metadata:
+* Primary keyword: "collaborative editor with live cursors"
+* Secondary keywords: "real-time editing with multiplayer state", "cursor presence tracking", "shared document sync", "Playroom Kit collaborative app", "live editing indicators"
+* AI crawl phrases: "build collaborative text editor with live cursors", "real-time multiplayer document editing tutorial", "cursor sync with Playroom Kit", "presence indicators in collaborative editor", "shared editor multiplayer example"
+* SEO tags: [collaborative editor, live cursors, multiplayer document, real-time sync, presence tracking, Playroom Kit]
+  */}
+
+
+# Collaborative Text Editor
+
+Build a real-time collaborative text editor where multiple users can edit a shared document simultaneously. Changes sync automatically across all connected players using Playroom Kit's shared state, with throttled updates to optimize network usage. This is the same experience you see in tools like [Google Docs](https://docs.google.com/), [Notion](https://www.notion.so/), [OverLeaf](https://www.overleaf.com/) and many more.
+
+<br />
+<a href="https://texteditor.playroom.gg/" target="_blank"><Button>View demo ⌝</Button></a>
+<a href="https://github.com/asadm/playroom-docs/tree/main/examples/multiplayer-text-editor"><Button variant="outline">Get Final Code</Button></a>
+<br />
+<br />
+
+<CodePlayground
+files={collaborativeTextEditorExampleFiles}
+height="480px"
+previewUrls={[
+"https://texteditor.playroom.gg/",
+"https://texteditor.playroom.gg/",
+]}
+/>
+
+## Getting Started
+
+This tutorial shows you how to build a collaborative rich text editor that multiple players can use simultaneously. The editor uses Playroom Kit's [`useMultiplayerState`](/api-reference/react/useMultiplayerState) to sync document content in real-time across all connected players. Each player's edits are throttled to avoid sending every keystroke, improving performance and reducing network load.
+
+The application features a full toolbar with formatting options (bold, italic, underline, strikethrough), text alignment, font color selection, and image insertion. Players can see who's in the room via avatars in the header, and the room code can be copied to share with others.
+
+### Vibe Coding System Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you are using an AI coding tool, copy this prompt:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Collaborative Text Editor". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+      <CopyMasterPromptButton text='You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React. Your task is to help me build a "Collaborative Text Editor". The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework. Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation. I already have a React project set up. I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding. Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions. Make sure to test each step before moving to the next one.' />
+    </div>
+    {(() => {
+      const fullText = `You are a senior software engineer at Little Umbrella specializing in building real-time multiplayer applications using Playroom Kit and React.
+Your task is to help me build a "Collaborative Text Editor".
+The application should be created using React as a frontend framework and Playroom Kit as a multiplayer framework.
+Do not assume the existence of any Playroom Kit APIs or hooks. Only use APIs documented in the official Playroom Kit documentation.
+I already have a React project set up.
+I will provide step-by-step instructions. After each step, clearly explain what was implemented and ask if I want customizations before proceeding.
+Important: Do not write any code yourself. Only provide guidance and code snippets based on my instructions.
+Make sure to test each step before moving to the next one.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 6);
+      const showButton = lines.length > 6;
+      const showBlur = !isExpanded && lines.length > 6;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 5 ? 'blur(2px)' : 'none', opacity: showBlur && i === 5 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+You can adjust the prompt according to whether or not you have an existing application.
+
+## Guide
+
+If you haven't cloned the starter repository yet, clone it before moving to the first step.
+
+<Callout emoji="✨">
+  If you're vibe-coding, start by copying the [Vibe Coding System prompt](#vibe-coding-system-prompt). Then copy each step one by one into your coding assistant by clicking "Copy Prompt".
+</Callout>
+
+### Step 1: Initialize Playroom Kit &nbsp; <PromptStepCopyButton counter={1} text="Initialize Playroom Kit with insertCoin in Index.tsx (or main.tsx). Set skipLobby to true and render the App component once ready. Show a loading spinner while connecting." />
+
+Initialize Playroom Kit to handle multiplayer state and authentication. This sets up the room connection using [`insertCoin`](/api-reference/js/insertCoin) and displays a loading state while connecting.
+
+```tsx filename="Index.tsx"
+import React, { useEffect, useState } from "react";
+import { insertCoin } from "playroomkit";
+import EditorHeader from "@/components/EditorHeader";
+import DocumentEditor from "@/components/DocumentEditor";
+
+const Index: React.FC = () => {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    insertCoin({ skipLobby: true }).then(() => setReady(true));
+  }, []);
+
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center space-y-3">
+          <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-muted-foreground text-sm">Connecting to room...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-screen bg-background">
+      <EditorHeader />
+      <DocumentEditor />
+    </div>
+  );
+};
+
+export default Index;
+```
+
+---
+
+### Step 2: Create the DocumentEditor Component &nbsp; <PromptStepCopyButton counter={2} text="Create DocumentEditor.tsx that uses useMultiplayerState for 'doc' state. Implement a contentEditable div for the editor. Add throttled sync using setTimeout with 300ms delay to avoid sending every keystroke. Handle incoming remote updates by checking pendingLocalChanges ref to prevent sync loops." />
+
+Create the DocumentEditor component that handles the shared document state using [`useMultiplayerState`](/api-reference/react/useMultiplayerState), local editing, and synchronization with other players.
+
+```tsx filename="DocumentEditor.tsx"
+import React, { useRef, useCallback, useEffect, useState } from "react";
+import { useMultiplayerState } from "playroomkit";
+import EditorToolbar from "./EditorToolbar";
+
+const DocumentEditor: React.FC = () => {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [docContent, setDocContent] = useMultiplayerState("doc", "");
+
+  const [currentColor, setCurrentColor] = useState("#000000");
+  const isRemoteUpdate = useRef(false);
+  const pendingLocalChanges = useRef(0);
+  const syncTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (!editorRef.current || !docContent) return;
+    if (pendingLocalChanges.current > 0) {
+      pendingLocalChanges.current--;
+      return;
+    }
+    if (isRemoteUpdate.current) return;
+
+    const currentHtml = editorRef.current.innerHTML;
+    if (currentHtml !== docContent) {
+      isRemoteUpdate.current = true;
+      editorRef.current.innerHTML = docContent as string;
+      isRemoteUpdate.current = false;
+    }
+  }, [docContent]);
+
+  const throttledSync = useCallback(() => {
+    if (syncTimer.current) clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(() => {
+      if (editorRef.current) {
+        pendingLocalChanges.current++;
+        setDocContent(editorRef.current.innerHTML);
+      }
+    }, 300);
+  }, [setDocContent]);
+
+  const handleInput = useCallback(() => {
+    throttledSync();
+  }, [throttledSync]);
+
+  const execCommand = useCallback((cmd: string, value?: string) => {
+    editorRef.current?.focus();
+    document.execCommand(cmd, false, value);
+    throttledSync();
+  }, [throttledSync]);
+
+  const handleFontColor = useCallback((color: string) => {
+    setCurrentColor(color);
+    document.execCommand("foreColor", false, color);
+    if (editorRef.current) {
+      editorRef.current.style.caretColor = color;
+    }
+    throttledSync();
+  }, [throttledSync]);
+
+  const handleInsertImage = useCallback((file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      editorRef.current?.focus();
+      const img = `<img src="${reader.result}" style="max-width:100%;height:auto;" />`;
+      document.execCommand("insertHTML", false, img);
+      throttledSync();
+    };
+    reader.readAsDataURL(file);
+  }, [throttledSync]);
+
+  const handleEditorClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "A" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      window.open((target as HTMLAnchorElement).href, "_blank");
+    }
+  }, []);
+
+  return (
+    <div className="flex flex-col flex-1 min-h-0">
+      <EditorToolbar
+        onCommand={execCommand}
+        onFontColor={handleFontColor}
+        onInsertImage={handleInsertImage}
+        currentColor={currentColor}
+      />
+      <div className="flex-1 overflow-auto bg-muted flex justify-center py-8 px-4">
+        <div className="relative w-full max-w-[816px]">
+          <div
+            ref={editorRef}
+            className="doc-paper"
+            contentEditable
+            suppressContentEditableWarning
+            onInput={handleInput}
+            onClick={handleEditorClick}
+            style={{ caretColor: currentColor, fontSize: "24px" }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DocumentEditor;
+```
+
+---
+
+### Step 3: Create the EditorToolbar Component &nbsp; <PromptStepCopyButton counter={3} text="Create EditorToolbar.tsx with formatting buttons (bold, italic, underline, strikethrough), text alignment, font color picker with Popover, and image upload. Use lucide-react for icons and prevent default on mouseDown to keep focus in the editor." />
+
+Create the EditorToolbar component with formatting buttons and the color picker.
+
+```tsx filename="EditorToolbar.tsx"
+import React, { useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import {
+  Bold, Italic, Underline, Strikethrough, Palette,
+  AlignLeft, AlignCenter, AlignRight, AlignJustify,
+  Image as ImageIcon,
+} from "lucide-react";
+
+const COLORS = [
+  { name: "Black", value: "#000000" },
+  { name: "Red", value: "#EA4335" },
+  { name: "Blue", value: "#4285F4" },
+  { name: "Green", value: "#34A853" },
+  { name: "Orange", value: "#FF6D01" },
+];
+
+interface EditorToolbarProps {
+  onCommand: (cmd: string, value?: string) => void;
+  onFontColor: (color: string) => void;
+  onInsertImage: (file: File) => void;
+  currentColor: string;
+}
+
+const EditorToolbar: React.FC<EditorToolbarProps> = ({
+  onCommand, onFontColor, onInsertImage, currentColor,
+}) => {
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) onInsertImage(file);
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const ToolBtn = ({ icon: Icon, cmd, title }: { icon: React.ElementType; cmd: string; title: string }) => (
+    <Button variant="ghost" size="icon" className="h-8 w-8" title={title} onMouseDown={(e) => { e.preventDefault(); onCommand(cmd); }}>
+      <Icon className="h-4 w-4" />
+    </Button>
+  );
+
+  return (
+    <div className="flex items-center justify-center px-4 py-2">
+      <div className="flex items-center gap-0.5 bg-card border border-border rounded-full px-3 py-1 shadow-sm">
+        <ToolBtn icon={Bold} cmd="bold" title="Bold" />
+        <ToolBtn icon={Italic} cmd="italic" title="Italic" />
+        <ToolBtn icon={Underline} cmd="underline" title="Underline" />
+        <ToolBtn icon={Strikethrough} cmd="strikeThrough" title="Strikethrough" />
+
+        <Separator orientation="vertical" className="h-5 mx-1" />
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8" title="Font Color">
+              <Palette className="h-4 w-4" style={{ color: currentColor }} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-2">
+            <div className="flex gap-1">
+              {COLORS.map(c => (
+                <button
+                  key={c.value}
+                  className="w-7 h-7 rounded-full border border-border hover:scale-110 transition-transform"
+                  style={{ backgroundColor: c.value }}
+                  title={c.name}
+                  onMouseDown={(e) => { e.preventDefault(); onFontColor(c.value); }}
+                />
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <Separator orientation="vertical" className="h-5 mx-1" />
+
+        <ToolBtn icon={AlignLeft} cmd="justifyLeft" title="Align Left" />
+        <ToolBtn icon={AlignCenter} cmd="justifyCenter" title="Align Center" />
+        <ToolBtn icon={AlignRight} cmd="justifyRight" title="Align Right" />
+        <ToolBtn icon={AlignJustify} cmd="justifyFull" title="Justify" />
+
+        <Separator orientation="vertical" className="h-5 mx-1" />
+
+        <Button variant="ghost" size="icon" className="h-8 w-8" title="Insert Image" onClick={() => fileRef.current?.click()}>
+          <ImageIcon className="h-4 w-4" />
+        </Button>
+        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+      </div>
+    </div>
+  );
+};
+
+export default EditorToolbar;
+```
+
+---
+
+### Step 4: Create the EditorHeader Component &nbsp; <PromptStepCopyButton counter={4} text="Create EditorHeader.tsx with usePlayersList to display connected player avatars. Show room code using getRoomCode with a copy button. Use myPlayer to highlight the current user's avatar with a ring. Assign colors from a predefined list to each player." />
+
+Create the EditorHeader component to display connected players using [`usePlayersList`](/api-reference/react/usePlayersList) and the room code using [`getRoomCode`](/api-reference/js/getRoomCode). Use [`myPlayer`](/api-reference/js/myPlayer) to highlight the current user's avatar with a ring.
+
+```tsx filename="EditorHeader.tsx"
+import React from "react";
+import { usePlayersList, myPlayer, getRoomCode } from "playroomkit";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Copy, Check } from "lucide-react";
+
+const PLAYER_COLORS = ["#4285F4", "#EA4335", "#FBBC05", "#34A853", "#FF6D01", "#46BDC6", "#7B1FA2", "#C2185B"];
+
+const EditorHeader: React.FC = () => {
+  const players = usePlayersList(true);
+  const [copied, setCopied] = React.useState(false);
+  const roomCode = getRoomCode();
+
+  const copyRoomCode = () => {
+    if (roomCode) {
+      navigator.clipboard.writeText(roomCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <header className="flex items-center justify-between px-5 py-3 border-b border-border bg-card">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium text-muted-foreground">Room:</span>
+        <code className="text-sm font-mono bg-muted px-2 py-1 rounded">{roomCode || "..."}</code>
+        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={copyRoomCode}>
+          {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+        </Button>
+      </div>
+      <div className="flex items-center gap-1">
+        {players.map((player, i) => {
+          const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
+          const name = player.getProfile()?.name || `P${i + 1}`;
+          const isMe = player.id === myPlayer()?.id;
+          return (
+            <Avatar key={player.id} className={`h-8 w-8 border-2 ${isMe ? "ring-2 ring-ring" : ""}`} style={{ borderColor: color }}>
+              <AvatarFallback className="text-xs font-bold" style={{ backgroundColor: color, color: "#fff" }}>
+                {name.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          );
+        })}
+      </div>
+    </header>
+  );
+};
+
+export default EditorHeader;
+```
+
+---
+
+## Improvements
+
+- Add real-time cursor positions showing where each player is editing
+- Implement a version history or undo/redo feature across all players
+- Add support for more rich text features like tables, lists, and hyperlinks

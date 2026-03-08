@@ -1,0 +1,56 @@
+# Using Angular with Playroom Kit
+
+[Angular](https://angular.dev/) is a framework for building web apps with TypeScript, components, and dependency injection. Playroom Kit adds real-time collaboration—shared state, rooms, and participants—without a custom backend.
+
+Playroom Kit runs in the browser. Initialize it in **ngOnInit** and clean up in **ngOnDestroy** so the connection only runs on the client.
+
+## Setup
+
+1. Install Playroom Kit in your Angular project:
+
+```sh npm2yarn copy
+npm install playroomkit
+```
+
+2. Use Playroom Kit in a component with **client-side only** init in `ngOnInit`:
+
+```ts copy
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { insertCoin, onPlayerJoin, myPlayer } from 'playroomkit';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [NgIf],
+  template: `
+    <div *ngIf="!ready">Loading...</div>
+    <div *ngIf="ready"><!-- Your multiplayer UI --></div>
+  `,
+})
+export class AppComponent implements OnInit, OnDestroy {
+  ready = false;
+  private unsubscribe: (() => void) | null = null;
+
+  async ngOnInit() {
+    await insertCoin();
+    this.ready = true;
+
+    this.unsubscribe = onPlayerJoin((state) => {
+      // Handle new player
+      return () => { /* cleanup on quit */ };
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe?.();
+  }
+}
+```
+
+3. For shared state, use `myPlayer().setState(key, value)` and `playerState.getState(key)`. Bind these to your template via component properties or signals if you use Angular signals.
+
+## Learn more
+
+- [API](/api-reference)
+- [Features](/components)
