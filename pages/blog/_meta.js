@@ -1,4 +1,9 @@
 export default {
+  "playroom-kit-for-vibe-coding": {
+    title: "Vibe code multiplayer apps with Playroom Kit",
+    date: "Mar 9, 2026",
+    image: "/images/blog/playroom-kit-for-vibe-coding-announcement-image.png",
+  },
   tim: {
     title: "Game Industry Veteran joins Playroom",
     date: "Aug 20, 2024",
