@@ -31,10 +31,12 @@ export default {
     display: "hidden",
   },
   "api-reference": {
-    theme: {
-      collapsed: true,
-    },
+    theme: { collapsed: true},
     title: "API Reference",
+  },
+  "errors": {
+    theme: { collapsed: true},
+    title: "Errors",
   },
   comparison: {
     display: "hidden",
