@@ -2,4 +2,4 @@
 
 | Code / Text | Where it appears | Meaning | What to do |
 | ----------- | ---------------- | ------- | ---------- |
-| No gameId provided in the insertCoin function. Learn more here: https://docs.joinplayroom.com/errors/no-game-id | console | It means that the developer hasn't provided `gameId` in the `insertCoin` function.  | The developer should create a project on the [Developer Portal](https://dev.joinplayroom.com) if they haven't. From there they will get the `gameId`, simply copy and paste it in the `insertCoin` function. e.g `insertCoin({gameId: "<your_gameid>"})`  |
+| insertCoin() called without gameId. This may impact analytics and enforce DAU limits soon. Fix it here: https://docs.joinplayroom.com/errors/no-game-id | console | It means that the developer hasn't provided `gameId` in the `insertCoin` function.  | The developer should create a project on the [Developer Portal](https://dev.joinplayroom.com) if they haven't. From there they will get the `gameId`, simply copy and paste it in the `insertCoin` function. e.g `insertCoin({gameId: "<your_gameid>"})`  |
