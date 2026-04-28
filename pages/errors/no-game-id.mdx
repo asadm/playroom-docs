@@ -1,5 +1,155 @@
-# No gameId provided in the insertCoin function
+import { Callout, Steps } from 'nextra/components'
+import { useState } from 'react'
+import ElectricBorder from '../../components/ElectricBorder'
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton'
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt'
 
-| Code / Text | Where it appears | Meaning | What to do |
-| ----------- | ---------------- | ------- | ---------- |
-| insertCoin() called without gameId. This may impact analytics and enforce DAU limits soon. Fix it here: https://docs.joinplayroom.com/errors/no-game-id | console | It means that the developer hasn't provided `gameId` in the `insertCoin` function.  | The developer should create a project on the [Developer Portal](https://dev.joinplayroom.com) if they haven't. From there they will get the `gameId`, simply copy and paste it in the `insertCoin` function. e.g `insertCoin({gameId: "<your_gameid>"})`  |
+# No gameId provided in insertCoin
+
+You called `insertCoin()` without a `gameId`. This will impact analytics and enforce DAU limits soon.
+
+```
+insertCoin() called without gameId. This may impact analytics and enforce DAU limits soon.
+Fix it here: https://docs.joinplayroom.com/errors/no-game-id
+```
+
+To fix it, create a project on the [Playroom Dev Portal](https://dev.joinplayroom.com) and paste your `gameId` into `insertCoin`.
+
+## How to get your Game ID
+
+<Steps>
+
+### Go to the Dev Portal
+
+Navigate to [dev.joinplayroom.com/signin](https://dev.joinplayroom.com/signin). You'll see the **Dev mode** sign-in form.
+
+
+
+### Enter your email
+
+Type your email address and click **Continue**.
+
+![Playroom Dev Portal signin page](/images/portal/1-signin.png)
+
+### Check your email
+
+You'll receive a **Sign in to Playroom** email from `noreply@joinplayroom.com`. Click the **Sign in to Playroom** link inside it.
+
+### Choose a plan
+
+Select a plan. **Hobby** is free.
+
+![Choose a plan](/images/portal/6-choose-plan.png)
+
+### Click + New Project
+
+You'll land on the dashboard. Click the **+ New Project** button in the top right.
+
+![Dev portal dashboard — click New Project](/images/portal/5-dashboard.png)
+
+
+### Name your project
+
+Enter a project name (letters and numbers only) and click **Continue**.
+
+![Fill in your project name](/images/portal/7-create-project.png)
+
+### Open your project
+
+Your project is created. Click on it in the left sidebar, then click **Configuration**.
+
+![Project overview — click Configuration in the sidebar](/images/portal/8-project-overview.png)
+
+### Generate your Game ID
+
+On the Configuration page, scroll down to the **API key** section. Click **Reset API Key** (or **Create** if this is your first key) to generate your Game ID.
+
+![Generate API Key on Configuration page](/images/portal/10-generate-api-key.png)
+
+### Copy your Game ID
+
+After generating, you'll see your `gameId` is now active in the **General** section. Scroll back to the top to find your `gameId`. You can either:
+
+- Copy just the `gameId` value from the field, **or**
+- Copy the ready-made `insertCoin` snippet shown at the top of the page
+
+![Configuration page showing gameId and API key section](/images/portal/11-copy-game-id.png)
+
+</Steps>
+
+## Use the Game ID in your code
+
+Paste the `gameId` into your `insertCoin` call:
+
+```js
+insertCoin({ gameId: "your_game_id_here" });
+```
+
+<Callout type="info">
+  The `gameId` is read-only and assigned when you create a project. You can always find it again in your project's **Configuration → General** tab.
+</Callout>
+
+---
+
+## Vibe Coding Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+If you're using an AI coding tool, copy this prompt to quickly wire in your `gameId`:
+
+<br />
+
+<ElectricBorder
+  color="#FFB347"
+  speed={1}
+  chaos={0.12}
+  thickness={2}
+  style={{ borderRadius: 3 }}
+>
+  <div style={{position: "relative", padding: 10}}>
+    <div style={{float: "right", position: "relative", zIndex: 9999, display: "flex", gap: 8}}>
+      <DropDownMenuForMasterPrompt text='I am building a multiplayer game using Playroom Kit. I have just created a project on the Playroom Dev Portal and obtained my gameId. I need you to find the insertCoin() call in my codebase and add my gameId to it so it reads: insertCoin({ gameId: "PASTE_YOUR_GAME_ID_HERE" }). If insertCoin is called with no arguments or with an options object that is missing gameId, update it to include the gameId. Do not change anything else. Only use the official Playroom Kit API. After making the change, show me the updated line.' />
+      <CopyMasterPromptButton text='I am building a multiplayer game using Playroom Kit. I have just created a project on the Playroom Dev Portal and obtained my gameId. I need you to find the insertCoin() call in my codebase and add my gameId to it so it reads: insertCoin({ gameId: "PASTE_YOUR_GAME_ID_HERE" }). If insertCoin is called with no arguments or with an options object that is missing gameId, update it to include the gameId. Do not change anything else. Only use the official Playroom Kit API. After making the change, show me the updated line.' />
+    </div>
+    {(() => {
+      const fullText = `I am building a multiplayer game using Playroom Kit. I have just created a project on the Playroom Dev Portal and obtained my gameId.
+I need you to find the insertCoin() call in my codebase and add my gameId to it so it reads:
+insertCoin({ gameId: "PASTE_YOUR_GAME_ID_HERE" })
+If insertCoin is called with no arguments or with an options object that is missing gameId, update it to include the gameId.
+Do not change anything else. Only use the official Playroom Kit API.
+After making the change, show me the updated line.`;
+      const lines = fullText.split('\n');
+      const [isExpanded, setIsExpanded] = useState(false);
+      const visibleLines = isExpanded ? lines : lines.slice(0, 4);
+      const showButton = lines.length > 4;
+      const showBlur = !isExpanded && lines.length > 4;
+      return (
+        <>
+          <pre style={{ padding: '10px', opacity: 0.8, whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "Courier New", fontSize: '14px' }}>
+            {visibleLines.map((line, i) => (
+              <span key={i} style={{ display: 'block', filter: showBlur && i === 3 ? 'blur(2px)' : 'none', opacity: showBlur && i === 3 ? 0.6 : 1 }}>
+                {line}
+              </span>
+            ))}
+          </pre>
+          {showButton && (
+            <div style={{ textAlign: 'center', marginTop: isExpanded ? '10px' : '-28px', position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ padding: '4px 12px', fontSize: '14px', cursor: 'pointer', background: 'transparent', border: 'none', color: '#fff', fontFamily: 'Courier New' }}
+              >
+                {isExpanded ? 'Show less' : 'Show all'}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+</ElectricBorder>
+
+Replace `PASTE_YOUR_GAME_ID_HERE` with the `gameId` you copied from your project's Configuration page.
