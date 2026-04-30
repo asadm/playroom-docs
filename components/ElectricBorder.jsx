@@ -7,8 +7,8 @@ const ElectricBorder = ({
   speed = 1,
   chaos = 0.12,
   borderRadius = 24,
-  className,
-  style
+  className = '',
+  style = {}
 }) => {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);

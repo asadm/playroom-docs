@@ -1,5 +1,100 @@
-# No gameId provided in the insertCoin function
+import { Callout, Steps } from 'nextra/components'
+import ElectricBorder from '../../components/ElectricBorder'
+import CopyMasterPromptButton from '../../components/CopyMasterPromptButton'
+import DropDownMenuForMasterPrompt from '../../components/DropDownMenuForMasterPrompt'
+import InsertCoinPromptGenerator from '../../components/InsertCoinPromptGenerator'
 
-| Code / Text | Where it appears | Meaning | What to do |
-| ----------- | ---------------- | ------- | ---------- |
-| insertCoin() called without gameId. This may impact analytics and enforce DAU limits soon. Fix it here: https://docs.joinplayroom.com/errors/no-game-id | console | It means that the developer hasn't provided `gameId` in the `insertCoin` function.  | The developer should create a project on the [Developer Portal](https://dev.joinplayroom.com) if they haven't. From there they will get the `gameId`, simply copy and paste it in the `insertCoin` function. e.g `insertCoin({gameId: "<your_gameid>"})`  |
+# No gameId provided in insertCoin
+
+You called `insertCoin()` without a `gameId`. 
+
+To fix it, create a project on the [Playroom Dev Portal](https://dev.joinplayroom.com) and paste your `gameId` into `insertCoin`.
+
+## How to get your Game ID
+
+<Steps>
+
+### Go to the Dev Portal
+
+Start by navigating to the [Playroom Dev Portal](https://dev.joinplayroom.com/signin). This is where you'll manage all your game projects and get your unique `gameId`. You'll see the **Dev mode** sign-in form ready for you to get started.
+
+### Enter your email
+
+Type your email address in the **Dev mode** field and click **Continue**. This will send you a verification link to confirm your identity.
+
+![Playroom Dev Portal — enter your email](/images/portal/1-enter-email.png)
+
+### Check your email
+
+You'll receive a **Sign in to Playroom** email from `noreply@joinplayroom.com`. Open the email and click the **Sign in to Playroom** link. This authenticates you and logs you into the Dev Portal.
+
+### Choose a plan
+
+After logging in, you'll need to select a plan to activate your account. Select the plan that works best for your needs.
+
+![Playroom pricing — choose a plan](/images/portal/2-choose-plan.png)
+
+### Click + New Project
+
+Once your plan is activated, you'll land on the dashboard. Here you can see all your projects. Click the **+ New Project** button in the top right corner to create a new project and get your `gameId`.
+
+![Playroom dashboard — click + New Project](/images/portal/3-click-new-project.png)
+
+### Name your project
+
+A dialog will appear asking you to name your project. Enter a project name using only letters and numbers, then click **Continue**. This name helps you organize and identify your projects.
+
+![Create project dialog — enter project name](/images/portal/4-name-project.png)
+
+### Open your project
+
+Your project is now created! You'll see it appear in the left sidebar under **Applications**. Click on your project name to open it, then click the **Configuration** tab. This is where you'll find your `gameId`.
+
+![Project overview — open Configuration tab](/images/portal/5-open-project.png)
+
+You'll land on the Configuration page. Your `gameId` is displayed in the **General** section at the top.
+
+![Configuration page overview — gameId](/images/portal/8-configuration-page.png)
+
+### Copy your Game ID
+
+In the **General** section at the top of the Configuration page, you'll see your `gameId` field. You have two options:
+
+- Copy only the `gameId` value from the field, or copy the ready-made `insertCoin()` code snippet shown in the box—it already includes your gameId and is ready to paste into your code.
+
+![Configuration page — copy your gameId](/images/portal/7-copy-game-id.png)
+
+</Steps>
+
+## Use the Game ID in your code
+
+Paste the `gameId` into your `insertCoin` call:
+
+```js
+insertCoin({ gameId: "your_game_id_here" });
+```
+
+<Callout type="info">
+  The `gameId` is read-only and assigned when you create a project. You can always find it again in your project's **Configuration → General** tab.
+</Callout>
+
+For the full reference, see [insertCoin API docs](/api-reference/js/insertCoin).
+
+
+## Vibe Coding Prompt
+
+<div className="w-50">
+  <Callout emoji="✨">
+    Vibe-code friendly
+  </Callout>
+</div>
+
+Add your gameId to generate a custom prompt for your AI coding assistant. This ensures the prompt knows exactly which game you're working with.
+
+---
+
+<InsertCoinPromptGenerator />
+
+---
+
+
