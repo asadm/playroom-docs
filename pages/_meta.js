@@ -78,4 +78,10 @@ export default {
     href: "https://discord.gg/uDHxeRYhRe",
     newWindow: true,
   },
+  privacy: {
+    title: "Privacy Policy ↗",
+    type: "page",
+    href: "https://joinplayroom.com/games/privacy.txt",
+    newWindow: true,
+  },
 };
